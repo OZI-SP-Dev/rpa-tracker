@@ -10,6 +10,7 @@ import {
   RadioGroup,
   Radio,
   Button,
+  Input,
 } from "@fluentui/react-components";
 import { useForm, Controller } from "react-hook-form";
 import {
@@ -345,6 +346,36 @@ const NewRequestForm = () => {
           {errors.advertisementLength && (
             <Text id="advertisementLengthErr" className={classes.errorText}>
               {errors.advertisementLength.message}
+            </Text>
+          )}
+        </div>
+
+        {/* Incumbent */}
+        <div className={classes.fieldContainer}>
+          <Label
+            htmlFor="lastIncumbentId"
+            size="small"
+            weight="semibold"
+            className={classes.fieldLabel}
+          >
+            <ContactIcon className={classes.fieldIcon} />
+            Name of last incubment (if applicable)
+          </Label>
+          <Controller
+            name="lastIncumbent"
+            control={control}
+            render={({ field }) => (
+              <Input
+                {...field}
+                aria-describedby="lastIncumbentErr"
+                id="lastIncumbentId"
+                placeholder="Example format: 'Last, First MI'"
+              />
+            )}
+          />
+          {errors.lastIncumbent && (
+            <Text id="lastIncumbentErr" className={classes.errorText}>
+              {errors.lastIncumbent.message}
             </Text>
           )}
         </div>
