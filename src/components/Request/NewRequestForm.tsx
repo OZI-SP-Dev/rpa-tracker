@@ -1,9 +1,7 @@
 import { PAYSYSTEMS } from "consts/PaySystems";
 import {
-  makeStyles,
   Text,
   Label,
-  tokens,
   Combobox,
   Option,
   Title1,
@@ -26,43 +24,7 @@ import { ToggleLeftRegular, RadioButtonFilled } from "@fluentui/react-icons";
 import { RPARequest } from "api/requestsApi";
 import { useCurrentUser } from "api/UserApi";
 import { REQUESTTYPES } from "consts/RequestTypes";
-
-/* FluentUI Styling */
-const useStyles = makeStyles({
-  formContainer: { display: "grid", maxWidth: "800px", width: "100%" },
-  errorText: {
-    color: tokens.colorPaletteRedForeground1,
-    fontSize: tokens.fontSizeBase200,
-    display: "block",
-  },
-  fieldIcon: {
-    marginRight: ".5em",
-  },
-  fieldContainer: {
-    marginLeft: "1em",
-    marginRight: "1em",
-    marginTop: "1em",
-    marginBottom: "1em",
-    display: "grid",
-    position: "relative",
-  },
-  fieldLabel: {
-    paddingBottom: ".5em",
-    display: "flex",
-  },
-  fieldDescription: {
-    display: "block",
-  },
-  createButton: {
-    display: "grid",
-    justifyContent: "end",
-    marginLeft: "1em",
-    marginRight: "1em",
-    marginTop: ".5em",
-    marginBottom: ".5em",
-  },
-  listBox: { maxHeight: "15em" },
-});
+import "./Request.css";
 
 // Probably use the omit system with RPARequest later, too simple right now
 type RHFRequest = {
@@ -75,7 +37,6 @@ type RHFRequest = {
 };
 
 const NewRequestForm = () => {
-  const classes = useStyles();
   const user = useCurrentUser();
   //const addRequest = useAddRequest();
 
@@ -132,34 +93,34 @@ const NewRequestForm = () => {
 
       <form
         id="inReqForm"
-        className={classes.formContainer}
+        className="requestFormContainer"
         onSubmit={handleSubmit(createNewRequest)}
       >
         {/* Requestor */}
-        <div className={classes.fieldContainer}>
+        <div className="requestFieldContainer">
           <Label
             id="requestorId"
             size="small"
             weight="semibold"
-            className={classes.fieldLabel}
+            className="requestFieldLabel"
             required
           >
-            <ContactIcon className={classes.fieldIcon} />
+            <ContactIcon className="requestFieldIcon" />
             Requestor
           </Label>
           {user.text}
         </div>
 
         {/* Request Type */}
-        <div className={classes.fieldContainer}>
+        <div className="requestFieldContainer">
           <Label
             id="requestTypeId"
             size="small"
             weight="semibold"
-            className={classes.fieldLabel}
+            className="requestFieldLabel"
             required
           >
-            <DropdownIcon className={classes.fieldIcon} />
+            <DropdownIcon className="requestFieldIcon" />
             Request Type
           </Label>
           <Controller
@@ -187,22 +148,22 @@ const NewRequestForm = () => {
             )}
           />
           {errors.requestType && (
-            <Text id="requestType" className={classes.errorText}>
+            <Text id="requestType" className="requesterrorText">
               {errors.requestType.message}
             </Text>
           )}
         </div>
 
         {/* MCR Required */}
-        <div className={classes.fieldContainer}>
+        <div className="requestFieldContainer">
           <Label
             htmlFor="mcrRequiredId"
             size="small"
             weight="semibold"
-            className={classes.fieldLabel}
+            className="requestFieldLabel"
             required
           >
-            <RadioButtonFilled className={classes.fieldIcon} />
+            <RadioButtonFilled className="requestFieldIcon" />
             MCR Required
           </Label>
           <Controller
@@ -224,22 +185,22 @@ const NewRequestForm = () => {
             )}
           />
           {errors.mcrRequired && (
-            <Text id="mcrRequiredErr" className={classes.errorText}>
+            <Text id="mcrRequiredErr" className="requesterrorText">
               {errors.mcrRequired.message}
             </Text>
           )}
         </div>
 
         {/* Pay System */}
-        <div className={classes.fieldContainer}>
+        <div className="requestFieldContainer">
           <Label
             id="paySystemId"
             size="small"
             weight="semibold"
-            className={classes.fieldLabel}
+            className="requestFieldLabel"
             required
           >
-            <DropdownIcon className={classes.fieldIcon} />
+            <DropdownIcon className="requestFieldIcon" />
             Pay System
           </Label>
           <Controller
@@ -256,7 +217,7 @@ const NewRequestForm = () => {
                 }
                 selectedOptions={[field.value ?? ""]}
                 onOptionSelect={(_event, data) => {
-                  setValue("paySystem", data.optionValue, {
+                  setValue("paySystem", data.optionValue ?? "", {
                     shouldValidate: true,
                   });
                 }}
@@ -270,22 +231,22 @@ const NewRequestForm = () => {
             )}
           />
           {errors.paySystem && (
-            <Text id="paySystem" className={classes.errorText}>
+            <Text id="paySystem" className="requesterrorText">
               {errors.paySystem.message}
             </Text>
           )}
         </div>
 
         {/* Hiring Type */}
-        <div className={classes.fieldContainer}>
+        <div className="requestFieldContainer">
           <Label
             htmlFor="hireTypeId"
             size="small"
             weight="semibold"
-            className={classes.fieldLabel}
+            className="requestFieldLabel"
             required
           >
-            <RadioButtonFilled className={classes.fieldIcon} />
+            <RadioButtonFilled className="requestFieldIcon" />
             Hiring Type
           </Label>
           <Controller
@@ -307,22 +268,22 @@ const NewRequestForm = () => {
             )}
           />
           {errors.hireType && (
-            <Text id="hireTypeErr" className={classes.errorText}>
+            <Text id="hireTypeErr" className="requesterrorText">
               {errors.hireType.message}
             </Text>
           )}
         </div>
 
         {/* Advertisement Length */}
-        <div className={classes.fieldContainer}>
+        <div className="requestFieldContainer">
           <Label
             htmlFor="advertisementLengthId"
             size="small"
             weight="semibold"
-            className={classes.fieldLabel}
+            className="requestFieldLabel"
             required
           >
-            <RadioButtonFilled className={classes.fieldIcon} />
+            <RadioButtonFilled className="requestFieldIcon" />
             Advertisement Length
           </Label>
           <Controller
@@ -344,21 +305,21 @@ const NewRequestForm = () => {
             )}
           />
           {errors.advertisementLength && (
-            <Text id="advertisementLengthErr" className={classes.errorText}>
+            <Text id="advertisementLengthErr" className="requesterrorText">
               {errors.advertisementLength.message}
             </Text>
           )}
         </div>
 
         {/* Incumbent */}
-        <div className={classes.fieldContainer}>
+        <div className="requestFieldContainer">
           <Label
             htmlFor="lastIncumbentId"
             size="small"
             weight="semibold"
-            className={classes.fieldLabel}
+            className="requestFieldLabel"
           >
-            <ContactIcon className={classes.fieldIcon} />
+            <ContactIcon className="requestFieldIcon" />
             Name of last incubment (if applicable)
           </Label>
           <Controller
@@ -374,13 +335,13 @@ const NewRequestForm = () => {
             )}
           />
           {errors.lastIncumbent && (
-            <Text id="lastIncumbentErr" className={classes.errorText}>
+            <Text id="lastIncumbentErr" className="requesterrorText">
               {errors.lastIncumbent.message}
             </Text>
           )}
         </div>
 
-        <div className={classes.createButton}>
+        <div className="requestCreateButton">
           <div>
             {/* {(addRequest.isLoading || addAdditionalInfo.isLoading) && (
               <Spinner
