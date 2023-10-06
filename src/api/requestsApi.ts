@@ -1,7 +1,16 @@
 import { spWebContext } from "api/SPWebContext";
 import { useQuery } from "@tanstack/react-query";
+import { REQUESTTYPES } from "consts/RequestTypes";
 
-// TODO: declare request type
+export interface RPARequest {
+  //requestor: ;
+  requestType: (typeof REQUESTTYPES)[number];
+  mcrRequired: "Yes" | "No";
+  paySystem: "NH" | "GS" | "GG";
+  hireType: "Internal" | "External";
+  advertisementLength: "Normal" | "Extended";
+  lastIncumbent: string;
+}
 
 /**
  * Gets all requests
