@@ -23,11 +23,11 @@ import { ToggleLeftRegular, RadioButtonFilled } from "@fluentui/react-icons";
 // import { UserContext } from "providers/UserProvider";
 import { RPARequest } from "api/requestsApi";
 import { useCurrentUser } from "api/UserApi";
-import { REQUESTTYPES } from "consts/RequestTypes";
+import RequestType from "./RequestType";
 import "./Request.css";
 
 // Probably use the omit system with RPARequest later, too simple right now
-type RHFRequest = {
+export type RHFRequest = {
   requestType: string;
   mcrRequired: string;
   paySystem: string; // "NH" | "GS" | "GG";
@@ -78,16 +78,7 @@ const NewRequestForm = () => {
         alignItems: "center",
       }}
     >
-      <Title1
-        align="center"
-        style={{
-          whiteSpace: "nowrap",
-          marginLeft: "1em",
-          marginRight: "1em",
-          marginTop: ".5em",
-          marginBottom: ".5em",
-        }}
-      >
+      <Title1 align="center">
         <b>Initiate New RPA Request</b>
       </Title1>
 
@@ -111,48 +102,12 @@ const NewRequestForm = () => {
           {user.text}
         </div>
 
-        {/* Request Type */}
-        <div className="requestFieldContainer">
-          <Label
-            id="requestTypeId"
-            size="small"
-            weight="semibold"
-            className="requestFieldLabel"
-            required
-          >
-            <DropdownIcon className="requestFieldIcon" />
-            Request Type
-          </Label>
-          <Controller
-            name="requestType"
-            control={control}
-            render={({ field }) => (
-              <Combobox
-                aria-describedby="requestTypeErr"
-                aria-labelledby="requestTypeId"
-                autoComplete="on"
-                {...field}
-                selectedOptions={[field.value ?? ""]}
-                onOptionSelect={(_event, data) => {
-                  setValue("requestType", data.optionValue ?? "", {
-                    shouldValidate: true,
-                  });
-                }}
-              >
-                {REQUESTTYPES.map((reqType) => (
-                  <Option key={reqType} value={reqType}>
-                    {reqType}
-                  </Option>
-                ))}
-              </Combobox>
-            )}
-          />
-          {errors.requestType && (
-            <Text id="requestType" className="requesterrorText">
-              {errors.requestType.message}
-            </Text>
-          )}
-        </div>
+        <RequestType
+          name="requestType"
+          control={control}
+          errors={errors}
+          setValue={setValue}
+        />
 
         {/* MCR Required */}
         <div className="requestFieldContainer">

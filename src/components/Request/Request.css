@@ -38,3 +38,11 @@
 .requestListBox {
   max-height: 15em;
 }
+
+.fui-Title1 {
+  white-space: nowrap;
+  margin-left: 1em;
+  margin-right: 1em;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
