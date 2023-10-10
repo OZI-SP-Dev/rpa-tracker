@@ -1,29 +1,16 @@
-import { PAYSYSTEMS } from "consts/PaySystems";
-import {
-  Text,
-  Label,
-  Combobox,
-  Option,
-  Title1,
-  RadioGroup,
-  Radio,
-  Button,
-  Input,
-} from "@fluentui/react-components";
-import { useForm, Controller } from "react-hook-form";
-import {
-  // TextFieldIcon,
-  // NumberFieldIcon,
-  // CalendarIcon,
-  DropdownIcon,
-  ContactIcon,
-  // AlertSolidIcon,
-} from "@fluentui/react-icons-mdl2";
-import { ToggleLeftRegular, RadioButtonFilled } from "@fluentui/react-icons";
-// import { UserContext } from "providers/UserProvider";
+import { Label, Title1, Button } from "@fluentui/react-components";
+import { useForm } from "react-hook-form";
+import { ContactIcon } from "@fluentui/react-icons-mdl2";
 import { RPARequest } from "api/requestsApi";
 import { useCurrentUser } from "api/UserApi";
-import RequestType from "./RequestType";
+import {
+  RequestType,
+  MCRRequired,
+  PaySystem,
+  HiringType,
+  AdvertisementLength,
+  Incumbent,
+} from "./FormFields/FormFields";
 import "./Request.css";
 
 // Probably use the omit system with RPARequest later, too simple right now
@@ -109,192 +96,42 @@ const NewRequestForm = () => {
           setValue={setValue}
         />
 
-        {/* MCR Required */}
-        <div className="requestFieldContainer">
-          <Label
-            htmlFor="mcrRequiredId"
-            size="small"
-            weight="semibold"
-            className="requestFieldLabel"
-            required
-          >
-            <RadioButtonFilled className="requestFieldIcon" />
-            MCR Required
-          </Label>
-          <Controller
-            name="mcrRequired"
-            control={control}
-            rules={{
-              required: "MCR Required is required",
-            }}
-            render={({ field }) => (
-              <RadioGroup
-                id="mcrRequiredId"
-                aria-describedby="mcrRequiredErr"
-                layout="horizontal"
-                {...field}
-              >
-                <Radio key="Yes" value="Yes" label="Yes" />
-                <Radio key="No" value="No" label="No" />
-              </RadioGroup>
-            )}
-          />
-          {errors.mcrRequired && (
-            <Text id="mcrRequiredErr" className="requesterrorText">
-              {errors.mcrRequired.message}
-            </Text>
-          )}
-        </div>
+        <MCRRequired
+          name="mcrRequired"
+          control={control}
+          errors={errors}
+          setValue={setValue}
+        />
 
-        {/* Pay System */}
-        <div className="requestFieldContainer">
-          <Label
-            id="paySystemId"
-            size="small"
-            weight="semibold"
-            className="requestFieldLabel"
-            required
-          >
-            <DropdownIcon className="requestFieldIcon" />
-            Pay System
-          </Label>
-          <Controller
-            name="paySystem"
-            control={control}
-            render={({ field }) => (
-              <Combobox
-                aria-describedby="paySystemErr"
-                aria-labelledby="paySystemId"
-                autoComplete="on"
-                {...field}
-                value={
-                  PAYSYSTEMS.find(({ key }) => key === field.value)?.text ?? ""
-                }
-                selectedOptions={[field.value ?? ""]}
-                onOptionSelect={(_event, data) => {
-                  setValue("paySystem", data.optionValue ?? "", {
-                    shouldValidate: true,
-                  });
-                }}
-              >
-                {PAYSYSTEMS.map((paysys) => (
-                  <Option key={paysys.key} value={paysys.key}>
-                    {paysys.text}
-                  </Option>
-                ))}
-              </Combobox>
-            )}
-          />
-          {errors.paySystem && (
-            <Text id="paySystem" className="requesterrorText">
-              {errors.paySystem.message}
-            </Text>
-          )}
-        </div>
+        <PaySystem
+          name="paySystem"
+          control={control}
+          errors={errors}
+          setValue={setValue}
+        />
 
-        {/* Hiring Type */}
-        <div className="requestFieldContainer">
-          <Label
-            htmlFor="hireTypeId"
-            size="small"
-            weight="semibold"
-            className="requestFieldLabel"
-            required
-          >
-            <RadioButtonFilled className="requestFieldIcon" />
-            Hiring Type
-          </Label>
-          <Controller
-            name="hireType"
-            control={control}
-            rules={{
-              required: "Hiring Type is required",
-            }}
-            render={({ field }) => (
-              <RadioGroup
-                id="empTypeId"
-                aria-describedby="empTypeErr"
-                layout="horizontal"
-                {...field}
-              >
-                <Radio key="Internal" value="Internal" label="Internal" />
-                <Radio key="External" value="External" label="External" />
-              </RadioGroup>
-            )}
-          />
-          {errors.hireType && (
-            <Text id="hireTypeErr" className="requesterrorText">
-              {errors.hireType.message}
-            </Text>
-          )}
-        </div>
+        <HiringType
+          name="hiringType"
+          control={control}
+          errors={errors}
+          setValue={setValue}
+        />
 
         {/* Advertisement Length */}
-        <div className="requestFieldContainer">
-          <Label
-            htmlFor="advertisementLengthId"
-            size="small"
-            weight="semibold"
-            className="requestFieldLabel"
-            required
-          >
-            <RadioButtonFilled className="requestFieldIcon" />
-            Advertisement Length
-          </Label>
-          <Controller
-            name="advertisementLength"
-            control={control}
-            rules={{
-              required: "Advertisement Length is required",
-            }}
-            render={({ field }) => (
-              <RadioGroup
-                id="advertisementLengthId"
-                aria-describedby="advertisementLengthErr"
-                layout="horizontal"
-                {...field}
-              >
-                <Radio value="Normal" label="Normal Period" />
-                <Radio value="Extended" label="Extended Period (> 14 days)" />
-              </RadioGroup>
-            )}
-          />
-          {errors.advertisementLength && (
-            <Text id="advertisementLengthErr" className="requesterrorText">
-              {errors.advertisementLength.message}
-            </Text>
-          )}
-        </div>
+        <AdvertisementLength
+          name="advertisementLength"
+          control={control}
+          errors={errors}
+          setValue={setValue}
+        />
 
         {/* Incumbent */}
-        <div className="requestFieldContainer">
-          <Label
-            htmlFor="lastIncumbentId"
-            size="small"
-            weight="semibold"
-            className="requestFieldLabel"
-          >
-            <ContactIcon className="requestFieldIcon" />
-            Name of last incubment (if applicable)
-          </Label>
-          <Controller
-            name="lastIncumbent"
-            control={control}
-            render={({ field }) => (
-              <Input
-                {...field}
-                aria-describedby="lastIncumbentErr"
-                id="lastIncumbentId"
-                placeholder="Example format: 'Last, First MI'"
-              />
-            )}
-          />
-          {errors.lastIncumbent && (
-            <Text id="lastIncumbentErr" className="requesterrorText">
-              {errors.lastIncumbent.message}
-            </Text>
-          )}
-        </div>
+        <Incumbent
+          name="lastIncumbent"
+          control={control}
+          errors={errors}
+          setValue={setValue}
+        />
 
         <div className="requestCreateButton">
           <div>

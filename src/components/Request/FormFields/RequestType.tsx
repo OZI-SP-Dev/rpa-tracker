@@ -7,8 +7,8 @@ import {
   FieldErrors,
   UseFormSetValue,
 } from "react-hook-form";
-import "./Request.css";
-import { RHFRequest } from "./NewRequestForm";
+import "../Request.css";
+import { RHFRequest } from "../NewRequestForm";
 
 interface IRequestType {
   name: string;
@@ -21,7 +21,7 @@ const RequestType = (rt: IRequestType) => {
   return (
     <div className="requestFieldContainer">
       <Label
-        id="requestTypeId"
+        id={rt.name + "Id"}
         size="small"
         weight="semibold"
         className="requestFieldLabel"
@@ -33,10 +33,16 @@ const RequestType = (rt: IRequestType) => {
       <Controller
         name="requestType"
         control={rt.control}
+        rules={{
+          validate: (value) => {
+            return value?.length > 0 ? undefined : "Request Type is required";
+          },
+        }}
         render={({ field }) => (
           <Combobox
-            aria-describedby="requestTypeErr"
-            aria-labelledby="requestTypeId"
+            aria-describedby={rt.name + "Err"}
+            aria-labelledby={rt.name + "Id"}
+            aria-invalid={rt.errors.requestType ? "true" : "false"}
             autoComplete="on"
             {...field}
             selectedOptions={[field.value ?? ""]}
@@ -55,7 +61,7 @@ const RequestType = (rt: IRequestType) => {
         )}
       />
       {rt.errors.requestType && (
-        <Text id="requestType" className="requestErrorText">
+        <Text role="alert" id={rt.name + "Err"} className="requestErrorText">
           {rt.errors.requestType.message}
         </Text>
       )}
