@@ -4,7 +4,7 @@ import { FormField } from "components/Request/NewRequestForm";
 import "components/Request/Request.css";
 import { RadioButtonFilled } from "@fluentui/react-icons";
 
-const fms = ({ name, form }: FormField) => {
+const FMS = ({ name, form }: FormField) => {
   return (
     <div className="requestFieldContainer">
       <Label
@@ -44,4 +44,4 @@ const fms = ({ name, form }: FormField) => {
     </div>
   );
 };
-export default fms;
+export default FMS;

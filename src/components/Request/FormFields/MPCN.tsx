@@ -26,8 +26,8 @@ const MPCN = ({ name, form }: FormField) => {
             message: "MPCN cannot be less than 7 digits",
           },
           maxLength: {
-            value: 7,
-            message: "MPCN cannot be more than 7 digits",
+            value: 10,
+            message: "MPCN cannot be more than 10 digits",
           },
           pattern: {
             value: /^\d+$/,

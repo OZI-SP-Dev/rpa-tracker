@@ -21,6 +21,9 @@ const PaySystem = ({ name, form }: FormField) => {
       <Controller
         name="paySystem"
         control={form.control}
+        rules={{
+          required: "Pay System is required",
+        }}
         render={({ field }) => (
           <Combobox
             aria-describedby={name + "Err"}
