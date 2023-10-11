@@ -39,9 +39,9 @@ const PositionSensitivity = ({ name, form }: FormField) => {
               field.onChange(data.optionValue ?? "");
             }}
           >
-            {POSITIONSENSITIVIES.map((paysys) => (
-              <Option key={paysys.key} value={paysys.key}>
-                {paysys.text}
+            {POSITIONSENSITIVIES.map((sensitivity) => (
+              <Option key={sensitivity.key} value={sensitivity.key}>
+                {sensitivity.text}
               </Option>
             ))}
           </Combobox>

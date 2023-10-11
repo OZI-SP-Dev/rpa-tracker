@@ -38,7 +38,14 @@ const PaySystem = ({ name, form }: FormField) => {
             onOptionSelect={(_event, data) => {
               field.onChange(data.optionValue ?? "");
               // Only reset grade if changing to or from the NH pay system
-              if (data.optionValue === "NH" || field.value === "NH") {
+              if (data.optionValue === "NH" && field.value === "NH") {
+                return;
+              }
+              if (
+                data.optionValue === "NH" ||
+                field.value === "NH" ||
+                data.optionValue === ""
+              ) {
                 form.setValue("grade", "", {
                   shouldValidate: true,
                 });
