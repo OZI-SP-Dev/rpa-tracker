@@ -36,9 +36,7 @@ const PositionSensitivity = ({ name, form }: FormField) => {
             }
             selectedOptions={[field.value ?? ""]}
             onOptionSelect={(_event, data) => {
-              form.setValue("positionSensitivity", data.optionValue ?? "", {
-                shouldValidate: true,
-              });
+              field.onChange(data.optionValue ?? "");
             }}
           >
             {POSITIONSENSITIVIES.map((paysys) => (

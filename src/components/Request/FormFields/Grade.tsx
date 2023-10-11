@@ -36,9 +36,7 @@ const Grade = ({ name, form }: FormField) => {
             {...field}
             selectedOptions={[field.value ?? ""]}
             onOptionSelect={(_event, data) => {
-              form.setValue("grade", data.optionValue ?? "", {
-                shouldValidate: true,
-              });
+              field.onChange(data.optionValue ?? "");
             }}
           >
             {paySystem === "NH"

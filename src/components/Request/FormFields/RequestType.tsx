@@ -33,9 +33,7 @@ const RequestType = ({ name, form }: FormField) => {
             {...field}
             selectedOptions={[field.value ?? ""]}
             onOptionSelect={(_event, data) => {
-              form.setValue("requestType", data.optionValue ?? "", {
-                shouldValidate: true,
-              });
+              field.onChange(data.optionValue ?? "");
             }}
           >
             {REQUESTTYPES.map((reqType) => (

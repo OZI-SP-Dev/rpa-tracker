@@ -33,9 +33,7 @@ const PaySystem = ({ name, form }: FormField) => {
             }
             selectedOptions={[field.value ?? ""]}
             onOptionSelect={(_event, data) => {
-              form.setValue("paySystem", data.optionValue ?? "", {
-                shouldValidate: true,
-              });
+              field.onChange(data.optionValue ?? "");
               // Only reset grade if changing to or from the NH pay system
               if (data.optionValue === "NH" || field.value === "NH") {
                 form.setValue("grade", "", {
