@@ -19,6 +19,12 @@ const PaySystem = ({ name, form }: FormField) => {
       <Controller
         name="lastIncumbent"
         control={form.control}
+        rules={{
+          maxLength: {
+            value: 255,
+            message: "Last Incumbent can be no longer than 255 characters",
+          },
+        }}
         render={({ field }) => (
           <Input
             {...field}

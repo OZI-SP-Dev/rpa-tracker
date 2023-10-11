@@ -22,9 +22,7 @@ const RequestType = ({ name, form }: FormField) => {
         name="requestType"
         control={form.control}
         rules={{
-          validate: (value) => {
-            return value?.length > 0 ? undefined : "Request Type is required";
-          },
+          required: "Request Type is required",
         }}
         render={({ field }) => (
           <Combobox
