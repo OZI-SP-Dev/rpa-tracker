@@ -12,6 +12,13 @@ import {
   Incumbent,
   Series,
   Grade,
+  PositionTitle,
+  MPCN,
+  CPCN,
+  FMS,
+  OfficeSymbol,
+  PositionSensitivity,
+  DutyLocation,
 } from "components/Request/FormFields/FormFields";
 import "components/Request/Request.css";
 
@@ -25,6 +32,13 @@ export type RHFRequest = {
   lastIncumbent: string;
   series: string; // 4 digit string
   grade: string;
+  positionTitle: string;
+  mpcn: string;
+  cpcn: string;
+  fms: string;
+  officeSymbol: string;
+  positionSensitivity: string;
+  dutyLocation: string;
 };
 
 export interface FormField {
@@ -46,6 +60,13 @@ const NewRequestForm = () => {
       lastIncumbent: "",
       series: "",
       grade: "",
+      positionTitle: "",
+      mpcn: "",
+      cpcn: "",
+      fms: "",
+      officeSymbol: "",
+      positionSensitivity: "",
+      dutyLocation: "",
     },
     criteriaMode:
       "all" /* Pass back multiple errors, so we can prioritize which one(s) to show */,
@@ -99,11 +120,25 @@ const NewRequestForm = () => {
 
         <MCRRequired name="mcrRequired" form={myForm} />
 
+        <PositionTitle name="positionTitle" form={myForm} />
+
         <PaySystem name="paySystem" form={myForm} />
 
         <Series name="series" form={myForm} />
 
         <Grade name="grade" form={myForm} />
+
+        <MPCN name="mpcn" form={myForm} />
+
+        <CPCN name="cpcn" form={myForm} />
+
+        <FMS name="fms" form={myForm} />
+
+        <OfficeSymbol name="officeSymbol" form={myForm} />
+
+        <PositionSensitivity name="positionSensitivity" form={myForm} />
+
+        <DutyLocation name="dutyLocation" form={myForm} />
 
         <HiringType name="hiringType" form={myForm} />
 

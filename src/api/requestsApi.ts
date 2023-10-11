@@ -13,6 +13,13 @@ export interface RPARequest {
   lastIncumbent: string;
   series: string;
   grade: (typeof GENERALGRADES)[number] | (typeof ACQGRADES)[number];
+  positionTitle: string;
+  mpcn: string;
+  cpcn: string;
+  fms: "Yes" | "No";
+  officeSymbol: string;
+  positionSensitivity: "NS" | "NCS" | "CS" | "SS";
+  dutyLocation: string;
 }
 
 /**
