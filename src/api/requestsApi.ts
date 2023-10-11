@@ -1,13 +1,15 @@
 import { spWebContext } from "api/SPWebContext";
 import { useQuery } from "@tanstack/react-query";
 import { REQUESTTYPES } from "consts/RequestTypes";
+import { PAYSYSTEMS } from "consts/PaySystems";
+import { POSITIONSENSITIVIES } from "consts/PositionSensitivities";
 import { GENERALGRADES, ACQGRADES } from "consts/Grades";
 
 export interface RPARequest {
   //requestor: ;
   requestType: (typeof REQUESTTYPES)[number];
   mcrRequired: "Yes" | "No";
-  paySystem: "NH" | "GS" | "GG";
+  paySystem: (typeof PAYSYSTEMS)[number]["key"];
   hireType: "Internal" | "External";
   advertisementLength: "Normal" | "Extended";
   lastIncumbent: string;
@@ -18,7 +20,7 @@ export interface RPARequest {
   cpcn: string;
   fms: "Yes" | "No";
   officeSymbol: string;
-  positionSensitivity: "NS" | "NCS" | "CS" | "SS";
+  positionSensitivity: (typeof POSITIONSENSITIVIES)[number]["key"];
   dutyLocation: string;
 }
 
