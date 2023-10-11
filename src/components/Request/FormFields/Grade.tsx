@@ -23,9 +23,7 @@ const Grade = ({ name, form }: FormField) => {
         name="grade"
         control={form.control}
         rules={{
-          validate: (value) => {
-            return value?.length > 0 ? undefined : "Grade is required";
-          },
+          required: "Grade is required",
         }}
         render={({ field }) => (
           <Combobox

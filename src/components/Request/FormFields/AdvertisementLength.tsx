@@ -4,7 +4,7 @@ import "components/Request/Request.css";
 import { FormField } from "components/Request/NewRequestForm";
 import { RadioButtonFilled } from "@fluentui/react-icons";
 
-const PaySystem = ({ name, form }: FormField) => {
+const AdvertisementLength = ({ name, form }: FormField) => {
   return (
     <div className="requestFieldContainer">
       <Label
@@ -46,4 +46,4 @@ const PaySystem = ({ name, form }: FormField) => {
     </div>
   );
 };
-export default PaySystem;
+export default AdvertisementLength;

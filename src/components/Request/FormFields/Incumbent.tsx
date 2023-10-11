@@ -4,7 +4,7 @@ import { FormField } from "components/Request/NewRequestForm";
 import "components/Request/Request.css";
 import { ContactIcon } from "@fluentui/react-icons-mdl2";
 
-const PaySystem = ({ name, form }: FormField) => {
+const Incumbent = ({ name, form }: FormField) => {
   return (
     <div className="requestFieldContainer">
       <Label
@@ -45,4 +45,4 @@ const PaySystem = ({ name, form }: FormField) => {
     </div>
   );
 };
-export default PaySystem;
+export default Incumbent;
