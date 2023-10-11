@@ -1,5 +1,5 @@
 import { Label, Title1, Button } from "@fluentui/react-components";
-import { useForm } from "react-hook-form";
+import { UseFormReturn, useForm } from "react-hook-form";
 import { ContactIcon } from "@fluentui/react-icons-mdl2";
 import { RPARequest } from "api/requestsApi";
 import { useCurrentUser } from "api/UserApi";
@@ -10,8 +10,10 @@ import {
   HiringType,
   AdvertisementLength,
   Incumbent,
-} from "./FormFields/FormFields";
-import "./Request.css";
+  Series,
+  Grade,
+} from "components/Request/FormFields/FormFields";
+import "components/Request/Request.css";
 
 // Probably use the omit system with RPARequest later, too simple right now
 export type RHFRequest = {
@@ -21,18 +23,20 @@ export type RHFRequest = {
   hireType: string; // "Internal" | "External";
   advertisementLength: string; // "Normal" | "Extended";
   lastIncumbent: string;
+  series: string; // 4 digit string
+  grade: string;
 };
+
+export interface FormField {
+  name: string;
+  form: UseFormReturn<RHFRequest, unknown, undefined>;
+}
 
 const NewRequestForm = () => {
   const user = useCurrentUser();
   //const addRequest = useAddRequest();
 
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-    setValue,
-  } = useForm<RHFRequest>({
+  const myForm = useForm<RHFRequest>({
     defaultValues: {
       requestType: "",
       mcrRequired: "",
@@ -40,6 +44,8 @@ const NewRequestForm = () => {
       hireType: "",
       advertisementLength: "",
       lastIncumbent: "",
+      series: "",
+      grade: "",
     },
     criteriaMode:
       "all" /* Pass back multiple errors, so we can prioritize which one(s) to show */,
@@ -72,7 +78,7 @@ const NewRequestForm = () => {
       <form
         id="inReqForm"
         className="requestFormContainer"
-        onSubmit={handleSubmit(createNewRequest)}
+        onSubmit={myForm.handleSubmit(createNewRequest)}
       >
         {/* Requestor */}
         <div className="requestFieldContainer">
@@ -89,49 +95,21 @@ const NewRequestForm = () => {
           {user.text}
         </div>
 
-        <RequestType
-          name="requestType"
-          control={control}
-          errors={errors}
-          setValue={setValue}
-        />
+        <RequestType name="requestType" form={myForm} />
 
-        <MCRRequired
-          name="mcrRequired"
-          control={control}
-          errors={errors}
-          setValue={setValue}
-        />
+        <MCRRequired name="mcrRequired" form={myForm} />
 
-        <PaySystem
-          name="paySystem"
-          control={control}
-          errors={errors}
-          setValue={setValue}
-        />
+        <PaySystem name="paySystem" form={myForm} />
 
-        <HiringType
-          name="hiringType"
-          control={control}
-          errors={errors}
-          setValue={setValue}
-        />
+        <Series name="series" form={myForm} />
 
-        {/* Advertisement Length */}
-        <AdvertisementLength
-          name="advertisementLength"
-          control={control}
-          errors={errors}
-          setValue={setValue}
-        />
+        <Grade name="grade" form={myForm} />
 
-        {/* Incumbent */}
-        <Incumbent
-          name="lastIncumbent"
-          control={control}
-          errors={errors}
-          setValue={setValue}
-        />
+        <HiringType name="hiringType" form={myForm} />
+
+        <AdvertisementLength name="advertisementLength" form={myForm} />
+
+        <Incumbent name="lastIncumbent" form={myForm} />
 
         <div className="requestCreateButton">
           <div>

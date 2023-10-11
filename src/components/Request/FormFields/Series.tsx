@@ -2,7 +2,7 @@ import { Input, Label, Text } from "@fluentui/react-components";
 import { Controller } from "react-hook-form";
 import { FormField } from "components/Request/NewRequestForm";
 import "components/Request/Request.css";
-import { ContactIcon } from "@fluentui/react-icons-mdl2";
+import { NumberFieldIcon } from "@fluentui/react-icons-mdl2";
 
 const PaySystem = ({ name, form }: FormField) => {
   return (
@@ -12,28 +12,42 @@ const PaySystem = ({ name, form }: FormField) => {
         size="small"
         weight="semibold"
         className="requestFieldLabel"
+        required
       >
-        <ContactIcon className="requestFieldIcon" />
-        Name of last incubment (if applicable)
+        <NumberFieldIcon className="requestFieldIcon" />
+        Series number
       </Label>
       <Controller
-        name="lastIncumbent"
+        name="series"
         control={form.control}
+        rules={{
+          required: "Series is required",
+          minLength: {
+            value: 4,
+            message: "Series is a 4 digit identifier",
+          },
+          maxLength: {
+            value: 4,
+            message: "Series is a 4 digit identifier",
+          },
+          pattern: {
+            value: /^\d+$/,
+            message: "Series can only consist of numbers",
+          },
+        }}
         render={({ field }) => (
           <Input
             {...field}
             aria-describedby={name + "Err"}
-            aria-invalid={
-              form.formState.errors.lastIncumbent ? "true" : "false"
-            }
+            aria-invalid={form.formState.errors.series ? "true" : "false"}
             id={name + "Id"}
-            placeholder="Example format: 'Last, First MI'"
+            placeholder="Example: 2210"
           />
         )}
       />
-      {form.formState.errors.lastIncumbent && (
+      {form.formState.errors.series && (
         <Text role="alert" id={name + "Err"} className="requestErrorText">
-          {form.formState.errors.lastIncumbent.message}
+          {form.formState.errors.series.message}
         </Text>
       )}
     </div>

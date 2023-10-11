@@ -1,26 +1,14 @@
 import { Label, Radio, RadioGroup, Text } from "@fluentui/react-components";
-import {
-  Control,
-  Controller,
-  FieldErrors,
-  UseFormSetValue,
-} from "react-hook-form";
-import "../Request.css";
-import { RHFRequest } from "../NewRequestForm";
+import { Controller } from "react-hook-form";
+import "components/Request/Request.css";
+import { FormField } from "components/Request/NewRequestForm";
 import { RadioButtonFilled } from "@fluentui/react-icons";
 
-interface IHiringType {
-  name: string;
-  control: Control<RHFRequest, unknown>;
-  errors: FieldErrors<RHFRequest>;
-  setValue: UseFormSetValue<RHFRequest>;
-}
-
-const HiringType = (hiringType: IHiringType) => {
+const HiringType = ({ name, form }: FormField) => {
   return (
     <div className="requestFieldContainer">
       <Label
-        htmlFor={hiringType.name + "Id"}
+        htmlFor={name + "Id"}
         size="small"
         weight="semibold"
         className="requestFieldLabel"
@@ -31,15 +19,15 @@ const HiringType = (hiringType: IHiringType) => {
       </Label>
       <Controller
         name="hireType"
-        control={hiringType.control}
+        control={form.control}
         rules={{
           required: "Hiring Type is required",
         }}
         render={({ field }) => (
           <RadioGroup
-            id={hiringType.name + "Id"}
-            aria-describedby={hiringType.name + "Err"}
-            aria-invalid={hiringType.errors.hireType ? "true" : "false"}
+            id={name + "Id"}
+            aria-describedby={name + "Err"}
+            aria-invalid={form.formState.errors.hireType ? "true" : "false"}
             layout="horizontal"
             {...field}
           >
@@ -48,13 +36,9 @@ const HiringType = (hiringType: IHiringType) => {
           </RadioGroup>
         )}
       />
-      {hiringType.errors.hireType && (
-        <Text
-          role="alert"
-          id={hiringType.name + "Err"}
-          className="requestErrorText"
-        >
-          {hiringType.errors.hireType.message}
+      {form.formState.errors.hireType && (
+        <Text role="alert" id={name + "Err"} className="requestErrorText">
+          {form.formState.errors.hireType.message}
         </Text>
       )}
     </div>

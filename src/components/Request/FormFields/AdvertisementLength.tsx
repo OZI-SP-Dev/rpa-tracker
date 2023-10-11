@@ -1,26 +1,14 @@
 import { Label, Radio, RadioGroup, Text } from "@fluentui/react-components";
-import {
-  Control,
-  Controller,
-  FieldErrors,
-  UseFormSetValue,
-} from "react-hook-form";
-import "../Request.css";
-import { RHFRequest } from "../NewRequestForm";
+import { Controller } from "react-hook-form";
+import "components/Request/Request.css";
+import { FormField } from "components/Request/NewRequestForm";
 import { RadioButtonFilled } from "@fluentui/react-icons";
 
-interface IAdvertisementLength {
-  name: string;
-  control: Control<RHFRequest, unknown>;
-  errors: FieldErrors<RHFRequest>;
-  setValue: UseFormSetValue<RHFRequest>;
-}
-
-const PaySystem = (adLength: IAdvertisementLength) => {
+const PaySystem = ({ name, form }: FormField) => {
   return (
     <div className="requestFieldContainer">
       <Label
-        htmlFor={adLength.name + "Id"}
+        htmlFor={name + "Id"}
         size="small"
         weight="semibold"
         className="requestFieldLabel"
@@ -31,16 +19,16 @@ const PaySystem = (adLength: IAdvertisementLength) => {
       </Label>
       <Controller
         name="advertisementLength"
-        control={adLength.control}
+        control={form.control}
         rules={{
           required: "Advertisement Length is required",
         }}
         render={({ field }) => (
           <RadioGroup
-            id={adLength.name + "Id"}
-            aria-describedby={adLength.name + "Err"}
+            id={name + "Id"}
+            aria-describedby={name + "Err"}
             aria-invalid={
-              adLength.errors.advertisementLength ? "true" : "false"
+              form.formState.errors.advertisementLength ? "true" : "false"
             }
             layout="horizontal"
             {...field}
@@ -50,13 +38,9 @@ const PaySystem = (adLength: IAdvertisementLength) => {
           </RadioGroup>
         )}
       />
-      {adLength.errors.advertisementLength && (
-        <Text
-          role="alert"
-          id={adLength.name + "Err"}
-          className="requestErrorText"
-        >
-          {adLength.errors.advertisementLength.message}
+      {form.formState.errors.advertisementLength && (
+        <Text role="alert" id={name + "Err"} className="requestErrorText">
+          {form.formState.errors.advertisementLength.message}
         </Text>
       )}
     </div>

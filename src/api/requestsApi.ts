@@ -1,6 +1,7 @@
 import { spWebContext } from "api/SPWebContext";
 import { useQuery } from "@tanstack/react-query";
 import { REQUESTTYPES } from "consts/RequestTypes";
+import { GENERALGRADES, ACQGRADES } from "consts/Grades";
 
 export interface RPARequest {
   //requestor: ;
@@ -10,6 +11,8 @@ export interface RPARequest {
   hireType: "Internal" | "External";
   advertisementLength: "Normal" | "Extended";
   lastIncumbent: string;
+  series: string;
+  grade: (typeof GENERALGRADES)[number] | (typeof ACQGRADES)[number];
 }
 
 /**

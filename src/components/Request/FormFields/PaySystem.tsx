@@ -1,27 +1,15 @@
 import { Combobox, Label, Option, Text } from "@fluentui/react-components";
-import {
-  Control,
-  Controller,
-  FieldErrors,
-  UseFormSetValue,
-} from "react-hook-form";
-import "../Request.css";
-import { RHFRequest } from "../NewRequestForm";
+import { Controller } from "react-hook-form";
+import { FormField } from "components/Request/NewRequestForm";
+import "components/Request/Request.css";
 import { DropdownIcon } from "@fluentui/react-icons-mdl2";
 import { PAYSYSTEMS } from "consts/PaySystems";
 
-interface IPaySystem {
-  name: string;
-  control: Control<RHFRequest, unknown>;
-  errors: FieldErrors<RHFRequest>;
-  setValue: UseFormSetValue<RHFRequest>;
-}
-
-const PaySystem = (paySystem: IPaySystem) => {
+const PaySystem = ({ name, form }: FormField) => {
   return (
     <div className="requestFieldContainer">
       <Label
-        id={paySystem.name + "Id"}
+        id={name + "Id"}
         size="small"
         weight="semibold"
         className="requestFieldLabel"
@@ -32,12 +20,12 @@ const PaySystem = (paySystem: IPaySystem) => {
       </Label>
       <Controller
         name="paySystem"
-        control={paySystem.control}
+        control={form.control}
         render={({ field }) => (
           <Combobox
-            aria-describedby={paySystem.name + "Err"}
-            aria-labelledby={paySystem.name + "Id"}
-            aria-invalid={paySystem.errors.paySystem ? "true" : "false"}
+            aria-describedby={name + "Err"}
+            aria-labelledby={name + "Id"}
+            aria-invalid={form.formState.errors.paySystem ? "true" : "false"}
             autoComplete="on"
             {...field}
             value={
@@ -45,9 +33,15 @@ const PaySystem = (paySystem: IPaySystem) => {
             }
             selectedOptions={[field.value ?? ""]}
             onOptionSelect={(_event, data) => {
-              paySystem.setValue("paySystem", data.optionValue ?? "", {
+              form.setValue("paySystem", data.optionValue ?? "", {
                 shouldValidate: true,
               });
+              // Only reset grade if changing to or from the NH pay system
+              if (data.optionValue === "NH" || field.value === "NH") {
+                form.setValue("grade", "", {
+                  shouldValidate: true,
+                });
+              }
             }}
           >
             {PAYSYSTEMS.map((paysys) => (
@@ -58,13 +52,9 @@ const PaySystem = (paySystem: IPaySystem) => {
           </Combobox>
         )}
       />
-      {paySystem.errors.paySystem && (
-        <Text
-          role="alert"
-          id={paySystem.name + "Id"}
-          className="requestErrorText"
-        >
-          {paySystem.errors.paySystem.message}
+      {form.formState.errors.paySystem && (
+        <Text role="alert" id={name + "Id"} className="requestErrorText">
+          {form.formState.errors.paySystem.message}
         </Text>
       )}
     </div>

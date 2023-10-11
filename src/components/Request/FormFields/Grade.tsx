@@ -1,11 +1,12 @@
 import { Combobox, Label, Option, Text } from "@fluentui/react-components";
 import { DropdownIcon } from "@fluentui/react-icons-mdl2";
-import { REQUESTTYPES } from "consts/RequestTypes";
+import { GENERALGRADES, ACQGRADES } from "consts/Grades";
 import { Controller } from "react-hook-form";
-import { FormField } from "components/Request/NewRequestForm";
 import "components/Request/Request.css";
+import { FormField } from "components/Request/NewRequestForm";
 
-const RequestType = ({ name, form }: FormField) => {
+const Grade = ({ name, form }: FormField) => {
+  const paySystem = form.watch("paySystem");
   return (
     <div className="requestFieldContainer">
       <Label
@@ -16,44 +17,50 @@ const RequestType = ({ name, form }: FormField) => {
         required
       >
         <DropdownIcon className="requestFieldIcon" />
-        Request Type
+        Grade
       </Label>
       <Controller
-        name="requestType"
+        name="grade"
         control={form.control}
         rules={{
           validate: (value) => {
-            return value?.length > 0 ? undefined : "Request Type is required";
+            return value?.length > 0 ? undefined : "Grade is required";
           },
         }}
         render={({ field }) => (
           <Combobox
             aria-describedby={name + "Err"}
             aria-labelledby={name + "Id"}
-            aria-invalid={form.formState.errors.requestType ? "true" : "false"}
+            aria-invalid={form.formState.errors.grade ? "true" : "false"}
             autoComplete="on"
             {...field}
             selectedOptions={[field.value ?? ""]}
             onOptionSelect={(_event, data) => {
-              form.setValue("requestType", data.optionValue ?? "", {
+              form.setValue("grade", data.optionValue ?? "", {
                 shouldValidate: true,
               });
             }}
           >
-            {REQUESTTYPES.map((reqType) => (
-              <Option key={reqType} value={reqType}>
-                {reqType}
-              </Option>
-            ))}
+            {paySystem === "NH"
+              ? ACQGRADES.map((reqType) => (
+                  <Option key={reqType} value={reqType}>
+                    {reqType}
+                  </Option>
+                ))
+              : GENERALGRADES.map((reqType) => (
+                  <Option key={reqType} value={reqType}>
+                    {reqType}
+                  </Option>
+                ))}
           </Combobox>
         )}
       />
-      {form.formState.errors.requestType && (
+      {form.formState.errors.grade && (
         <Text role="alert" id={name + "Err"} className="requestErrorText">
-          {form.formState.errors.requestType.message}
+          {form.formState.errors.grade.message}
         </Text>
       )}
     </div>
   );
 };
-export default RequestType;
+export default Grade;
