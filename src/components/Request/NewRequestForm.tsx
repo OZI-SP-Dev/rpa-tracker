@@ -194,7 +194,7 @@ const NewRequestForm = () => {
                 <Badge
                   size="extra-large"
                   appearance="ghost"
-                  color="danger"
+                  color="success"
                   icon={<CompletedIcon />}
                 />
               </Tooltip>
