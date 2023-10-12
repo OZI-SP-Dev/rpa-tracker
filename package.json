@@ -7,7 +7,7 @@
     "dev": "vite --open",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "build": "tsc && vite build && npm run postbuildclean",
-    "postbuildclean": "cat dist/index.aspx dist/index.html > dist/index.aspx && rm dist/index.html",
+    "postbuildclean": "cat dist/index.html >> dist/index.aspx && rm dist/index.html",
     "test": "vitest run"
   },
   "dependencies": {

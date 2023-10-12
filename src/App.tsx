@@ -11,13 +11,19 @@ import { ThemeProvider } from "@fluentui/react";
 import { FluentProvider, webLightTheme } from "@fluentui/react-components";
 import { UserProvider } from "providers/UserProvider";
 import { lazy, Suspense } from "react";
+import Home from "Home";
 
-const Home = lazy(() => import("Home"));
+// const Home = lazy(() => import("Home"));
+
+// Begin module download immediately, but still utilize lazy() for code splitting
+const newRequestFormPromise = import("components/Request/NewRequestForm");
+const NewRequestForm = lazy(() => newRequestFormPromise);
 
 const router = createHashRouter(
   createRoutesFromElements(
     <Route element={<MainLayout />}>
       <Route path="/" element={<Home />} />
+      <Route path="new" element={<NewRequestForm />} />
     </Route>
   )
 );
