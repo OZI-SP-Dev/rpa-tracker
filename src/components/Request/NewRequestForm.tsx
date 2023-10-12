@@ -168,8 +168,7 @@ const NewRequestForm = () => {
             )}
             {!addRequest.isLoading && (
               <Button appearance="primary" type="submit">
-                Submit Request
-                {!addRequest.isError ? "Create In Processing Request" : "Retry"}
+                {!addRequest.isError ? "Submit Request" : "Retry"}
               </Button>
             )}
             {addRequest.isError && (
