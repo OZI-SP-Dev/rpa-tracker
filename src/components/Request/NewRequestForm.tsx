@@ -1,7 +1,18 @@
-import { Label, Title1, Button } from "@fluentui/react-components";
+import {
+  Label,
+  Title1,
+  Button,
+  Spinner,
+  Tooltip,
+  Badge,
+} from "@fluentui/react-components";
 import { UseFormReturn, useForm } from "react-hook-form";
-import { ContactIcon } from "@fluentui/react-icons-mdl2";
-import { RPARequest } from "api/requestsApi";
+import {
+  AlertSolidIcon,
+  CompletedIcon,
+  ContactIcon,
+} from "@fluentui/react-icons-mdl2";
+import { RPARequest, useAddRequest } from "api/requestsApi";
 import { useCurrentUser } from "api/UserApi";
 import {
   RequestType,
@@ -48,7 +59,7 @@ export interface FormField {
 
 const NewRequestForm = () => {
   const user = useCurrentUser();
-  //const addRequest = useAddRequest();
+  const addRequest = useAddRequest();
 
   const myForm = useForm<RHFRequest>({
     defaultValues: {
@@ -79,8 +90,8 @@ const NewRequestForm = () => {
       ...data,
     } as RPARequest;
 
-    //const newRequest = await addRequest.mutateAsync(data2);
-    console.log(data2);
+    const newRequest = await addRequest.mutateAsync(data2);
+    console.log(newRequest);
   };
 
   return (
@@ -148,24 +159,20 @@ const NewRequestForm = () => {
 
         <div className="requestCreateButton">
           <div>
-            {/* {(addRequest.isLoading || addAdditionalInfo.isLoading) && (
+            {addRequest.isLoading && (
               <Spinner
                 style={{ justifyContent: "flex-start" }}
                 size="small"
                 label="Creating Request..."
               />
-            )} */}
-            {
-              // !addRequest.isLoading && !addAdditionalInfo.isLoading && (
+            )}
+            {!addRequest.isLoading && (
               <Button appearance="primary" type="submit">
                 Submit Request
-                {/* {!addRequest.isError && !addAdditionalInfo.isError
-                    ? "Create In Processing Request"
-                    : "Retry"} */}
+                {!addRequest.isError ? "Create In Processing Request" : "Retry"}
               </Button>
-              // )
-            }
-            {/* {addRequest.isError && (
+            )}
+            {addRequest.isError && (
               <Tooltip
                 content={
                   addRequest.error instanceof Error
@@ -181,24 +188,17 @@ const NewRequestForm = () => {
                   icon={<AlertSolidIcon />}
                 />
               </Tooltip>
-            )} */}
-            {/* {addAdditionalInfo.isError && (
-              <Tooltip
-                content={
-                  addAdditionalInfo.error instanceof Error
-                    ? addAdditionalInfo.error.message
-                    : "An error occurred."
-                }
-                relationship="label"
-              >
+            )}
+            {addRequest.isSuccess && (
+              <Tooltip content="Success!" relationship="label">
                 <Badge
                   size="extra-large"
                   appearance="ghost"
                   color="danger"
-                  icon={<AlertSolidIcon />}
+                  icon={<CompletedIcon />}
                 />
               </Tooltip>
-            )} */}
+            )}
           </div>
         </div>
       </form>

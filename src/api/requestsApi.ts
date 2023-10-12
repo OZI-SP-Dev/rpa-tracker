@@ -1,5 +1,5 @@
 import { spWebContext } from "api/SPWebContext";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { REQUESTTYPES } from "consts/RequestTypes";
 import { PAYSYSTEMS } from "consts/PaySystems";
 import { POSITIONSENSITIVIES } from "consts/PositionSensitivities";
@@ -7,6 +7,7 @@ import { GENERALGRADES, ACQGRADES } from "consts/Grades";
 
 export interface RPARequest {
   //requestor: ;
+  Id?: string;
   requestType: (typeof REQUESTTYPES)[number];
   mcrRequired: "Yes" | "No";
   paySystem: (typeof PAYSYSTEMS)[number]["key"];
@@ -78,3 +79,26 @@ const getRequests = async () => {
 //     Active: request.Active,
 //   };
 // };
+
+export const useAddRequest = () => {
+  const queryClient = useQueryClient();
+  return useMutation(
+    ["requests"],
+    async (newRequest: RPARequest) => {
+      const response = await spWebContext.web.lists
+        .getByTitle("requests")
+        .items.add(newRequest);
+
+      // Pass back the request that came to us, but add in the Id returned from SharePoint
+      const data = structuredClone(newRequest);
+      data.Id = response.data.Id;
+      return data;
+    },
+    {
+      onSuccess: async () => {
+        // Mark requests as needing refreshed
+        queryClient.invalidateQueries(["requests"]);
+      },
+    }
+  );
+};
