@@ -14,3 +14,5 @@ export { default as FMS } from "./FMS";
 export { default as OfficeSymbol } from "./OfficeSymbol";
 export { default as PositionSensitivity } from "./PositionSensitivity";
 export { default as DutyLocation } from "./DutyLocation";
+export { default as OSF } from "./OSF";
+export { default as OrgApprover } from "./OrgApprover";

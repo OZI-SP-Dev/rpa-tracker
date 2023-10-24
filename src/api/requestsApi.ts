@@ -4,6 +4,13 @@ import { REQUESTTYPES } from "consts/RequestTypes";
 import { PAYSYSTEMS } from "consts/PaySystems";
 import { POSITIONSENSITIVIES } from "consts/PositionSensitivities";
 import { GENERALGRADES, ACQGRADES } from "consts/Grades";
+import { OSFS } from "consts/OSFs";
+
+export interface Person {
+  Id: string;
+  EMail: string;
+  Title: string;
+}
 
 export interface RPARequest {
   //requestor: ;
@@ -23,62 +30,32 @@ export interface RPARequest {
   officeSymbol: string;
   positionSensitivity: (typeof POSITIONSENSITIVIES)[number]["key"];
   dutyLocation: string;
+  osf: (typeof OSFS)[number];
+  orgApprover?: Person;
 }
 
 /**
  * Gets all requests
- *
  */
 export const useRequests = () => {
   return useQuery({
     queryKey: ["requests"],
     queryFn: () => getRequests(),
     retry: false, // disable retries for initial setup
-    //select: transformCheckListItemsFromSP,
+    //select: transformRequestsFromSP,
   });
 };
 
-/**
- * Gets checklist items for current user's roles
- * Currently unable to filter specifically for where user is the Supervisor or Employee
- * Module using this function then filters for the correct supervisor/employee
- * @returns TypeTBD
- */
 const getRequests = async () => {
-  return spWebContext.web.lists.getByTitle("requests").items();
+  const requestedFields =
+    "*,orgApprover/Id,orgApprover/EMail,orgApprover/Title";
+  const expandedFields = "orgApprover";
+  return spWebContext.web.lists
+    .getByTitle("requests")
+    .items.select(requestedFields)
+    .expand(expandedFields)
+    .top(5000)();
 };
-
-// const transformCheckListItemFromSP = (
-//   request: ICheckListResponseItem
-// ): ICheckListItem => {
-//   let lead: RoleType;
-//   if (Object.values(RoleType).includes(request.Lead as RoleType)) {
-//     lead = request.Lead as RoleType;
-//   } else {
-//     // If the Lead specified in the record doesn't exist on our mapping -- make the Lead ADMIN
-//     lead = RoleType.ADMIN;
-//   }
-
-//   return {
-//     Id: request.Id,
-//     Title: request.Title,
-//     Description: request.Description,
-//     Lead: lead,
-//     CompletedDate: request.CompletedDate
-//       ? DateTime.fromISO(request.CompletedDate)
-//       : undefined,
-//     CompletedBy: request.CompletedBy
-//       ? new Person({
-//           Id: request.CompletedBy.Id,
-//           Title: request.CompletedBy.Title,
-//           EMail: request.CompletedBy.EMail,
-//         })
-//       : undefined,
-//     RequestId: request.RequestId,
-//     TemplateId: request.TemplateId,
-//     Active: request.Active,
-//   };
-// };
 
 export const useAddRequest = () => {
   const queryClient = useQueryClient();
@@ -87,7 +64,7 @@ export const useAddRequest = () => {
     async (newRequest: RPARequest) => {
       const response = await spWebContext.web.lists
         .getByTitle("requests")
-        .items.add(newRequest);
+        .items.add(await transformRequestToSP(newRequest));
 
       // Pass back the request that came to us, but add in the Id returned from SharePoint
       const data = structuredClone(newRequest);
@@ -101,4 +78,19 @@ export const useAddRequest = () => {
       },
     }
   );
+};
+
+type InternalRequestItem = Omit<RPARequest, "orgApprover"> & {
+  orgApproverId?: string;
+};
+
+const transformRequestToSP = async (
+  request: RPARequest
+): Promise<InternalRequestItem> => {
+  return {
+    // if an orgApprover has been selected, include them, otherwise leave the property off the object
+    ...(request.orgApprover && { orgApproverId: request.orgApprover.Id }),
+    // include the rest of the properties that match from the RPARequest
+    ...request,
+  };
 };

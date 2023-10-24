@@ -12,7 +12,7 @@ import {
   CompletedIcon,
   ContactIcon,
 } from "@fluentui/react-icons-mdl2";
-import { RPARequest, useAddRequest } from "api/requestsApi";
+import { Person, RPARequest, useAddRequest } from "api/requestsApi";
 import { useCurrentUser } from "api/UserApi";
 import {
   RequestType,
@@ -30,6 +30,8 @@ import {
   OfficeSymbol,
   PositionSensitivity,
   DutyLocation,
+  OSF,
+  OrgApprover,
 } from "components/Request/FormFields/FormFields";
 import "components/Request/Request.css";
 
@@ -50,6 +52,8 @@ export type RHFRequest = {
   officeSymbol: string;
   positionSensitivity: string;
   dutyLocation: string;
+  osf: string;
+  orgApprover?: Person;
 };
 
 export interface FormField {
@@ -78,6 +82,8 @@ const NewRequestForm = () => {
       officeSymbol: "",
       positionSensitivity: "",
       dutyLocation: "",
+      osf: "",
+      orgApprover: {},
     },
     criteriaMode:
       "all" /* Pass back multiple errors, so we can prioritize which one(s) to show */,
@@ -128,6 +134,10 @@ const NewRequestForm = () => {
         </div>
 
         <RequestType name="requestType" form={myForm} />
+
+        <OSF name="osf" form={myForm} />
+
+        <OrgApprover name="orgApprover" form={myForm} />
 
         <MCRRequired name="mcrRequired" form={myForm} />
 
