@@ -5,6 +5,7 @@ import {
   IBasePickerSuggestionsProps,
   ISuggestionItemProps,
   NormalPeoplePicker,
+  PeoplePickerItemSuggestion,
 } from "@fluentui/react/lib/Pickers";
 import { spWebContext } from "api/SPWebContext";
 import { IPeoplePickerEntity } from "@pnp/sp/profiles";
