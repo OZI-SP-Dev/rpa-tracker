@@ -1,1 +1,1 @@
-export const OSFS = ["GB", "HN", "HB", "KR", "WF", "NASO"];
+export const OSFS = ["GB", "HB", "HN", "KR", "WF", "NASO"];

@@ -32,6 +32,7 @@ import {
   DutyLocation,
   OSF,
   OrgApprover,
+  Methods,
 } from "components/Request/FormFields/FormFields";
 import "components/Request/Request.css";
 
@@ -54,6 +55,7 @@ export type RHFRequest = {
   dutyLocation: string;
   osf: string;
   orgApprover?: Person;
+  methods: string[];
 };
 
 export interface FormField {
@@ -83,6 +85,7 @@ const NewRequestForm = () => {
       positionSensitivity: "",
       dutyLocation: "",
       osf: "",
+      methods: [],
     },
     criteriaMode:
       "all" /* Pass back multiple errors, so we can prioritize which one(s) to show */,
@@ -165,6 +168,8 @@ const NewRequestForm = () => {
         <AdvertisementLength name="advertisementLength" form={myForm} />
 
         <Incumbent name="lastIncumbent" form={myForm} />
+
+        <Methods name="method" form={myForm} />
 
         <div className="requestCreateButton">
           <div>

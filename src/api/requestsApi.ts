@@ -32,6 +32,7 @@ export interface RPARequest {
   dutyLocation: string;
   osf: (typeof OSFS)[number];
   orgApprover?: Person;
+  methods: string[];
 }
 
 /**
@@ -80,8 +81,9 @@ export const useAddRequest = () => {
   );
 };
 
-type InternalRequestItem = Omit<RPARequest, "orgApprover"> & {
+type InternalRequestItem = Omit<RPARequest, "orgApprover" | "methods"> & {
   orgApproverId?: string;
+  methods: string;
 };
 
 const transformRequestToSP = async (
@@ -90,7 +92,7 @@ const transformRequestToSP = async (
   // desctructure the request object
   // this removes any named properties we don't want to send to SharePoint
   // rest object will include any remaining properties
-  const { orgApprover, ...rest } = request;
+  const { orgApprover, methods, ...rest } = request;
   let orgApproverId;
 
   if (orgApprover) {
@@ -107,6 +109,10 @@ const transformRequestToSP = async (
   return {
     // if an orgApprover has been selected, include them, otherwise leave the property off the object
     ...(orgApproverId && { orgApproverId: orgApproverId }),
+
+    // stringify methods for storage in SharePoint
+    methods: JSON.stringify(methods),
+
     // include the rest of the properties from the RPARequest
     ...rest,
   };
