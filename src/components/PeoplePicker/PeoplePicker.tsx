@@ -11,6 +11,13 @@ import { spWebContext } from "api/SPWebContext";
 import { IPeoplePickerEntity } from "@pnp/sp/profiles";
 import { LayerHost } from "@fluentui/react";
 
+// Custom Persona type so we can save Id and/or EMail with the item
+interface CustomPersona extends IPersonaProps {
+  Id: string;
+  Title: string;
+  EMail: string;
+}
+
 // TODO: Add a way to show as input needed/corrected
 
 const suggestionProps: IBasePickerSuggestionsProps = {
@@ -37,13 +44,16 @@ interface IPeoplePickerProps {
 export const PeoplePicker: FunctionComponent<IPeoplePickerProps> = (props) => {
   const picker = useRef(null);
 
-  //let selectedItems: Person[];
-  let selectedItems: IPersonaProps[];
+  let selectedItems: CustomPersona[];
   if (Array.isArray(props.selectedItems)) {
-    //selectedItems = [...props.selectedItems];
-    selectedItems = props.selectedItems.map((item) => ({ text: item.Title }));
+    selectedItems = props.selectedItems.map((item) => ({
+      ...item,
+      text: item.Title,
+    }));
   } else if (props.selectedItems) {
-    selectedItems = [{ text: props.selectedItems.Title }];
+    selectedItems = [
+      { ...props.selectedItems, text: props.selectedItems.Title },
+    ];
   } else {
     selectedItems = [];
   }
@@ -59,7 +69,7 @@ export const PeoplePicker: FunctionComponent<IPeoplePickerProps> = (props) => {
       const results = await spWebContext.profiles.clientPeoplePickerSearchUser({
         AllowEmailAddresses: false,
         AllowMultipleEntities: false,
-        MaximumEntitySuggestions: limitResults ? limitResults : 25,
+        MaximumEntitySuggestions: limitResults ?? 25,
         QueryString: filterText,
         PrincipalSource: 15, // PrincipalSource.All -- Cannot use the enum directly from PnPJS due to it being an ambient enum
         PrincipalType: 1, // PrincipalType.User -- Cannot use the enum directly from PnPJS due to it being an ambient enum
@@ -67,11 +77,12 @@ export const PeoplePicker: FunctionComponent<IPeoplePickerProps> = (props) => {
 
       const newPersonas: IPersonaProps[] = [];
       results.forEach((person: IPeoplePickerEntity) => {
-        const persona: IPersonaProps = {
-          //Id: -1,
-          //Title: person.DisplayText,
-          //EMail: person.EntityData.Email ? person.EntityData.Email : "",
+        const persona: CustomPersona = {
+          Id: person.EntityData.SPUserID ?? "-1",
+          Title: person.DisplayText,
+          EMail: person.EntityData.Email ?? "",
           text: person.DisplayText,
+          secondaryText: person.EntityData.Title,
         };
         newPersonas.push(persona);
       });

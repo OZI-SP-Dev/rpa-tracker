@@ -87,10 +87,27 @@ type InternalRequestItem = Omit<RPARequest, "orgApprover"> & {
 const transformRequestToSP = async (
   request: RPARequest
 ): Promise<InternalRequestItem> => {
+  // desctructure the request object
+  // this removes any named properties we don't want to send to SharePoint
+  // rest object will include any remaining properties
+  const { orgApprover, ...rest } = request;
+  let orgApproverId;
+
+  if (orgApprover) {
+    // resolve orgApprover is no current Id set
+    if (orgApprover.Id === "-1") {
+      orgApproverId = (
+        await spWebContext.web.ensureUser(orgApprover.EMail)
+      ).data.Id.toString();
+    } else {
+      orgApproverId = orgApprover.Id;
+    }
+  }
+
   return {
     // if an orgApprover has been selected, include them, otherwise leave the property off the object
-    ...(request.orgApprover && { orgApproverId: request.orgApprover.Id }),
-    // include the rest of the properties that match from the RPARequest
-    ...request,
+    ...(orgApproverId && { orgApproverId: orgApproverId }),
+    // include the rest of the properties from the RPARequest
+    ...rest,
   };
 };

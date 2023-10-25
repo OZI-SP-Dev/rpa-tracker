@@ -83,7 +83,6 @@ const NewRequestForm = () => {
       positionSensitivity: "",
       dutyLocation: "",
       osf: "",
-      orgApprover: {},
     },
     criteriaMode:
       "all" /* Pass back multiple errors, so we can prioritize which one(s) to show */,
