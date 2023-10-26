@@ -13,6 +13,7 @@ const IssueTo = ({ name, form }: FormField) => {
         size="small"
         weight="semibold"
         className="requestFieldLabel"
+        required
       >
         <ContactIcon className="requestFieldIcon" />
         Issue Certificate To

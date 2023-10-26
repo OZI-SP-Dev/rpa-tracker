@@ -40,6 +40,11 @@ import {
   IssueTo,
   FullPartTime,
   Salary,
+  Telework,
+  Remote,
+  PCS,
+  JOAQualifications,
+  JOAIdealCandidate,
 } from "components/Request/FormFields/FormFields";
 import "components/Request/Request.css";
 
@@ -69,6 +74,11 @@ export type RHFRequest = {
   fullPartTime: string;
   salaryLow: number;
   salaryHigh: number;
+  telework: string;
+  remote: string;
+  pcs: string;
+  joaQualifications: string;
+  joaIdealCandidate: string;
 };
 
 export interface FormField {
@@ -102,6 +112,11 @@ const NewRequestForm = () => {
       fullPartTime: "",
       salaryLow: 20999,
       salaryHigh: 31683,
+      telework: "",
+      remote: "",
+      pcs: "",
+      joaQualifications: "",
+      joaIdealCandidate: "",
     },
     criteriaMode:
       "all" /* Pass back multiple errors, so we can prioritize which one(s) to show */,
@@ -109,7 +124,6 @@ const NewRequestForm = () => {
   });
 
   const createNewRequest = async (data: RHFRequest) => {
-    //TODO: properly convert from RHFRequest to Request
     const data2 = {
       ...data,
     } as RPARequest;
@@ -213,9 +227,15 @@ const NewRequestForm = () => {
 
         <Salary name="salary" form={myForm} />
 
-        {/* <Telework name="telework" form={myForm} />
+        <Telework name="telework" form={myForm} />
 
-        <PCS name="pcs" form={myForm} /> */}
+        <Remote name="remote" form={myForm} />
+
+        <PCS name="pcs" form={myForm} />
+
+        <JOAQualifications name="joaQualifications" form={myForm} />
+
+        <JOAIdealCandidate name="joaIdealCandidate" form={myForm} />
 
         <div className="requestCreateButton">
           <div>

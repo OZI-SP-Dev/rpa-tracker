@@ -13,6 +13,7 @@ const Salary = ({ name, form }: FormField) => {
           size="small"
           weight="semibold"
           className="requestFieldLabel"
+          required
         >
           <NumberFieldIcon className="requestFieldIcon" />
           Salary Range
@@ -25,6 +26,10 @@ const Salary = ({ name, form }: FormField) => {
             max: {
               value: 999999,
               message: "Salary cannot exceed 6 digits",
+            },
+            min: {
+              value: 10000,
+              message: "Salary must be at least 5 digits",
             },
             validate: (value) => {
               return value >= Number(form.getValues("salaryHigh"))
@@ -58,6 +63,10 @@ const Salary = ({ name, form }: FormField) => {
             max: {
               value: 999999,
               message: "Salary cannot exceed 6 digits",
+            },
+            min: {
+              value: 10000,
+              message: "Salary must be at least 5 digits",
             },
             validate: (value) => {
               return value <= Number(form.getValues("salaryLow"))
