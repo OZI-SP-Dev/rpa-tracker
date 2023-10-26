@@ -96,7 +96,7 @@ const transformRequestToSP = async (
   let orgApproverId;
 
   if (orgApprover) {
-    // resolve orgApprover is no current Id set
+    // resolve orgApprover if no current Id set
     if (orgApprover.Id === "-1") {
       orgApproverId = (
         await spWebContext.web.ensureUser(orgApprover.EMail)
