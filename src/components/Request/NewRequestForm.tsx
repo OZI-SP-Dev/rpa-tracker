@@ -45,6 +45,9 @@ import {
   PCS,
   JOAQualifications,
   JOAIdealCandidate,
+  Temporary,
+  NTE,
+  Incentives,
 } from "components/Request/FormFields/FormFields";
 import "components/Request/Request.css";
 
@@ -79,6 +82,9 @@ export type RHFRequest = {
   pcs: string;
   joaQualifications: string;
   joaIdealCandidate: string;
+  temporary: string;
+  nte: Date;
+  incentives: string;
 };
 
 export interface FormField {
@@ -117,13 +123,19 @@ const NewRequestForm = () => {
       pcs: "",
       joaQualifications: "",
       joaIdealCandidate: "",
+      temporary: "",
+      incentives: "",
     },
     criteriaMode:
       "all" /* Pass back multiple errors, so we can prioritize which one(s) to show */,
     mode: "onChange" /* Provide input directly as they input, so if entering bad data (eg letter in MPCN) it will let them know */,
   });
 
-  const joa = myForm.watch("methods").includes("joa");
+  const methods = myForm.watch("methods");
+  const joa = methods.includes("joa");
+  const linkedinPost = methods.includes("linkedinPost");
+
+  const temporary = myForm.watch("temporary");
 
   const createNewRequest = async (data: RHFRequest) => {
     const data2 = {
@@ -217,7 +229,7 @@ const NewRequestForm = () => {
 
         <Methods name="methods" form={myForm} />
 
-        {joa && (
+        {joa && ( // TODO: Possibly make this it's own "page" in a wizard like sequence?
           <>
             <Divider inset>
               <Title2 align="center">JOA Additional Information</Title2>
@@ -240,6 +252,28 @@ const NewRequestForm = () => {
             <JOAQualifications name="joaQualifications" form={myForm} />
 
             <JOAIdealCandidate name="joaIdealCandidate" form={myForm} />
+          </>
+        )}
+
+        {linkedinPost && (
+          <>
+            <Divider inset>
+              <Title2 align="center">
+                LinkedIn Job Posting Additional Information
+              </Title2>
+            </Divider>
+
+            <Temporary name="temporary" form={myForm} />
+
+            {(temporary === "Term" || temporary === "Temp") && (
+              <NTE name="nte" form={myForm} />
+            )}
+
+            <Salary name="salary" form={myForm} />
+
+            <Incentives name="incentives" form={myForm} />
+
+            <Telework name="telework" form={myForm} />
           </>
         )}
 

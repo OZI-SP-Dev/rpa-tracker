@@ -44,6 +44,9 @@ export interface RPARequest {
   pcs: "Yes" | "No";
   joaQualifications: string;
   joaIdealCandidate: string;
+  temporary: "Full" | "Term" | "Temp";
+  nte: Date;
+  incentives: "Yes" | "No";
 }
 
 /**
