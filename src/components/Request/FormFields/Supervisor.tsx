@@ -13,6 +13,7 @@ const Supervisor = ({ name, form }: FormField) => {
         size="small"
         weight="semibold"
         className="requestFieldLabel"
+        required
       >
         <ContactIcon className="requestFieldIcon" />
         Supervisor
@@ -20,6 +21,9 @@ const Supervisor = ({ name, form }: FormField) => {
       <Controller
         name="supervisor"
         control={form.control}
+        rules={{
+          required: "Supervisor is required",
+        }}
         render={({ field }) => (
           <PeoplePicker
             ariaLabel="Supervisor"
