@@ -37,6 +37,7 @@ import {
   Methods,
   Supervisor,
   OrganizationalPOC,
+  IssueTo
 } from "components/Request/FormFields/FormFields";
 import "components/Request/Request.css";
 
@@ -62,6 +63,7 @@ export type RHFRequest = {
   methods: string[];
   supervisor: Person;
   organizationalPOC: Person;
+  issueTo: Person;
 };
 
 export interface FormField {
@@ -197,9 +199,9 @@ const NewRequestForm = () => {
 
         <OrganizationalPOC name="organizationalPOC" form={myForm} />
 
-        {/* <IssueTo name="issueTo" form={myForm} />
+        <IssueTo name="issueTo" form={myForm} />
 
-        <FullPartTime name="fullPartTime" form={myForm} />
+        {/* <FullPartTime name="fullPartTime" form={myForm} />
 
         <Salary name="salary" form={myForm} />
 

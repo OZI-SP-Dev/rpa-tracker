@@ -35,6 +35,7 @@ export interface RPARequest {
   methods: string[];
   supervisor: Person;
   organizationalPOC: Person;
+  issueTo: Person;
 }
 
 /**
@@ -85,12 +86,13 @@ export const useAddRequest = () => {
 
 type InternalRequestItem = Omit<
   RPARequest,
-  "orgApprover" | "methods" | "supervisor" | "organizationalPOC"
+  "orgApprover" | "methods" | "supervisor" | "organizationalPOC" | "issueTo"
 > & {
   orgApproverId?: string;
   methods: string;
   supervisorId: string;
   organizationalPOCId: string;
+  issueToId: string;
 };
 
 const transformRequestToSP = async (
@@ -99,8 +101,14 @@ const transformRequestToSP = async (
   // desctructure the request object
   // this removes any named properties we don't want to send to SharePoint
   // rest object will include any remaining properties
-  const { orgApprover, methods, supervisor, organizationalPOC, ...rest } =
-    request;
+  const {
+    orgApprover,
+    methods,
+    supervisor,
+    organizationalPOC,
+    issueTo,
+    ...rest
+  } = request;
 
   let orgApproverId;
   if (orgApprover) {
@@ -132,6 +140,15 @@ const transformRequestToSP = async (
     ).data.Id.toString();
   }
 
+  let issueToId;
+  if (issueTo.Id) {
+    issueToId = issueTo.Id;
+  } else {
+    issueToId = (
+      await spWebContext.web.ensureUser(issueTo.EMail)
+    ).data.Id.toString();
+  }
+
   return {
     // if an orgApprover has been selected, include them, otherwise leave the property off the object
     ...(orgApproverId && { orgApproverId: orgApproverId }),
@@ -139,6 +156,7 @@ const transformRequestToSP = async (
     methods: JSON.stringify(methods), // stringify methods for storage in SharePoint
     supervisorId: supervisorId,
     organizationalPOCId: organizationalPOCId,
+    issueToId: issueToId,
 
     // include the rest of the properties from the RPARequest
     ...rest,
