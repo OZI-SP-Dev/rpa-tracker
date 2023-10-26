@@ -22,7 +22,7 @@ const OrgApprover = ({ name, form }: FormField) => {
         control={form.control}
         render={({ field }) => (
           <PeoplePicker
-            ariaLabel="Org Aprover"
+            ariaLabel="Org Approver"
             aria-describedby={name + "Err"}
             aria-labelledby={name + "Id"}
             aria-invalid={form.formState.errors.osf ? "true" : "false"}
