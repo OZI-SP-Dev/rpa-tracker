@@ -34,6 +34,7 @@ export interface RPARequest {
   orgApprover?: Person;
   methods: string[];
   supervisor: Person;
+  organizationalPOC: Person;
 }
 
 /**
@@ -84,11 +85,12 @@ export const useAddRequest = () => {
 
 type InternalRequestItem = Omit<
   RPARequest,
-  "orgApprover" | "methods" | "supervisor"
+  "orgApprover" | "methods" | "supervisor" | "organizationalPOC"
 > & {
   orgApproverId?: string;
   methods: string;
   supervisorId: string;
+  organizationalPOCId: string;
 };
 
 const transformRequestToSP = async (
@@ -97,7 +99,8 @@ const transformRequestToSP = async (
   // desctructure the request object
   // this removes any named properties we don't want to send to SharePoint
   // rest object will include any remaining properties
-  const { orgApprover, methods, supervisor, ...rest } = request;
+  const { orgApprover, methods, supervisor, organizationalPOC, ...rest } =
+    request;
 
   let orgApproverId;
   if (orgApprover) {
@@ -120,14 +123,22 @@ const transformRequestToSP = async (
     ).data.Id.toString();
   }
 
+  let organizationalPOCId;
+  if (organizationalPOC.Id) {
+    organizationalPOCId = organizationalPOC.Id;
+  } else {
+    organizationalPOCId = (
+      await spWebContext.web.ensureUser(organizationalPOC.EMail)
+    ).data.Id.toString();
+  }
+
   return {
     // if an orgApprover has been selected, include them, otherwise leave the property off the object
     ...(orgApproverId && { orgApproverId: orgApproverId }),
 
-    // stringify methods for storage in SharePoint
-    methods: JSON.stringify(methods),
-
+    methods: JSON.stringify(methods), // stringify methods for storage in SharePoint
     supervisorId: supervisorId,
+    organizationalPOCId: organizationalPOCId,
 
     // include the rest of the properties from the RPARequest
     ...rest,

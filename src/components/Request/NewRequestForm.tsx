@@ -36,6 +36,7 @@ import {
   OrgApprover,
   Methods,
   Supervisor,
+  OrganizationalPOC,
 } from "components/Request/FormFields/FormFields";
 import "components/Request/Request.css";
 
@@ -60,6 +61,7 @@ export type RHFRequest = {
   orgApprover?: Person;
   methods: string[];
   supervisor: Person;
+  organizationalPOC: Person;
 };
 
 export interface FormField {
@@ -90,7 +92,6 @@ const NewRequestForm = () => {
       dutyLocation: "",
       osf: "",
       methods: [],
-      supervisor: [],
     },
     criteriaMode:
       "all" /* Pass back multiple errors, so we can prioritize which one(s) to show */,
@@ -189,6 +190,22 @@ const NewRequestForm = () => {
         <AdvertisementLength name="advertisementLength" form={myForm} />
 
         <Methods name="method" form={myForm} />
+
+        <Divider inset>
+          <Title2 align="center">JOA Additional Information</Title2>
+        </Divider>
+
+        <OrganizationalPOC name="organizationalPOC" form={myForm} />
+
+        {/* <IssueTo name="issueTo" form={myForm} />
+
+        <FullPartTime name="fullPartTime" form={myForm} />
+
+        <Salary name="salary" form={myForm} />
+
+        <Telework name="telework" form={myForm} />
+
+        <PCS name="pcs" form={myForm} /> */}
 
         <div className="requestCreateButton">
           <div>
