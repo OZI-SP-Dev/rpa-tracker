@@ -28,7 +28,9 @@ const OrganizationalPOC = ({ name, form }: FormField) => {
             ariaLabel="Organizational POC"
             aria-describedby={name + "Err"}
             aria-labelledby={name + "Id"}
-            aria-invalid={form.formState.errors.osf ? "true" : "false"}
+            aria-invalid={
+              form.formState.errors.organizationalPOC ? "true" : "false"
+            }
             selectedItems={field.value ?? []}
             updatePeople={(items) => {
               if (items?.[0]?.Title) {

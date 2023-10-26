@@ -37,6 +37,8 @@ export interface RPARequest {
   organizationalPOC: Person;
   issueTo: Person;
   fullPartTime: "Full" | "Part";
+  salaryLow: number;
+  salaryHigh: number;
 }
 
 /**
