@@ -57,7 +57,7 @@ const Methods = ({ name, form }: FormField) => {
             />
             <Checkbox
               id={name + "Id"}
-              label="LinkedIn Job Posting' will be selectable"
+              label="LinkedIn Job Posting"
               checked={field.value?.some((item) => item === "linkedinPost")}
               aria-describedby={name + "Err"}
               onChange={(e) => {
