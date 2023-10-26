@@ -17,3 +17,4 @@ export { default as DutyLocation } from "./DutyLocation";
 export { default as OSF } from "./OSF";
 export { default as OrgApprover } from "./OrgApprover";
 export { default as Methods } from "./Methods";
+export { default as Supervisor } from "./Supervisor";

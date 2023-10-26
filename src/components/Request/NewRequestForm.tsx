@@ -5,6 +5,8 @@ import {
   Spinner,
   Tooltip,
   Badge,
+  Title2,
+  Divider,
 } from "@fluentui/react-components";
 import { UseFormReturn, useForm } from "react-hook-form";
 import {
@@ -33,6 +35,7 @@ import {
   OSF,
   OrgApprover,
   Methods,
+  Supervisor,
 } from "components/Request/FormFields/FormFields";
 import "components/Request/Request.css";
 
@@ -56,6 +59,7 @@ export type RHFRequest = {
   osf: string;
   orgApprover?: Person;
   methods: string[];
+  supervisor: Person;
 };
 
 export interface FormField {
@@ -86,6 +90,7 @@ const NewRequestForm = () => {
       dutyLocation: "",
       osf: "",
       methods: [],
+      supervisor: [],
     },
     criteriaMode:
       "all" /* Pass back multiple errors, so we can prioritize which one(s) to show */,
@@ -120,6 +125,10 @@ const NewRequestForm = () => {
         className="requestFormContainer"
         onSubmit={myForm.handleSubmit(createNewRequest)}
       >
+        <Divider inset>
+          <Title2 align="center">Routing Information</Title2>
+        </Divider>
+
         {/* Requestor */}
         <div className="requestFieldContainer">
           <Label
@@ -143,6 +152,10 @@ const NewRequestForm = () => {
 
         <MCRRequired name="mcrRequired" form={myForm} />
 
+        <Divider inset>
+          <Title2 align="center">Position Information</Title2>
+        </Divider>
+
         <PositionTitle name="positionTitle" form={myForm} />
 
         <PaySystem name="paySystem" form={myForm} />
@@ -151,23 +164,29 @@ const NewRequestForm = () => {
 
         <Grade name="grade" form={myForm} />
 
+        <OfficeSymbol name="officeSymbol" form={myForm} />
+
+        <Supervisor name="supervisor" form={myForm} />
+
         <MPCN name="mpcn" form={myForm} />
 
         <CPCN name="cpcn" form={myForm} />
 
         <FMS name="fms" form={myForm} />
 
-        <OfficeSymbol name="officeSymbol" form={myForm} />
-
         <PositionSensitivity name="positionSensitivity" form={myForm} />
 
         <DutyLocation name="dutyLocation" form={myForm} />
 
+        <Incumbent name="lastIncumbent" form={myForm} />
+
+        <Divider inset>
+          <Title2 align="center">Hiring Information</Title2>
+        </Divider>
+
         <HiringType name="hiringType" form={myForm} />
 
         <AdvertisementLength name="advertisementLength" form={myForm} />
-
-        <Incumbent name="lastIncumbent" form={myForm} />
 
         <Methods name="method" form={myForm} />
 
