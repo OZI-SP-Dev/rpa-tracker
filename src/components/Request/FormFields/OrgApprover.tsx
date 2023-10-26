@@ -29,16 +29,17 @@ const OrgApprover = ({ name, form }: FormField) => {
             selectedItems={field.value ?? []}
             updatePeople={(items) => {
               if (items?.[0]?.Title) {
-                //setValue("empName", items[0].Title, { shouldValidate: true });
                 field.onChange(items[0]);
               } else {
-                //setValue("empName", "", { shouldValidate: true });
                 field.onChange([]);
               }
             }}
           />
         )}
       />
+      <Text>
+        For orgs that have additional internal approvals such as CROWS and WAC
+      </Text>
       {form.formState.errors.orgApprover && (
         <Text role="alert" id={name + "Err"} className="requestErrorText">
           {form.formState.errors.orgApprover.message}

@@ -21,7 +21,7 @@ const Methods = ({ name, form }: FormField) => {
         name="methods"
         control={form.control}
         rules={{
-          validate: (_value, formValues) => formValues.methods.length > 0,
+          required: "At least one Announcement Method is required",
         }}
         render={({ field }) => (
           <>
@@ -105,7 +105,7 @@ const Methods = ({ name, form }: FormField) => {
       />
       {form.formState.errors.methods && (
         <Text role="alert" id={name + "Err"} className="requestErrorText">
-          At least one Announcement Method is required
+          {form.formState.errors.methods.message}
         </Text>
       )}
     </div>
