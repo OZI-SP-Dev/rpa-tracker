@@ -123,6 +123,8 @@ const NewRequestForm = () => {
     mode: "onChange" /* Provide input directly as they input, so if entering bad data (eg letter in MPCN) it will let them know */,
   });
 
+  const joa = myForm.watch("methods").includes("joa");
+
   const createNewRequest = async (data: RHFRequest) => {
     const data2 = {
       ...data,
@@ -213,29 +215,33 @@ const NewRequestForm = () => {
 
         <AdvertisementLength name="advertisementLength" form={myForm} />
 
-        <Methods name="method" form={myForm} />
+        <Methods name="methods" form={myForm} />
 
-        <Divider inset>
-          <Title2 align="center">JOA Additional Information</Title2>
-        </Divider>
+        {joa && (
+          <>
+            <Divider inset>
+              <Title2 align="center">JOA Additional Information</Title2>
+            </Divider>
 
-        <OrganizationalPOC name="organizationalPOC" form={myForm} />
+            <OrganizationalPOC name="organizationalPOC" form={myForm} />
 
-        <IssueTo name="issueTo" form={myForm} />
+            <IssueTo name="issueTo" form={myForm} />
 
-        <FullPartTime name="fullPartTime" form={myForm} />
+            <FullPartTime name="fullPartTime" form={myForm} />
 
-        <Salary name="salary" form={myForm} />
+            <Salary name="salary" form={myForm} />
 
-        <Telework name="telework" form={myForm} />
+            <Telework name="telework" form={myForm} />
 
-        <Remote name="remote" form={myForm} />
+            <Remote name="remote" form={myForm} />
 
-        <PCS name="pcs" form={myForm} />
+            <PCS name="pcs" form={myForm} />
 
-        <JOAQualifications name="joaQualifications" form={myForm} />
+            <JOAQualifications name="joaQualifications" form={myForm} />
 
-        <JOAIdealCandidate name="joaIdealCandidate" form={myForm} />
+            <JOAIdealCandidate name="joaIdealCandidate" form={myForm} />
+          </>
+        )}
 
         <div className="requestCreateButton">
           <div>

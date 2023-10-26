@@ -34,8 +34,8 @@ export interface RPARequest {
   orgApprover?: Person;
   methods: string[];
   supervisor: Person;
-  organizationalPOC: Person;
-  issueTo: Person;
+  organizationalPOC?: Person;
+  issueTo?: Person;
   fullPartTime: "Full" | "Part";
   salaryLow: number;
   salaryHigh: number;
@@ -99,8 +99,8 @@ type InternalRequestItem = Omit<
   orgApproverId?: string;
   methods: string;
   supervisorId: string;
-  organizationalPOCId: string;
-  issueToId: string;
+  organizationalPOCId?: string;
+  issueToId?: string;
 };
 
 const transformRequestToSP = async (
@@ -131,40 +131,44 @@ const transformRequestToSP = async (
   }
 
   let supervisorId;
-  if (supervisor.Id) {
-    supervisorId = supervisor.Id;
-  } else {
+  if (supervisor.Id === "-1") {
     supervisorId = (
       await spWebContext.web.ensureUser(supervisor.EMail)
     ).data.Id.toString();
+  } else {
+    supervisorId = supervisor.Id;
   }
 
   let organizationalPOCId;
-  if (organizationalPOC.Id) {
-    organizationalPOCId = organizationalPOC.Id;
-  } else {
-    organizationalPOCId = (
-      await spWebContext.web.ensureUser(organizationalPOC.EMail)
-    ).data.Id.toString();
+  if (organizationalPOC) {
+    if (organizationalPOC.Id === "-1") {
+      organizationalPOCId = (
+        await spWebContext.web.ensureUser(organizationalPOC.EMail)
+      ).data.Id.toString();
+    } else {
+      organizationalPOCId = organizationalPOC.Id;
+    }
   }
 
   let issueToId;
-  if (issueTo.Id) {
-    issueToId = issueTo.Id;
-  } else {
-    issueToId = (
-      await spWebContext.web.ensureUser(issueTo.EMail)
-    ).data.Id.toString();
+  if (issueTo) {
+    if (issueTo.Id) {
+      issueToId = issueTo.Id;
+    } else {
+      issueToId = (
+        await spWebContext.web.ensureUser(issueTo.EMail)
+      ).data.Id.toString();
+    }
   }
 
   return {
-    // if an orgApprover has been selected, include them, otherwise leave the property off the object
+    // if optional Person fields have been selected, include them
     ...(orgApproverId && { orgApproverId: orgApproverId }),
+    ...(organizationalPOC && { organizationalPOCId: organizationalPOCId }),
+    ...(issueTo && { issueToId: issueToId }),
 
-    methods: JSON.stringify(methods), // stringify methods for storage in SharePoint
-    supervisorId: supervisorId,
-    organizationalPOCId: organizationalPOCId,
-    issueToId: issueToId,
+    methods: JSON.stringify(methods), // stringify array of methods for storage in SharePoint
+    supervisorId: supervisorId, // Required Person field
 
     // include the rest of the properties from the RPARequest
     ...rest,
