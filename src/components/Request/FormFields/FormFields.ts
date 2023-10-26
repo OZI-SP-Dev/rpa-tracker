@@ -20,3 +20,4 @@ export { default as Methods } from "./Methods";
 export { default as Supervisor } from "./Supervisor";
 export { default as OrganizationalPOC } from "./OrganizationalPOC";
 export { default as IssueTo } from "./IssueTo";
+export { default as FullPartTime } from "./FullPartTime";

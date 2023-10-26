@@ -37,7 +37,8 @@ import {
   Methods,
   Supervisor,
   OrganizationalPOC,
-  IssueTo
+  IssueTo,
+  FullPartTime,
 } from "components/Request/FormFields/FormFields";
 import "components/Request/Request.css";
 
@@ -64,6 +65,7 @@ export type RHFRequest = {
   supervisor: Person;
   organizationalPOC: Person;
   issueTo: Person;
+  fullPartTime: string;
 };
 
 export interface FormField {
@@ -94,6 +96,7 @@ const NewRequestForm = () => {
       dutyLocation: "",
       osf: "",
       methods: [],
+      fullPartTime: "",
     },
     criteriaMode:
       "all" /* Pass back multiple errors, so we can prioritize which one(s) to show */,
@@ -201,9 +204,9 @@ const NewRequestForm = () => {
 
         <IssueTo name="issueTo" form={myForm} />
 
-        {/* <FullPartTime name="fullPartTime" form={myForm} />
+        <FullPartTime name="fullPartTime" form={myForm} />
 
-        <Salary name="salary" form={myForm} />
+        {/* <Salary name="salary" form={myForm} />
 
         <Telework name="telework" form={myForm} />
 

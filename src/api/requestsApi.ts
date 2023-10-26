@@ -36,6 +36,7 @@ export interface RPARequest {
   supervisor: Person;
   organizationalPOC: Person;
   issueTo: Person;
+  fullPartTime: "Full" | "Part";
 }
 
 /**
