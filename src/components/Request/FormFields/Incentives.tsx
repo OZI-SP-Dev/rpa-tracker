@@ -15,7 +15,7 @@ const Incentives = ({ name, form }: FormField) => {
         required
       >
         <RadioButtonFilled className="requestFieldIcon" />
-        Recuitment, Retention, and Relocations incentives are avialable
+        Recruitment, Retention, and Relocation incentives are available
       </Label>
       <Controller
         name="incentives"
