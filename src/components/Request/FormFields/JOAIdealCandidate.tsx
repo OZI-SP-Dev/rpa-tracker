@@ -27,12 +27,12 @@ const JOAIdealCandidate = ({ name, form }: FormField) => {
           <Textarea
             {...field}
             resize="vertical"
+            rows={10}
             aria-describedby={name + "Err"}
             aria-invalid={
               form.formState.errors.joaIdealCandidate ? "true" : "false"
             }
             id={name + "Id"}
-            style={{ height: "20em" }}
           />
         )}
       />

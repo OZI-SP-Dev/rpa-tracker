@@ -27,12 +27,12 @@ const JOAQualifications = ({ name, form }: FormField) => {
           <Textarea
             {...field}
             resize="vertical"
+            rows={10}
             aria-describedby={name + "Err"}
             aria-invalid={
               form.formState.errors.joaQualifications ? "true" : "false"
             }
             id={name + "Id"}
-            style={{ height: "20em" }}
           />
         )}
       />
