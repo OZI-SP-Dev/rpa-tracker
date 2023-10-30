@@ -36,6 +36,7 @@ const NTE = ({ name, form }: FormField) => {
             aria-labelledby={name + "Id"}
             aria-invalid={form.formState.errors.nte ? "true" : "false"}
             formatDate={onFormatDate}
+            onSelectDate={field.onChange}
             {...field}
           />
         )}
