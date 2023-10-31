@@ -5,6 +5,8 @@ import {
   Spinner,
   Tooltip,
   Badge,
+  Title2,
+  Divider,
 } from "@fluentui/react-components";
 import { UseFormReturn, useForm } from "react-hook-form";
 import {
@@ -12,7 +14,7 @@ import {
   CompletedIcon,
   ContactIcon,
 } from "@fluentui/react-icons-mdl2";
-import { RPARequest, useAddRequest } from "api/requestsApi";
+import { Person, RPARequest, useAddRequest } from "api/requestsApi";
 import { useCurrentUser } from "api/UserApi";
 import {
   RequestType,
@@ -30,6 +32,22 @@ import {
   OfficeSymbol,
   PositionSensitivity,
   DutyLocation,
+  OSF,
+  OrgApprover,
+  Methods,
+  Supervisor,
+  OrganizationalPOC,
+  IssueTo,
+  FullPartTime,
+  Salary,
+  Telework,
+  Remote,
+  PCS,
+  JOAQualifications,
+  JOAIdealCandidate,
+  Temporary,
+  NTE,
+  Incentives,
 } from "components/Request/FormFields/FormFields";
 import "components/Request/Request.css";
 
@@ -50,6 +68,23 @@ export type RHFRequest = {
   officeSymbol: string;
   positionSensitivity: string;
   dutyLocation: string;
+  osf: string;
+  orgApprover?: Person;
+  methods: string[];
+  supervisor: Person;
+  organizationalPOC: Person;
+  issueTo: Person;
+  fullPartTime: string;
+  salaryLow: number;
+  salaryHigh: number;
+  telework: string;
+  remote: string;
+  pcs: string;
+  joaQualifications: string;
+  joaIdealCandidate: string;
+  temporary: string;
+  nte: Date;
+  incentives: string;
 };
 
 export interface FormField {
@@ -78,14 +113,31 @@ const NewRequestForm = () => {
       officeSymbol: "",
       positionSensitivity: "",
       dutyLocation: "",
+      osf: "",
+      methods: [],
+      fullPartTime: "",
+      salaryLow: 20999,
+      salaryHigh: 31683,
+      telework: "",
+      remote: "",
+      pcs: "",
+      joaQualifications: "",
+      joaIdealCandidate: "",
+      temporary: "",
+      incentives: "",
     },
     criteriaMode:
       "all" /* Pass back multiple errors, so we can prioritize which one(s) to show */,
     mode: "onChange" /* Provide input directly as they input, so if entering bad data (eg letter in MPCN) it will let them know */,
   });
 
+  const methods = myForm.watch("methods");
+  const joa = methods.includes("joa");
+  const linkedinPost = methods.includes("linkedinPost");
+
+  const temporary = myForm.watch("temporary");
+
   const createNewRequest = async (data: RHFRequest) => {
-    //TODO: properly convert from RHFRequest to Request
     const data2 = {
       ...data,
     } as RPARequest;
@@ -112,6 +164,10 @@ const NewRequestForm = () => {
         className="requestFormContainer"
         onSubmit={myForm.handleSubmit(createNewRequest)}
       >
+        <Divider inset>
+          <Title2 align="center">Routing Information</Title2>
+        </Divider>
+
         {/* Requestor */}
         <div className="requestFieldContainer">
           <Label
@@ -129,7 +185,15 @@ const NewRequestForm = () => {
 
         <RequestType name="requestType" form={myForm} />
 
+        <OSF name="osf" form={myForm} />
+
+        <OrgApprover name="orgApprover" form={myForm} />
+
         <MCRRequired name="mcrRequired" form={myForm} />
+
+        <Divider inset>
+          <Title2 align="center">Position Information</Title2>
+        </Divider>
 
         <PositionTitle name="positionTitle" form={myForm} />
 
@@ -139,23 +203,79 @@ const NewRequestForm = () => {
 
         <Grade name="grade" form={myForm} />
 
+        <OfficeSymbol name="officeSymbol" form={myForm} />
+
+        <Supervisor name="supervisor" form={myForm} />
+
         <MPCN name="mpcn" form={myForm} />
 
         <CPCN name="cpcn" form={myForm} />
 
         <FMS name="fms" form={myForm} />
 
-        <OfficeSymbol name="officeSymbol" form={myForm} />
-
         <PositionSensitivity name="positionSensitivity" form={myForm} />
 
         <DutyLocation name="dutyLocation" form={myForm} />
+
+        <Incumbent name="lastIncumbent" form={myForm} />
+
+        <Divider inset>
+          <Title2 align="center">Hiring Information</Title2>
+        </Divider>
 
         <HiringType name="hiringType" form={myForm} />
 
         <AdvertisementLength name="advertisementLength" form={myForm} />
 
-        <Incumbent name="lastIncumbent" form={myForm} />
+        <Methods name="methods" form={myForm} />
+
+        {joa && ( // TODO: Possibly make this it's own "page" in a wizard like sequence?
+          <>
+            <Divider inset>
+              <Title2 align="center">JOA Additional Information</Title2>
+            </Divider>
+
+            <OrganizationalPOC name="organizationalPOC" form={myForm} />
+
+            <IssueTo name="issueTo" form={myForm} />
+
+            <FullPartTime name="fullPartTime" form={myForm} />
+
+            <Salary name="salary" form={myForm} />
+
+            <Telework name="telework" form={myForm} />
+
+            <Remote name="remote" form={myForm} />
+
+            <PCS name="pcs" form={myForm} />
+
+            <JOAQualifications name="joaQualifications" form={myForm} />
+
+            <JOAIdealCandidate name="joaIdealCandidate" form={myForm} />
+          </>
+        )}
+
+        {linkedinPost && (
+          <>
+            <Divider inset>
+              <Title2 align="center">
+                LinkedIn Job Posting Additional Information
+              </Title2>
+            </Divider>
+
+            <Temporary name="temporary" form={myForm} />
+
+            {(temporary === "Term" || temporary === "Temp") && (
+              <NTE name="nte" form={myForm} />
+            )}
+
+            <Salary name="salary" form={myForm} />
+
+            <Incentives name="incentives" form={myForm} />
+
+            <Telework name="telework" form={myForm} />
+          </>
+        )}
 
         <div className="requestCreateButton">
           <div>

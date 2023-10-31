@@ -4,6 +4,13 @@ import { REQUESTTYPES } from "consts/RequestTypes";
 import { PAYSYSTEMS } from "consts/PaySystems";
 import { POSITIONSENSITIVIES } from "consts/PositionSensitivities";
 import { GENERALGRADES, ACQGRADES } from "consts/Grades";
+import { OSFS } from "consts/OSFs";
+
+export interface Person {
+  Id: string;
+  EMail: string;
+  Title: string;
+}
 
 export interface RPARequest {
   //requestor: ;
@@ -23,62 +30,47 @@ export interface RPARequest {
   officeSymbol: string;
   positionSensitivity: (typeof POSITIONSENSITIVIES)[number]["key"];
   dutyLocation: string;
+  osf: (typeof OSFS)[number];
+  orgApprover?: Person;
+  methods: string[];
+  supervisor: Person;
+  organizationalPOC?: Person;
+  issueTo?: Person;
+  fullPartTime: "Full" | "Part";
+  salaryLow: number;
+  salaryHigh: number;
+  telework: "Yes" | "No";
+  remote: "Yes" | "No";
+  pcs: "Yes" | "No";
+  joaQualifications: string;
+  joaIdealCandidate: string;
+  temporary: "Full" | "Term" | "Temp";
+  nte: Date;
+  incentives: "Yes" | "No";
 }
 
 /**
  * Gets all requests
- *
  */
 export const useRequests = () => {
   return useQuery({
     queryKey: ["requests"],
     queryFn: () => getRequests(),
     retry: false, // disable retries for initial setup
-    //select: transformCheckListItemsFromSP,
+    //select: transformRequestsFromSP,
   });
 };
 
-/**
- * Gets checklist items for current user's roles
- * Currently unable to filter specifically for where user is the Supervisor or Employee
- * Module using this function then filters for the correct supervisor/employee
- * @returns TypeTBD
- */
 const getRequests = async () => {
-  return spWebContext.web.lists.getByTitle("requests").items();
+  const requestedFields =
+    "*,orgApprover/Id,orgApprover/EMail,orgApprover/Title";
+  const expandedFields = "orgApprover";
+  return spWebContext.web.lists
+    .getByTitle("requests")
+    .items.select(requestedFields)
+    .expand(expandedFields)
+    .top(5000)();
 };
-
-// const transformCheckListItemFromSP = (
-//   request: ICheckListResponseItem
-// ): ICheckListItem => {
-//   let lead: RoleType;
-//   if (Object.values(RoleType).includes(request.Lead as RoleType)) {
-//     lead = request.Lead as RoleType;
-//   } else {
-//     // If the Lead specified in the record doesn't exist on our mapping -- make the Lead ADMIN
-//     lead = RoleType.ADMIN;
-//   }
-
-//   return {
-//     Id: request.Id,
-//     Title: request.Title,
-//     Description: request.Description,
-//     Lead: lead,
-//     CompletedDate: request.CompletedDate
-//       ? DateTime.fromISO(request.CompletedDate)
-//       : undefined,
-//     CompletedBy: request.CompletedBy
-//       ? new Person({
-//           Id: request.CompletedBy.Id,
-//           Title: request.CompletedBy.Title,
-//           EMail: request.CompletedBy.EMail,
-//         })
-//       : undefined,
-//     RequestId: request.RequestId,
-//     TemplateId: request.TemplateId,
-//     Active: request.Active,
-//   };
-// };
 
 export const useAddRequest = () => {
   const queryClient = useQueryClient();
@@ -87,7 +79,7 @@ export const useAddRequest = () => {
     async (newRequest: RPARequest) => {
       const response = await spWebContext.web.lists
         .getByTitle("requests")
-        .items.add(newRequest);
+        .items.add(await transformRequestToSP(newRequest));
 
       // Pass back the request that came to us, but add in the Id returned from SharePoint
       const data = structuredClone(newRequest);
@@ -101,4 +93,87 @@ export const useAddRequest = () => {
       },
     }
   );
+};
+
+type InternalRequestItem = Omit<
+  RPARequest,
+  "orgApprover" | "methods" | "supervisor" | "organizationalPOC" | "issueTo"
+> & {
+  orgApproverId?: string;
+  methods: string;
+  supervisorId: string;
+  organizationalPOCId?: string;
+  issueToId?: string;
+};
+
+const transformRequestToSP = async (
+  request: RPARequest
+): Promise<InternalRequestItem> => {
+  // desctructure the request object
+  // this removes any named properties we don't want to send to SharePoint
+  // rest object will include any remaining properties
+  const {
+    orgApprover,
+    methods,
+    supervisor,
+    organizationalPOC,
+    issueTo,
+    ...rest
+  } = request;
+
+  let orgApproverId;
+  if (orgApprover) {
+    // resolve orgApprover if no current Id set
+    if (orgApprover.Id === "-1") {
+      orgApproverId = (
+        await spWebContext.web.ensureUser(orgApprover.EMail)
+      ).data.Id.toString();
+    } else {
+      orgApproverId = orgApprover.Id;
+    }
+  }
+
+  let supervisorId;
+  if (supervisor.Id === "-1") {
+    supervisorId = (
+      await spWebContext.web.ensureUser(supervisor.EMail)
+    ).data.Id.toString();
+  } else {
+    supervisorId = supervisor.Id;
+  }
+
+  let organizationalPOCId;
+  if (organizationalPOC) {
+    if (organizationalPOC.Id === "-1") {
+      organizationalPOCId = (
+        await spWebContext.web.ensureUser(organizationalPOC.EMail)
+      ).data.Id.toString();
+    } else {
+      organizationalPOCId = organizationalPOC.Id;
+    }
+  }
+
+  let issueToId;
+  if (issueTo) {
+    if (issueTo.Id) {
+      issueToId = issueTo.Id;
+    } else {
+      issueToId = (
+        await spWebContext.web.ensureUser(issueTo.EMail)
+      ).data.Id.toString();
+    }
+  }
+
+  return {
+    // if optional Person fields have been selected, include them
+    ...(orgApproverId && { orgApproverId: orgApproverId }),
+    ...(organizationalPOC && { organizationalPOCId: organizationalPOCId }),
+    ...(issueTo && { issueToId: issueToId }),
+
+    methods: JSON.stringify(methods), // stringify array of methods for storage in SharePoint
+    supervisorId: supervisorId, // Required Person field
+
+    // include the rest of the properties from the RPARequest
+    ...rest,
+  };
 };
