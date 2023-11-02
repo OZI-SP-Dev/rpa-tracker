@@ -92,7 +92,12 @@ const Salary = ({ name, form }: FormField) => {
           )}
         />
         <br />
-        <Text>Include the appropriate locality</Text>
+        <Text>
+          Include the appropriate{" "}
+          <a href="./Interactive_AcqDemo_Salary_Ranges.pdf" target="_blank">
+            locality
+          </a>
+        </Text>
         {(form.formState.errors.salaryLow && (
           <>
             <br />
