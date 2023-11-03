@@ -50,6 +50,9 @@ export interface RPARequest {
   closeDateLCMC?: Date;
   closeDateJOA?: Date;
   closeDateLinkedinPost?: Date;
+  joaPositionSummary?: string;
+  linkedinQualifications: string[];
+  dcwf: string[];
 }
 
 /**

@@ -51,6 +51,9 @@ import {
   CloseDateLCMC,
   CloseDateJOA,
   CloseDateLinkedinPost,
+  JOAPositionSummary,
+  LinkedinQualifications,
+  Certifications,
 } from "components/Request/FormFields/FormFields";
 import "components/Request/Request.css";
 import { addDays } from "@fluentui/react";
@@ -92,6 +95,9 @@ export type RHFRequest = {
   closeDateLCMC?: Date;
   closeDateJOA?: Date;
   closeDateLinkedinPost?: Date;
+  joaPositionSummary: string;
+  linkedinQualifications: string[];
+  dcwf: string[];
 };
 
 export interface FormField {
@@ -137,6 +143,17 @@ const NewRequestForm = () => {
       closeDateLCMC: addDays(today, 7),
       closeDateJOA: addDays(today, 30),
       closeDateLinkedinPost: addDays(today, 30),
+      joaPositionSummary: "",
+      linkedinQualifications: [
+        "citizenship",
+        "clearance",
+        "drugtest",
+        "certification",
+        "financial",
+        "physical",
+        "travel",
+      ],
+      dcwf: [],
     },
     criteriaMode:
       "all" /* Pass back multiple errors, so we can prioritize which one(s) to show */,
@@ -283,6 +300,8 @@ const NewRequestForm = () => {
             <JOAQualifications name="joaQualifications" form={myForm} />
 
             <JOAIdealCandidate name="joaIdealCandidate" form={myForm} />
+
+            <JOAPositionSummary name="joaPositionSummary" form={myForm} />
           </>
         )}
 
@@ -305,6 +324,13 @@ const NewRequestForm = () => {
             <Incentives name="incentives" form={myForm} />
 
             <Telework name="telework" form={myForm} />
+
+            <LinkedinQualifications
+              name="linkedinQualifications"
+              form={myForm}
+            />
+
+            <Certifications name="dcwf" form={myForm} />
           </>
         )}
 
