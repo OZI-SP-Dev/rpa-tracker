@@ -48,8 +48,12 @@ import {
   Temporary,
   NTE,
   Incentives,
+  CloseDateLCMC,
+  CloseDateJOA,
+  CloseDateLinkedinPost,
 } from "components/Request/FormFields/FormFields";
 import "components/Request/Request.css";
+import { addDays } from "@fluentui/react";
 
 // Probably use the omit system with RPARequest later, too simple right now
 export type RHFRequest = {
@@ -83,8 +87,11 @@ export type RHFRequest = {
   joaQualifications: string;
   joaIdealCandidate: string;
   temporary: string;
-  nte: Date;
+  nte?: Date;
   incentives: string;
+  closeDateLCMC?: Date;
+  closeDateJOA?: Date;
+  closeDateLinkedinPost?: Date;
 };
 
 export interface FormField {
@@ -95,6 +102,8 @@ export interface FormField {
 const NewRequestForm = () => {
   const user = useCurrentUser();
   const addRequest = useAddRequest();
+
+  const today = new Date(Date.now());
 
   const myForm = useForm<RHFRequest>({
     defaultValues: {
@@ -125,6 +134,9 @@ const NewRequestForm = () => {
       joaIdealCandidate: "",
       temporary: "",
       incentives: "",
+      closeDateLCMC: addDays(today, 7),
+      closeDateJOA: addDays(today, 30),
+      closeDateLinkedinPost: addDays(today, 30),
     },
     criteriaMode:
       "all" /* Pass back multiple errors, so we can prioritize which one(s) to show */,
@@ -132,8 +144,11 @@ const NewRequestForm = () => {
   });
 
   const methods = myForm.watch("methods");
+  const lcmc = methods.includes("lcmc");
   const joa = methods.includes("joa");
   const linkedinPost = methods.includes("linkedinPost");
+  const linkedinSearch = methods.includes("linkedinSearch");
+  const resumeSearch = methods.includes("resumeSearch");
 
   const temporary = myForm.watch("temporary");
 
@@ -229,11 +244,27 @@ const NewRequestForm = () => {
 
         <Methods name="methods" form={myForm} />
 
-        {joa && ( // TODO: Possibly make this it's own "page" in a wizard like sequence?
+        {/* TODO: Possibly make below sections their own "pages" in a wizard like sequence? */}
+
+        {lcmc && (
+          <>
+            <Divider inset>
+              <Title2 align="center">
+                Additional LCMC Job Board Information
+              </Title2>
+            </Divider>
+
+            <CloseDateLCMC name="closeDateLCMC" form={myForm} />
+          </>
+        )}
+
+        {joa && (
           <>
             <Divider inset>
               <Title2 align="center">JOA Additional Information</Title2>
             </Divider>
+
+            <CloseDateJOA name="closeDateJOA" form={myForm} />
 
             <OrganizationalPOC name="organizationalPOC" form={myForm} />
 
@@ -274,6 +305,28 @@ const NewRequestForm = () => {
             <Incentives name="incentives" form={myForm} />
 
             <Telework name="telework" form={myForm} />
+          </>
+        )}
+
+        {linkedinSearch && (
+          <>
+            <Divider inset>
+              <Title2 align="center">
+                LinkedIn Profile Search Additional Information
+              </Title2>
+            </Divider>
+
+            <CloseDateLinkedinPost name="closeDateLinkedinPost" form={myForm} />
+          </>
+        )}
+
+        {resumeSearch && (
+          <>
+            <Divider inset>
+              <Title2 align="center">
+                Resume Search Additional Information
+              </Title2>
+            </Divider>
           </>
         )}
 

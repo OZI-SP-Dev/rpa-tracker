@@ -36,17 +36,20 @@ export interface RPARequest {
   supervisor: Person;
   organizationalPOC?: Person;
   issueTo?: Person;
-  fullPartTime: "Full" | "Part";
-  salaryLow: number;
-  salaryHigh: number;
-  telework: "Yes" | "No";
-  remote: "Yes" | "No";
-  pcs: "Yes" | "No";
-  joaQualifications: string;
-  joaIdealCandidate: string;
-  temporary: "Full" | "Term" | "Temp";
-  nte: Date;
-  incentives: "Yes" | "No";
+  fullPartTime?: "Full" | "Part";
+  salaryLow?: number;
+  salaryHigh?: number;
+  telework?: "Yes" | "No";
+  remote?: "Yes" | "No";
+  pcs?: "Yes" | "No";
+  joaQualifications?: string;
+  joaIdealCandidate?: string;
+  temporary?: "Full" | "Term" | "Temp";
+  nte?: Date;
+  incentives?: "Yes" | "No";
+  closeDateLCMC?: Date;
+  closeDateJOA?: Date;
+  closeDateLinkedinPost?: Date;
 }
 
 /**
