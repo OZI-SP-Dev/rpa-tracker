@@ -1,9 +1,5 @@
 export const DCWFCodes = [
   {
-    Code: "000",
-    Role: "NON CYBER PRIMARY WORK ROLE",
-  },
-  {
     Code: "111",
     Role: "ALL-SOURCE ANALYST",
   },
@@ -22,10 +18,6 @@ export const DCWFCodes = [
   {
     Code: "132",
     Role: "TARGET NETWORK ANALYST",
-  },
-  {
-    Code: "133",
-    Role: "TARGET REPORTER",
   },
   {
     Code: "141",
@@ -54,14 +46,6 @@ export const DCWFCodes = [
   {
     Code: "312",
     Role: "ALL-SOURCE COLLECTION REQUIREMENTS MANAGER",
-  },
-  {
-    Code: "321",
-    Role: "ACCESS NETWORK OPERATOR",
-  },
-  {
-    Code: "322",
-    Role: "INTERACTIVE OPERATOR",
   },
   {
     Code: "331",
@@ -110,10 +94,6 @@ export const DCWFCodes = [
   {
     Code: "461",
     Role: "SYSTEMS SECURITY ANALYST",
-  },
-  {
-    Code: "462",
-    Role: "CONTROL SYSTEMS SECURITY SPECIALIST",
   },
   {
     Code: "511",
