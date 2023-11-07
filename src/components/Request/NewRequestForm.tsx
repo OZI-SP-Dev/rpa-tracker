@@ -54,6 +54,7 @@ import {
   JOAPositionSummary,
   LinkedinQualifications,
   Certifications,
+  LinkedinKSAs,
 } from "components/Request/FormFields/FormFields";
 import "components/Request/Request.css";
 import { addDays } from "@fluentui/react";
@@ -98,6 +99,7 @@ export type RHFRequest = {
   joaPositionSummary: string;
   linkedinQualifications: string[];
   dcwf: string[];
+  linkedinKSAs: string;
 };
 
 export interface FormField {
@@ -154,6 +156,7 @@ const NewRequestForm = () => {
         "travel",
       ],
       dcwf: [],
+      linkedinKSAs: "",
     },
     criteriaMode:
       "all" /* Pass back multiple errors, so we can prioritize which one(s) to show */,
@@ -331,6 +334,8 @@ const NewRequestForm = () => {
             />
 
             <Certifications name="dcwf" form={myForm} />
+
+            <LinkedinKSAs name="linkedinKSAs" form={myForm} />
           </>
         )}
 

@@ -53,6 +53,7 @@ export interface RPARequest {
   joaPositionSummary?: string;
   linkedinQualifications: string[];
   dcwf: string[];
+  linkedinKSAs?: string;
 }
 
 /**

@@ -11,14 +11,12 @@ const options = [
   { id: "certification", text: "Certifications/Licensure" },
   {
     id: "financial",
-    text: "Financial management Statement",
-    tooltip: "OGE-450 Financial Disclosure Report",
+    text: "Financial management Statement - OGE-450 Financial Disclosure Report",
   },
   { id: "physical", text: "Must be able to pass pre-employment physical" },
   {
     id: "travel",
-    text: "Travel",
-    tooltip: "Select if trave is more than occasional. Reference SPRD.",
+    text: "Travel - Select if trave is more than occasional. Reference SPRD.",
   },
 ];
 
