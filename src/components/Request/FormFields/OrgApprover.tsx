@@ -8,12 +8,7 @@ import { PeoplePicker } from "components/PeoplePicker/PeoplePicker";
 const OrgApprover = ({ name, form }: FormField) => {
   return (
     <div className="requestFieldContainer">
-      <Label
-        id={name + "Id"}
-        size="small"
-        weight="semibold"
-        className="requestFieldLabel"
-      >
+      <Label id={name + "Id"} weight="semibold" className="requestFieldLabel">
         <ContactIcon className="requestFieldIcon" />
         Org Approver
       </Label>

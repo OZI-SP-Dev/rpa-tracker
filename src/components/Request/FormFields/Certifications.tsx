@@ -1,4 +1,4 @@
-import { Dropdown, Label, Option, Text } from "@fluentui/react-components";
+import { Dropdown, InfoLabel, Option, Text } from "@fluentui/react-components";
 import { DropdownIcon } from "@fluentui/react-icons-mdl2";
 import { DCWFCodes } from "consts/DCWF";
 import { Controller } from "react-hook-form";
@@ -8,16 +8,16 @@ import { FormField } from "components/Request/NewRequestForm";
 const Certifications = ({ name, form }: FormField) => {
   return (
     <div className="requestFieldContainer">
-      <Label
-        id={name + "Id"}
-        size="small"
+      <InfoLabel
+        htmlFor={name + "Id"}
         weight="semibold"
         className="requestFieldLabel"
         required
+        info="Select one to three options"
       >
         <DropdownIcon className="requestFieldIcon" />
         Certifications/Licensure
-      </Label>
+      </InfoLabel>
       <Controller
         name="dcwf"
         control={form.control}
@@ -31,7 +31,6 @@ const Certifications = ({ name, form }: FormField) => {
             aria-invalid={form.formState.errors.dcwf ? "true" : "false"}
             multiselect={true}
             aria-required
-            //{...field}
             selectedOptions={field.value}
             onOptionSelect={(_e, data) => {
               if (data.selectedOptions.length <= 3) {
@@ -51,7 +50,6 @@ const Certifications = ({ name, form }: FormField) => {
           </Dropdown>
         )}
       />
-      <Text>Select one to three options</Text>
       {form.formState.errors.grade && (
         <Text role="alert" id={name + "Err"} className="requestErrorText">
           {form.formState.errors.grade.message}

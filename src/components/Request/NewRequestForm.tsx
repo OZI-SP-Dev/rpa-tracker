@@ -59,7 +59,6 @@ import {
 import "components/Request/Request.css";
 import { addDays } from "@fluentui/react";
 
-// Probably use the omit system with RPARequest later, too simple right now
 export type RHFRequest = {
   requestType: string;
   mcrRequired: string;
@@ -207,7 +206,6 @@ const NewRequestForm = () => {
         <div className="requestFieldContainer">
           <Label
             id="requestorId"
-            size="small"
             weight="semibold"
             className="requestFieldLabel"
             required
@@ -369,7 +367,6 @@ const NewRequestForm = () => {
             {addRequest.isLoading && (
               <Spinner
                 style={{ justifyContent: "flex-start" }}
-                size="small"
                 label="Creating Request..."
               />
             )}

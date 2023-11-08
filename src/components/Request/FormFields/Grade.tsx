@@ -11,7 +11,6 @@ const Grade = ({ name, form }: FormField) => {
     <div className="requestFieldContainer">
       <Label
         id={name + "Id"}
-        size="small"
         weight="semibold"
         className="requestFieldLabel"
         required

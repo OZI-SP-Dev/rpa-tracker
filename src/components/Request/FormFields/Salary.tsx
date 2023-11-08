@@ -10,7 +10,6 @@ const Salary = ({ name, form }: FormField) => {
       <p>
         <Label
           htmlFor={name + "Id"}
-          size="small"
           weight="semibold"
           className="requestFieldLabel"
           required
