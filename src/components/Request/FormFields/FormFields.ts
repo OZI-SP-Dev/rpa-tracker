@@ -33,7 +33,7 @@ export { default as Incentives } from "./Incentives";
 export { default as CloseDateLCMC } from "./CloseDateLCMC";
 export { default as CloseDateJOA } from "./CloseDateJOA";
 export { default as CloseDateLinkedinPost } from "./CloseDateLinkedinPost";
-export { default as JOAPositionSummary } from "./JOAPositionSummary";
+export { default as LinkedinPositionSummary } from "./LinkedinPositionSummary";
 export { default as LinkedinQualifications } from "./LinkedinQualifications";
 export { default as Certifications } from "./Certifications";
 export { default as LinkedinKSAs } from "./LinkedinKSAs";

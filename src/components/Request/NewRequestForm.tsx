@@ -51,7 +51,7 @@ import {
   CloseDateLCMC,
   CloseDateJOA,
   CloseDateLinkedinPost,
-  JOAPositionSummary,
+  LinkedinPositionSummary,
   LinkedinQualifications,
   Certifications,
   LinkedinKSAs,
@@ -96,7 +96,7 @@ export type RHFRequest = {
   closeDateLCMC?: Date;
   closeDateJOA?: Date;
   closeDateLinkedinPost?: Date;
-  joaPositionSummary: string;
+  linkedinPositionSummary: string;
   linkedinQualifications: string[];
   dcwf: string[];
   linkedinKSAs: string;
@@ -145,7 +145,7 @@ const NewRequestForm = () => {
       closeDateLCMC: addDays(today, 7),
       closeDateJOA: addDays(today, 30),
       closeDateLinkedinPost: addDays(today, 30),
-      joaPositionSummary: "",
+      linkedinPositionSummary: "",
       linkedinQualifications: [
         "citizenship",
         "clearance",
@@ -303,8 +303,6 @@ const NewRequestForm = () => {
             <JOAQualifications name="joaQualifications" form={myForm} />
 
             <JOAIdealCandidate name="joaIdealCandidate" form={myForm} />
-
-            <JOAPositionSummary name="joaPositionSummary" form={myForm} />
           </>
         )}
 
@@ -327,6 +325,11 @@ const NewRequestForm = () => {
             <Incentives name="incentives" form={myForm} />
 
             <Telework name="telework" form={myForm} />
+
+            <LinkedinPositionSummary
+              name="linkedinPositionSummary"
+              form={myForm}
+            />
 
             <LinkedinQualifications
               name="linkedinQualifications"
