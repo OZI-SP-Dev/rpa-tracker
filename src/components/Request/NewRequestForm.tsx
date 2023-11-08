@@ -169,6 +169,10 @@ const NewRequestForm = () => {
   const linkedinSearch = methods.includes("linkedinSearch");
   const resumeSearch = methods.includes("resumeSearch");
 
+  const linkedinQualifications = myForm.watch("linkedinQualifications");
+  const linkedinCertification =
+    linkedinQualifications.includes("certification");
+
   const temporary = myForm.watch("temporary");
 
   const createNewRequest = async (data: RHFRequest) => {
@@ -334,7 +338,9 @@ const NewRequestForm = () => {
               form={myForm}
             />
 
-            <Certifications name="dcwf" form={myForm} />
+            {linkedinCertification && (
+              <Certifications name="dcwf" form={myForm} />
+            )}
 
             <LinkedinKSAs name="linkedinKSAs" form={myForm} />
           </>
