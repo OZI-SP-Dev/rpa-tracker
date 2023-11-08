@@ -1,4 +1,4 @@
-import { Label, Text, Textarea } from "@fluentui/react-components";
+import { InfoLabel, Text, Textarea } from "@fluentui/react-components";
 import { Controller } from "react-hook-form";
 import { FormField } from "components/Request/NewRequestForm";
 import "components/Request/Request.css";
@@ -7,16 +7,17 @@ import { TextFieldIcon } from "@fluentui/react-icons-mdl2";
 const LinkedinKSAs = ({ name, form }: FormField) => {
   return (
     <div className="requestFieldContainer">
-      <Label
+      <InfoLabel
         htmlFor={name + "Id"}
-        size="small"
         weight="semibold"
         className="requestFieldLabel"
         required
+        info="In layman's terms, provide the top 3-4 related Knowledge, Skills, and
+        Abilitiles (KSA's)"
       >
         <TextFieldIcon className="requestFieldIcon" />
         Top related KSA's
-      </Label>
+      </InfoLabel>
       <Controller
         name="linkedinKSAs"
         control={form.control}
@@ -34,10 +35,6 @@ const LinkedinKSAs = ({ name, form }: FormField) => {
           />
         )}
       />
-      <Text>
-        In layman's terms, provide the top 3-4 related Knowledge, Skills, and
-        Abilitiles (KSA's)
-      </Text>
       {form.formState.errors.linkedinKSAs && (
         <Text role="alert" id={name + "Err"} className="requestErrorText">
           {form.formState.errors.linkedinKSAs.message}
