@@ -16,7 +16,7 @@ const options = [
   { id: "physical", text: "Must be able to pass a pre-employment physical" },
   {
     id: "travel",
-    text: "Travel - Select if trave is more than occasional. Reference SPRD.",
+    text: "Travel - Select if travel is more than occasional. For more detail, reference the SPRD.",
   },
 ];
 
