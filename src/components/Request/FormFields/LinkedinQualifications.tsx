@@ -13,7 +13,7 @@ const options = [
     id: "financial",
     text: "Financial Management Statement - OGE-450 Financial Disclosure Report",
   },
-  { id: "physical", text: "Must be able to pass pre-employment physical" },
+  { id: "physical", text: "Must be able to pass a pre-employment physical" },
   {
     id: "travel",
     text: "Travel - Select if trave is more than occasional. Reference SPRD.",
