@@ -23,7 +23,7 @@ const CloseDateLinkedinPost = ({ name, form }: FormField) => {
         required
       >
         <CalendarIcon className="requestFieldIcon" />
-        Close date for Job Opportunity Announcement (JOA)
+        Close date for LinkedIn Job Posting
       </Label>
       <Controller
         name="closeDateLinkedinPost"
