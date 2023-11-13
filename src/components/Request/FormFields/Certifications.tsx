@@ -50,9 +50,9 @@ const Certifications = ({ name, form }: FormField) => {
           </Dropdown>
         )}
       />
-      {form.formState.errors.grade && (
+      {form.formState.errors.dcwf && (
         <Text role="alert" id={name + "Err"} className="requestErrorText">
-          {form.formState.errors.grade.message}
+          {form.formState.errors.dcwf.message}
         </Text>
       )}
     </div>
