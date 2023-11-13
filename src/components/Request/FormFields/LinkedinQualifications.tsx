@@ -11,7 +11,7 @@ const options = [
   { id: "certification", text: "Certifications/Licensure" },
   {
     id: "financial",
-    text: "Financial management Statement - OGE-450 Financial Disclosure Report",
+    text: "Financial Management Statement - OGE-450 Financial Disclosure Report",
   },
   { id: "physical", text: "Must be able to pass pre-employment physical" },
   {
