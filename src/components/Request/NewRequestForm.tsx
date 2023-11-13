@@ -50,7 +50,6 @@ import {
   Incentives,
   CloseDateLCMC,
   CloseDateJOA,
-  CloseDateLinkedinPost,
   LinkedinPositionSummary,
   LinkedinQualifications,
   Certifications,
@@ -353,8 +352,6 @@ const NewRequestForm = () => {
                 LinkedIn Profile Search Additional Information
               </Title2>
             </Divider>
-
-            <CloseDateLinkedinPost name="closeDateLinkedinPost" form={myForm} />
           </>
         )}
 

@@ -37,9 +37,6 @@ const LinkedinQualifications = ({ name, form }: FormField) => {
       <Controller
         name="linkedinQualifications"
         control={form.control}
-        rules={{
-          required: "At least one Announcement Method is required",
-        }}
         render={({ field }) => (
           <>
             {options.map((option) => {
