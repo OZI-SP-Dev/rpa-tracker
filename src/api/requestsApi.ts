@@ -49,7 +49,6 @@ export interface RPARequest {
   incentives?: "Yes" | "No";
   closeDateLCMC?: Date;
   closeDateJOA?: Date;
-  closeDateLinkedinPost?: Date;
   linkedinPositionSummary?: string;
   linkedinQualifications: string[];
   dcwf: string[];

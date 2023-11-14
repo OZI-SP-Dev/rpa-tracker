@@ -93,7 +93,6 @@ export type RHFRequest = {
   incentives: string;
   closeDateLCMC?: Date;
   closeDateJOA?: Date;
-  closeDateLinkedinPost?: Date;
   linkedinPositionSummary: string;
   linkedinQualifications: string[];
   dcwf: string[];
@@ -142,7 +141,6 @@ const NewRequestForm = () => {
       incentives: "",
       closeDateLCMC: addDays(today, 7),
       closeDateJOA: addDays(today, 30),
-      closeDateLinkedinPost: addDays(today, 30),
       linkedinPositionSummary: "",
       linkedinQualifications: [
         "citizenship",
