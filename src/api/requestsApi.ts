@@ -119,7 +119,7 @@ export const useAddRequest = () => {
       }
 
       const now = new Date();
-      const folderName = now.toISOString() + " " + newRequest.positionTitle;
+      const folderName = now.toISOString().replace(/:/g, "-");
       const newFolder = await spWebContext.web.lists
         .getByTitle("requests")
         .rootFolder.folders.addUsingPath(folderName);
@@ -151,10 +151,18 @@ export const useAddRequest = () => {
 
 type InternalRequestItem = Omit<
   RPARequest,
-  "orgApprover" | "methods" | "supervisor" | "organizationalPOC" | "issueTo"
+  | "orgApprover"
+  | "methods"
+  | "dcwf"
+  | "linkedinQualifications"
+  | "supervisor"
+  | "organizationalPOC"
+  | "issueTo"
 > & {
   orgApproverId?: string;
   methods: string;
+  dcwf: string;
+  linkedinQualifications: string;
   supervisorId: string;
   organizationalPOCId?: string;
   issueToId?: string;
@@ -170,6 +178,8 @@ const transformRequestToSP = async (
   const {
     orgApprover,
     methods,
+    dcwf,
+    linkedinQualifications,
     supervisor,
     organizationalPOC,
     issueTo,
@@ -225,9 +235,15 @@ const transformRequestToSP = async (
     ...(organizationalPOC && { organizationalPOCId: organizationalPOCId }),
     ...(issueTo && { issueToId: issueToId }),
 
-    methods: JSON.stringify(methods), // stringify array of methods for storage in SharePoint
-    supervisorId: supervisorId, // Required Person field
+    // stringify arrays for storage in SharePoint
+    methods: JSON.stringify(methods),
+    dcwf: JSON.stringify(dcwf),
+    linkedinQualifications: JSON.stringify(linkedinQualifications),
 
-    ...rest, // include the rest of the properties from the RPARequest
+    // Required Person field
+    supervisorId: supervisorId,
+
+    // include the rest of the properties from the RPARequest
+    ...rest,
   };
 };
