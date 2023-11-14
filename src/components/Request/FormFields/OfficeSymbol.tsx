@@ -9,7 +9,6 @@ const OfficeSymbol = ({ name, form }: FormField) => {
     <div className="requestFieldContainer">
       <Label
         htmlFor={name + "Id"}
-        size="small"
         weight="semibold"
         className="requestFieldLabel"
       >

@@ -36,18 +36,38 @@ export interface RPARequest {
   supervisor: Person;
   organizationalPOC?: Person;
   issueTo?: Person;
-  fullPartTime: "Full" | "Part";
-  salaryLow: number;
-  salaryHigh: number;
-  telework: "Yes" | "No";
-  remote: "Yes" | "No";
-  pcs: "Yes" | "No";
-  joaQualifications: string;
-  joaIdealCandidate: string;
-  temporary: "Full" | "Term" | "Temp";
-  nte: Date;
-  incentives: "Yes" | "No";
+  fullPartTime?: "Full" | "Part";
+  salaryLow?: number;
+  salaryHigh?: number;
+  telework?: "Yes" | "No";
+  remote?: "Yes" | "No";
+  pcs?: "Yes" | "No";
+  joaQualifications?: string;
+  joaIdealCandidate?: string;
+  temporary?: "Full" | "Term" | "Temp";
+  nte?: Date;
+  incentives?: "Yes" | "No";
+  closeDateLCMC?: Date;
+  closeDateJOA?: Date;
+  linkedinPositionSummary?: string;
+  linkedinQualifications: string[];
+  dcwf: string[];
+  linkedinKSAs?: string;
 }
+
+/**
+ * Queries the "requests" lists for available content types
+ * The internal Id of the RPADocSet is neeeded when creating
+ * new requests
+ */
+const useContentTypes = () => {
+  return useQuery({
+    queryKey: ["requests", "contentTypes"],
+    queryFn: () => spWebContext.web.lists.getByTitle("requests").contentTypes(),
+    staleTime: Infinity, // Prevent refetch
+    cacheTime: Infinity, // Prevent garbage collection
+  });
+};
 
 /**
  * Gets all requests
@@ -62,28 +82,61 @@ export const useRequests = () => {
 };
 
 const getRequests = async () => {
+  // Grab all fields, and expand Person fields
   const requestedFields =
-    "*,orgApprover/Id,orgApprover/EMail,orgApprover/Title";
-  const expandedFields = "orgApprover";
+    "*," +
+    "orgApprover/Id,orgApprover/EMail,orgApprover/Title," +
+    "supervisor/Id,supervisor/EMail,supervisor/Title," +
+    "organizationalPOC/Id,organizationalPOC/EMail,organizationalPOC/Title," +
+    "issueTo/Id,issueTo/EMail,issueTo/Title";
+
+  const expandedFields = "orgApprover,supervisor,organizationalPOC,issueTo";
+
   return spWebContext.web.lists
     .getByTitle("requests")
     .items.select(requestedFields)
     .expand(expandedFields)
+    .filter("ContentType eq 'RPADocSet'")
     .top(5000)();
 };
 
 export const useAddRequest = () => {
   const queryClient = useQueryClient();
+  const contentTypes = useContentTypes();
+
   return useMutation(
     ["requests"],
     async (newRequest: RPARequest) => {
-      const response = await spWebContext.web.lists
+      // We must have the ID of RPADocSet in order to create our DocSet folder
+      let contentTypeId = "";
+      if (contentTypes.data) {
+        contentTypeId =
+          contentTypes.data.find((ct) => ct.Name === "RPADocSet")?.StringId ||
+          "";
+      } else {
+        throw new Error("RPADocSet Content Type not available to be created");
+      }
+
+      const now = new Date();
+      const folderName = now.toISOString().replace(/:/g, "-");
+      const newFolder = await spWebContext.web.lists
         .getByTitle("requests")
-        .items.add(await transformRequestToSP(newRequest));
+        .rootFolder.folders.addUsingPath(folderName);
+
+      const newFolderFields = await newFolder.folder.listItemAllFields();
+
+      await spWebContext.web.lists
+        .getByTitle("requests")
+        .items.getById(newFolderFields.Id)
+        .update({
+          ContentTypeId: contentTypeId,
+          Title: folderName,
+          ...(await transformRequestToSP(newRequest)),
+        });
 
       // Pass back the request that came to us, but add in the Id returned from SharePoint
       const data = structuredClone(newRequest);
-      data.Id = response.data.Id;
+      data.Id = newFolderFields.Id;
       return data;
     },
     {
@@ -97,10 +150,18 @@ export const useAddRequest = () => {
 
 type InternalRequestItem = Omit<
   RPARequest,
-  "orgApprover" | "methods" | "supervisor" | "organizationalPOC" | "issueTo"
+  | "orgApprover"
+  | "methods"
+  | "dcwf"
+  | "linkedinQualifications"
+  | "supervisor"
+  | "organizationalPOC"
+  | "issueTo"
 > & {
   orgApproverId?: string;
   methods: string;
+  dcwf: string;
+  linkedinQualifications: string;
   supervisorId: string;
   organizationalPOCId?: string;
   issueToId?: string;
@@ -109,12 +170,15 @@ type InternalRequestItem = Omit<
 const transformRequestToSP = async (
   request: RPARequest
 ): Promise<InternalRequestItem> => {
-  // desctructure the request object
-  // this removes any named properties we don't want to send to SharePoint
-  // rest object will include any remaining properties
+  // Desctructure the request object
+  // This removes any named properties we don't want to send to SharePoint
+  // The "rest" object will include any remaining properties that can be
+  // passed back to SharePoint without modification
   const {
     orgApprover,
     methods,
+    dcwf,
+    linkedinQualifications,
     supervisor,
     organizationalPOC,
     issueTo,
@@ -170,8 +234,13 @@ const transformRequestToSP = async (
     ...(organizationalPOC && { organizationalPOCId: organizationalPOCId }),
     ...(issueTo && { issueToId: issueToId }),
 
-    methods: JSON.stringify(methods), // stringify array of methods for storage in SharePoint
-    supervisorId: supervisorId, // Required Person field
+    // stringify arrays for storage in SharePoint
+    methods: JSON.stringify(methods),
+    dcwf: JSON.stringify(dcwf),
+    linkedinQualifications: JSON.stringify(linkedinQualifications),
+
+    // Required Person field
+    supervisorId: supervisorId,
 
     // include the rest of the properties from the RPARequest
     ...rest,

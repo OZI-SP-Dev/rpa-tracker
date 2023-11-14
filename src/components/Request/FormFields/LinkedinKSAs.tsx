@@ -1,45 +1,46 @@
-import { Input, Label, Text } from "@fluentui/react-components";
+import { InfoLabel, Text, Textarea } from "@fluentui/react-components";
 import { Controller } from "react-hook-form";
 import { FormField } from "components/Request/NewRequestForm";
 import "components/Request/Request.css";
 import { TextFieldIcon } from "@fluentui/react-icons-mdl2";
 
-const CPCN = ({ name, form }: FormField) => {
+const LinkedinKSAs = ({ name, form }: FormField) => {
   return (
     <div className="requestFieldContainer">
-      <Label
+      <InfoLabel
         htmlFor={name + "Id"}
         weight="semibold"
         className="requestFieldLabel"
+        required
+        info="In layman's terms, provide the top 3-4 related Knowledge, Skills, and
+        Abilitiles (KSA's)"
       >
         <TextFieldIcon className="requestFieldIcon" />
-        CPCN
-      </Label>
+        Top related KSA's
+      </InfoLabel>
       <Controller
-        name="cpcn"
+        name="linkedinKSAs"
         control={form.control}
         rules={{
-          required: "CPCN is required",
-          maxLength: {
-            value: 30,
-            message: "CPCN cannot exceed 30 characters",
-          },
+          required: "KSA's are required",
         }}
         render={({ field }) => (
-          <Input
+          <Textarea
             {...field}
+            resize="vertical"
+            rows={8}
             aria-describedby={name + "Err"}
-            aria-invalid={form.formState.errors.cpcn ? "true" : "false"}
+            aria-invalid={form.formState.errors.linkedinKSAs ? "true" : "false"}
             id={name + "Id"}
           />
         )}
       />
-      {form.formState.errors.cpcn && (
+      {form.formState.errors.linkedinKSAs && (
         <Text role="alert" id={name + "Err"} className="requestErrorText">
-          {form.formState.errors.cpcn.message}
+          {form.formState.errors.linkedinKSAs.message}
         </Text>
       )}
     </div>
   );
 };
-export default CPCN;
+export default LinkedinKSAs;

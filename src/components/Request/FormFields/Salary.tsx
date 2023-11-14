@@ -10,7 +10,6 @@ const Salary = ({ name, form }: FormField) => {
       <p>
         <Label
           htmlFor={name + "Id"}
-          size="small"
           weight="semibold"
           className="requestFieldLabel"
           required
@@ -92,7 +91,12 @@ const Salary = ({ name, form }: FormField) => {
           )}
         />
         <br />
-        <Text>Include the appropriate locality</Text>
+        <Text>
+          Include the appropriate{" "}
+          <a href="./Interactive_AcqDemo_Salary_Ranges.pdf" target="_blank">
+            locality
+          </a>
+        </Text>
         {(form.formState.errors.salaryLow && (
           <>
             <br />

@@ -1,4 +1,4 @@
-import { DatePicker } from "@fluentui/react";
+import { addDays, DatePicker } from "@fluentui/react";
 import { Label, Text } from "@fluentui/react-components";
 import { CalendarIcon } from "@fluentui/react-icons-mdl2";
 import { Controller } from "react-hook-form";
@@ -11,7 +11,11 @@ const onFormatDate = (date?: Date): string => {
     : date.getMonth() + 1 + "/" + date.getDate() + "/" + date.getFullYear();
 };
 
-const NTE = ({ name, form }: FormField) => {
+const CloseDateLCMC = ({ name, form }: FormField) => {
+  const today = new Date(Date.now());
+  const minDate = addDays(today, 7);
+  const maxDate = addDays(today, 30);
+
   return (
     <div className="requestFieldContainer">
       <Label
@@ -21,10 +25,10 @@ const NTE = ({ name, form }: FormField) => {
         required
       >
         <CalendarIcon className="requestFieldIcon" />
-        Not to exceed date
+        Close date for AFLCMC Posting
       </Label>
       <Controller
-        name="nte"
+        name="closeDateLCMC"
         control={form.control}
         rules={{
           required: "A date is required",
@@ -33,20 +37,27 @@ const NTE = ({ name, form }: FormField) => {
           <DatePicker
             aria-describedby={name + "Err"}
             aria-labelledby={name + "Id"}
-            aria-invalid={form.formState.errors.nte ? "true" : "false"}
+            aria-invalid={
+              form.formState.errors.closeDateLCMC ? "true" : "false"
+            }
+            //isRequired
+            placeholder="Select a date..."
+            ariaLabel="Select a date"
             formatDate={onFormatDate}
+            minDate={minDate}
+            maxDate={maxDate}
             onSelectDate={field.onChange}
             {...field}
           />
         )}
       />
-      {form.formState.errors.nte && (
+      {form.formState.errors.closeDateLCMC && (
         <Text role="alert" id={name + "Err"} className="requestErrorText">
-          {form.formState.errors.nte.message}
+          {form.formState.errors.closeDateLCMC.message}
         </Text>
       )}
     </div>
   );
 };
 
-export default NTE;
+export default CloseDateLCMC;

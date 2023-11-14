@@ -1,45 +1,47 @@
-import { Input, Label, Text } from "@fluentui/react-components";
+import { InfoLabel, Text, Textarea } from "@fluentui/react-components";
 import { Controller } from "react-hook-form";
 import { FormField } from "components/Request/NewRequestForm";
 import "components/Request/Request.css";
 import { TextFieldIcon } from "@fluentui/react-icons-mdl2";
 
-const CPCN = ({ name, form }: FormField) => {
+const LinkedinPositionSummary = ({ name, form }: FormField) => {
   return (
     <div className="requestFieldContainer">
-      <Label
+      <InfoLabel
         htmlFor={name + "Id"}
         weight="semibold"
         className="requestFieldLabel"
+        required
+        info="A brief summary of the job description (3-4 sentences)"
       >
         <TextFieldIcon className="requestFieldIcon" />
-        CPCN
-      </Label>
+        Position Summary
+      </InfoLabel>
       <Controller
-        name="cpcn"
+        name="linkedinPositionSummary"
         control={form.control}
         rules={{
-          required: "CPCN is required",
-          maxLength: {
-            value: 30,
-            message: "CPCN cannot exceed 30 characters",
-          },
+          required: "Position Summary is required",
         }}
         render={({ field }) => (
-          <Input
+          <Textarea
             {...field}
+            resize="vertical"
+            rows={10}
             aria-describedby={name + "Err"}
-            aria-invalid={form.formState.errors.cpcn ? "true" : "false"}
+            aria-invalid={
+              form.formState.errors.linkedinPositionSummary ? "true" : "false"
+            }
             id={name + "Id"}
           />
         )}
       />
-      {form.formState.errors.cpcn && (
+      {form.formState.errors.linkedinPositionSummary && (
         <Text role="alert" id={name + "Err"} className="requestErrorText">
-          {form.formState.errors.cpcn.message}
+          {form.formState.errors.linkedinPositionSummary.message}
         </Text>
       )}
     </div>
   );
 };
-export default CPCN;
+export default LinkedinPositionSummary;

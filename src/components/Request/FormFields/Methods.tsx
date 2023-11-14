@@ -9,7 +9,6 @@ const Methods = ({ name, form }: FormField) => {
     <div className="requestFieldContainer">
       <Label
         htmlFor={name + "Id"}
-        size="small"
         weight="semibold"
         className="requestFieldLabel"
         required
@@ -26,7 +25,7 @@ const Methods = ({ name, form }: FormField) => {
         render={({ field }) => (
           <>
             <Checkbox
-              id={name + "Id"}
+              id="lcmcId"
               label="LCMC Job Announcement Board"
               checked={field.value?.some((item) => item === "lcmc")}
               aria-describedby={name + "Err"}
@@ -41,7 +40,7 @@ const Methods = ({ name, form }: FormField) => {
               }}
             />
             <Checkbox
-              id={name + "Id"}
+              id="joaId"
               label="Job Opportunity Announcement (JOA)"
               checked={field.value?.some((item) => item === "joa")}
               aria-describedby={name + "Err"}
@@ -56,7 +55,7 @@ const Methods = ({ name, form }: FormField) => {
               }}
             />
             <Checkbox
-              id={name + "Id"}
+              id="linkedinPostId"
               label="LinkedIn Job Posting"
               checked={field.value?.some((item) => item === "linkedinPost")}
               aria-describedby={name + "Err"}
@@ -71,7 +70,7 @@ const Methods = ({ name, form }: FormField) => {
               }}
             />
             <Checkbox
-              id={name + "Id"}
+              id="linkedinSearchId"
               label="LinkedIn Profile Search"
               checked={field.value?.some((item) => item === "linkedinSearch")}
               aria-describedby={name + "Err"}
@@ -86,7 +85,7 @@ const Methods = ({ name, form }: FormField) => {
               }}
             />
             <Checkbox
-              id={name + "Id"}
+              id="resumeSearchId"
               label="Resume Search"
               checked={field.value?.some((item) => item === "resumeSearch")}
               aria-describedby={name + "Err"}
