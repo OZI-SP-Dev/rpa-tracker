@@ -93,11 +93,11 @@ const getRequests = async () => {
 
   const expandedFields = "orgApprover,supervisor,organizationalPOC,issueTo";
 
-  //
   return spWebContext.web.lists
     .getByTitle("requests")
     .items.select(requestedFields)
     .expand(expandedFields)
+    .filter("ContentType eq 'RPADocSet'")
     .top(5000)();
 };
 
