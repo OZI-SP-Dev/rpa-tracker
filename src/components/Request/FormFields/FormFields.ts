@@ -36,3 +36,4 @@ export { default as LinkedinPositionSummary } from "./LinkedinPositionSummary";
 export { default as LinkedinQualifications } from "./LinkedinQualifications";
 export { default as Certifications } from "./Certifications";
 export { default as LinkedinKSAs } from "./LinkedinKSAs";
+export { default as CloseDateUsaJobs } from "./CloseDateUsaJobs";

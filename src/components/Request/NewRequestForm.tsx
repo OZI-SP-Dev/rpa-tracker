@@ -51,6 +51,7 @@ import {
   Incentives,
   CloseDateLCMC,
   CloseDateJOA,
+  CloseDateUsaJobs,
   LinkedinPositionSummary,
   LinkedinQualifications,
   Certifications,
@@ -94,6 +95,7 @@ export type RHFRequest = {
   incentives: string;
   closeDateLCMC?: Date;
   closeDateJOA?: Date;
+  closeDateUsaJobsFlyer?: Date;
   linkedinPositionSummary: string;
   linkedinQualifications: string[];
   dcwf: string[];
@@ -142,6 +144,7 @@ const NewRequestForm = () => {
       incentives: "",
       closeDateLCMC: addDays(today, 7),
       closeDateJOA: addDays(today, 30),
+      closeDateUsaJobsFlyer: addDays(today, 14),
       linkedinPositionSummary: "",
       linkedinQualifications: [
         "citizenship",
@@ -166,6 +169,7 @@ const NewRequestForm = () => {
   const linkedinPost = methods.includes("linkedinPost");
   const linkedinSearch = methods.includes("linkedinSearch");
   const resumeSearch = methods.includes("resumeSearch");
+  const usaJobsFlyer = methods.includes("usaJobsFlyer");
 
   const linkedinQualifications = myForm.watch("linkedinQualifications");
   const linkedinCertification =
@@ -365,6 +369,18 @@ const NewRequestForm = () => {
                 Resume Search Additional Information
               </Title2>
             </Divider>
+          </>
+        )}
+
+        {usaJobsFlyer && (
+          <>
+            <Divider inset>
+              <Title2 align="center">
+                USA Jobs Flyer Additional Information
+              </Title2>
+            </Divider>
+
+            <CloseDateUsaJobs name="closeDateUsaJobs" form={myForm} />
           </>
         )}
 

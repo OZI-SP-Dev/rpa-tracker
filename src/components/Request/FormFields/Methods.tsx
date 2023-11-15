@@ -10,6 +10,7 @@ const options = [
   { id: "linkedinPost", text: "LinkedIn Job Posting" },
   { id: "linkedinSearch", text: "LinkedIn Profile Search" },
   { id: "resumeSearch", text: "COS Resume Repository Search" },
+  { id: "usaJobsFlyer", text: "USA Jobs Flyer" },
 ];
 
 const Methods = ({ name, form }: FormField) => {
