@@ -27,7 +27,6 @@ const LinkedinQualifications = ({ name, form }: FormField) => {
         htmlFor={name + "Id"}
         weight="semibold"
         className="requestFieldLabel"
-        required
         info="De-select what is not applicable for your position from the following
         list"
       >

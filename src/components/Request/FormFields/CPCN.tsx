@@ -11,6 +11,7 @@ const CPCN = ({ name, form }: FormField) => {
         htmlFor={name + "Id"}
         weight="semibold"
         className="requestFieldLabel"
+        required
       >
         <TextFieldIcon className="requestFieldIcon" />
         CPCN

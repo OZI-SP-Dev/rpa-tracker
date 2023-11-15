@@ -11,6 +11,7 @@ const DutyLocation = ({ name, form }: FormField) => {
         htmlFor={name + "Id"}
         weight="semibold"
         className="requestFieldLabel"
+        required
       >
         <TextFieldIcon className="requestFieldIcon" />
         Duty Location
