@@ -54,6 +54,27 @@ export interface RPARequest {
   linkedinQualifications: string[];
   dcwf: string[];
   linkedinKSAs?: string;
+  linkedinSearchTitle1?: string;
+  linkedinSearchTitle2?: string;
+  linkedinSearchTitle3?: string;
+  linkedinSearchTitle4?: string;
+  linkedinSearchSkill1?: string;
+  linkedinSearchSkill2?: string;
+  linkedinSearchSkill3?: string;
+  linkedinSearchSkill4?: string;
+  linkedinSearchEmployer1?: string;
+  linkedinSearchEmployer2?: string;
+  linkedinSearchEmployer3?: string;
+  linkedinSearchEmployer4?: string;
+  linkedinSearchStudy1?: string;
+  linkedinSearchStudy2?: string;
+  linkedinSearchStudy3?: string;
+  linkedinSearchStudy4?: string;
+  linkedinSearchKeyword1?: string;
+  linkedinSearchKeyword2?: string;
+  linkedinSearchKeyword3?: string;
+  linkedinSearchKeyword4?: string;
+  linkedinSearchComments?: string;
 }
 
 /**
