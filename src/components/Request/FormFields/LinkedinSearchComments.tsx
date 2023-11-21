@@ -19,9 +19,6 @@ const LinkedinSearchComments = ({ name, form }: FormField) => {
       <Controller
         name="linkedinSearchComments"
         control={form.control}
-        rules={{
-          required: "Ideal Candidate text is required",
-        }}
         render={({ field }) => (
           <Textarea
             {...field}
