@@ -357,7 +357,7 @@ const NewRequestForm = () => {
               form={myForm}
             />
             <FormFields.LinkedinSearchComments
-              name="linkedinSkill"
+              name="linkedinComments"
               form={myForm}
             />
           </>
