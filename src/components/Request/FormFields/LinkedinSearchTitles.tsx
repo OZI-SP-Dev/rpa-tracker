@@ -16,7 +16,7 @@ const LinkedinSearchTitles = ({ name, form }: FormField) => {
     <fieldset>
       <legend>
         <TextFieldIcon className="requestFieldIcon" />
-        <Text weight="semibold">Similar Job Titles to Search For</Text>
+        <Text weight="semibold">Similar Job Titles</Text>
       </legend>
       <Controller
         name="linkedinSearchTitle1"
