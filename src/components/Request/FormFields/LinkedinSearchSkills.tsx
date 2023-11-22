@@ -17,7 +17,7 @@ const LinkedinSearchSkills = ({ name, form }: FormField) => {
       <legend>
         <TextFieldIcon className="requestFieldIcon" />
         <InfoLabel weight="semibold" info="C++, MATLAB, etc.">
-          Skills to Search For
+          Skills
         </InfoLabel>
       </legend>
       <Controller
