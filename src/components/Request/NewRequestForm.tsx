@@ -345,7 +345,7 @@ const NewRequestForm = () => {
               form={myForm}
             />
             <FormFields.LinkedinSearchEmployers
-              name="linkedinStudies"
+              name="linkedinEmployers"
               form={myForm}
             />
             <FormFields.LinkedinSearchStudies
