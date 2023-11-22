@@ -16,7 +16,7 @@ const LinkedinSearchKeywords = ({ name, form }: FormField) => {
     <fieldset>
       <legend>
         <TextFieldIcon className="requestFieldIcon" />
-        <Text weight="semibold">Preferred Current/Past Keywords</Text>
+        <Text weight="semibold">Preferred Profile Keywords</Text>
       </legend>
       <Controller
         name="linkedinSearchKeyword1"
