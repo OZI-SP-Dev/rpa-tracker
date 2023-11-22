@@ -13,7 +13,7 @@ export interface Person {
 }
 
 export interface RPARequest {
-  //requestor: ;
+  Author?: Person;
   Id?: string;
   requestType: (typeof REQUESTTYPES)[number];
   mcrRequired: "Yes" | "No";
@@ -103,6 +103,17 @@ export const useRequests = () => {
   });
 };
 
+/**
+ * Get a specific request
+ */
+export const useRequest = (requestId: number) => {
+  return useQuery({
+    queryKey: ["requests", requestId],
+    queryFn: () => getRequest(requestId),
+    select: transformRequestFromSP,
+  });
+};
+
 const getRequests = async () => {
   // Grab all fields, and expand Person fields
   const requestedFields =
@@ -120,6 +131,25 @@ const getRequests = async () => {
     .expand(expandedFields)
     .filter("ContentType eq 'RPADocSet'")
     .top(5000)();
+};
+
+const getRequest = async (Id: number) => {
+  const requestedFields =
+    "*," +
+    "Author/Id,Author/EMail,Author/Title," +
+    "orgApprover/Id,orgApprover/EMail,orgApprover/Title," +
+    "supervisor/Id,supervisor/EMail,supervisor/Title," +
+    "organizationalPOC/Id,organizationalPOC/EMail,organizationalPOC/Title," +
+    "issueTo/Id,issueTo/EMail,issueTo/Title";
+
+  const expandedFields =
+    "Author,orgApprover,supervisor,organizationalPOC,issueTo";
+
+  return spWebContext.web.lists
+    .getByTitle("requests")
+    .items.getById(Id)
+    .select(requestedFields)
+    .expand(expandedFields)();
 };
 
 export const useAddRequest = () => {
@@ -266,5 +296,73 @@ const transformRequestToSP = async (
 
     // include the rest of the properties from the RPARequest
     ...rest,
+  };
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const transformRequestFromSP = (request: any): RPARequest => {
+  return {
+    Id: request.Id,
+    Author: request.Author,
+    requestType: request.requestType,
+    mcrRequired: request.mcrRequired,
+    paySystem: request.paySystem,
+    hireType: request.hireType,
+    advertisementLength: request.advertisementLength,
+    lastIncumbent: request.lastIncumbent,
+    series: request.series,
+    grade: request.grade,
+    positionTitle: request.positionTitle,
+    mpcn: request.mpcn,
+    cpcn: request.cpcn,
+    fms: request.fms,
+    officeSymbol: request.officeSymbol,
+    positionSensitivity: request.positionSensitivity,
+    dutyLocation: request.dutyLocation,
+    osf: request.osf,
+    orgApprover: request.orgApprover,
+    methods: JSON.parse(request.methods),
+    supervisor: request.supervisor,
+    organizationalPOC: request.organizationalPOC,
+    issueTo: request.issueTo,
+    fullPartTime: request.fullPartTime,
+    salaryLow: request.salaryLow,
+    salaryHigh: request.salaryHigh,
+    telework: request.telework,
+    remote: request.remote,
+    pcs: request.pcs,
+    joaQualifications: request.joaQualifications,
+    joaIdealCandidate: request.joaIdealCandidate,
+    temporary: request.temporary,
+    nte: new Date(request.nte),
+    incentives: request.incentives,
+    closeDateLCMC: new Date(request.closeDateLCMC),
+    closeDateJOA: new Date(request.closeDateJOA),
+    closeDateUsaJobsFlyer: new Date(request.closeDateUsaJobsFlyer),
+    linkedinPositionSummary: request.linkedinPositionSummary,
+    linkedinQualifications: JSON.parse(request.linkedinQualifications),
+    dcwf: JSON.parse(request.dcwf),
+    linkedinKSAs: request.linkedinKSAs,
+    linkedinSearchTitle1: request.linkedinSearchTitle1,
+    linkedinSearchTitle2: request.linkedinSearchTitle2,
+    linkedinSearchTitle3: request.linkedinSearchTitle3,
+    linkedinSearchTitle4: request.linkedinSearchTitle4,
+    linkedinSearchSkill1: request.linkedinSearchSkill1,
+    linkedinSearchSkill2: request.linkedinSearchSkill2,
+    linkedinSearchSkill3: request.linkedinSearchSkill3,
+    linkedinSearchSkill4: request.linkedinSearchSkill4,
+    linkedinSearchEmployer1: request.linkedinSearchEmployer1,
+    linkedinSearchEmployer2: request.linkedinSearchEmployer2,
+    linkedinSearchEmployer3: request.linkedinSearchEmployer3,
+    linkedinSearchEmployer4: request.linkedinSearchEmployer4,
+    linkedinSearchStudy1: request.linkedinSearchStudy1,
+    linkedinSearchStudy2: request.linkedinSearchStudy2,
+    linkedinSearchStudy3: request.linkedinSearchStudy3,
+    linkedinSearchStudy4: request.linkedinSearchStudy4,
+    linkedinSearchKeyword1: request.linkedinSearchKeyword1,
+    linkedinSearchKeyword2: request.linkedinSearchKeyword2,
+    linkedinSearchKeyword3: request.linkedinSearchKeyword3,
+    linkedinSearchKeyword4: request.linkedinSearchKeyword4,
+    linkedinSearchComments: request.string,
   };
 };

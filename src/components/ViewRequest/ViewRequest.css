@@ -1,0 +1,46 @@
+#viewRequestContainer {
+  display: grid;
+  grid-template-columns: 5em 1fr 1fr;
+  grid-template-rows: 5em auto auto;
+  column-gap: 0.5em;
+  row-gap: 0.5em;
+  height: calc(100vh - 56px);
+  width: calc(100vw - 1em);
+  margin: 0.5em;
+}
+
+#viewRequestActionBar {
+  grid-column-start: 1;
+  grid-row-start: 1;
+  grid-row-end: span 3;
+}
+
+#viewRequestHeader {
+  grid-column-start: 2;
+  grid-column-end: span 3;
+}
+
+#viewRequestDocuments {
+  grid-column-start: 3;
+  grid-row-start: 2;
+  grid-row-end: span 2;
+}
+
+#viewRequestNotes {
+  grid-column-start: 2;
+  grid-row-start: 3;
+}
+
+.gray-gradiant {
+  border-color: #dcdcdc;
+  background-image: linear-gradient(to bottom, #e8e8e8 0, #f5f5f5 100%);
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  border-radius: 0.25em;
+  padding: 0.25em;
+}
+
+#viewRequestDetails {
+  display: grid;
+  grid-template-columns: auto auto;
+  row-gap: 0.5em;
+}
