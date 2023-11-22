@@ -25,7 +25,7 @@ const LinkedinSearchKeywords = ({ name, form }: FormField) => {
         render={({ field }) => (
           <Input
             {...field}
-            title="LinkedIn Search Keyword 1"
+            title="LinkedIn Search Profile Keyword 1"
             style={{ width: "100%" }}
             aria-describedby={name + "Err"}
             aria-invalid={
