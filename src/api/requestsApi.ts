@@ -363,6 +363,6 @@ const transformRequestFromSP = (request: any): RPARequest => {
     linkedinSearchKeyword2: request.linkedinSearchKeyword2,
     linkedinSearchKeyword3: request.linkedinSearchKeyword3,
     linkedinSearchKeyword4: request.linkedinSearchKeyword4,
-    linkedinSearchComments: request.string,
+    linkedinSearchComments: request.linkedinSearchComments,
   };
 };
