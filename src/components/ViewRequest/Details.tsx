@@ -5,10 +5,16 @@ import {
   AccordionPanel,
   Label,
   Text,
+  Title2,
   Title3,
 } from "@fluentui/react-components";
 import { useRequest } from "api/requestsApi";
 import { useParams } from "react-router-dom";
+import ViewRequestLCMCDetails from "./Methods/LCMC";
+import ViewRequestJOADetails from "./Methods/JOA";
+import ViewRequestLIJobPostDetails from "./Methods/LinkedInJobPost";
+import ViewRequestLISearchDetails from "./Methods/LinkedInSearch";
+import ViewRequestJobsFlyerDetails from "./Methods/JobsFlyer";
 
 const ViewRequestDetails = () => {
   const params = useParams();
@@ -16,6 +22,10 @@ const ViewRequestDetails = () => {
 
   return (
     <>
+      <Title2>Request Details</Title2>
+      <br />
+      {request.isLoading && <div>Fetching data...</div>}
+      <br />
       {request.data && (
         <>
           <article id="viewRequestDetails">
@@ -110,45 +120,60 @@ const ViewRequestDetails = () => {
             {request.data.methods.includes("lcmc") && (
               <AccordionItem value="lcmc">
                 <AccordionHeader>LCMC Job Board</AccordionHeader>
-                <AccordionPanel></AccordionPanel>
+                <AccordionPanel>
+                  <ViewRequestLCMCDetails data={request.data} />
+                </AccordionPanel>
               </AccordionItem>
             )}
             {request.data.methods.includes("joa") && (
               <AccordionItem value="joa">
                 <AccordionHeader>JOA</AccordionHeader>
-                <AccordionPanel></AccordionPanel>
+                <AccordionPanel>
+                  <ViewRequestJOADetails data={request.data} />
+                </AccordionPanel>
               </AccordionItem>
             )}
 
             {request.data.methods.includes("linkedinPost") && (
               <AccordionItem value="linkedinPost">
                 <AccordionHeader>LinkedIn Job Posting</AccordionHeader>
-                <AccordionPanel></AccordionPanel>
+                <AccordionPanel>
+                  <ViewRequestLIJobPostDetails data={request.data} />
+                </AccordionPanel>
               </AccordionItem>
             )}
 
             {request.data.methods.includes("linkedinSearch") && (
               <AccordionItem value="linkedinSearch">
                 <AccordionHeader>LinkedIn Profile Search</AccordionHeader>
-                <AccordionPanel></AccordionPanel>
+                <AccordionPanel>
+                  <ViewRequestLISearchDetails data={request.data} />
+                </AccordionPanel>
               </AccordionItem>
             )}
 
             {request.data.methods.includes("resumeSearch") && (
               <AccordionItem value="resumeSearch">
                 <AccordionHeader>Resume Search</AccordionHeader>
-                <AccordionPanel></AccordionPanel>
+                <AccordionPanel>
+                  <Text>Resume Search Selected</Text>
+                </AccordionPanel>
               </AccordionItem>
             )}
 
             {request.data.methods.includes("usaJobsFlyer") && (
               <AccordionItem value="usaJobsFlyer">
                 <AccordionHeader>USA Jobs Flyer</AccordionHeader>
-                <AccordionPanel></AccordionPanel>
+                <AccordionPanel>
+                  <ViewRequestJobsFlyerDetails data={request.data} />
+                </AccordionPanel>
               </AccordionItem>
             )}
           </Accordion>
         </>
+      )}
+      {request.isError && (
+        <div>An error has occured: {(request.error as Error).message}</div>
       )}
     </>
   );
