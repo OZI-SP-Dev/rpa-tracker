@@ -65,7 +65,6 @@ const LinkedinSearchSkills = ({ name, form }: FormField) => {
             aria-invalid={
               form.formState.errors.linkedinSearchSkill3 ? "true" : "false"
             }
-            id={name + "3Id"}
           />
         )}
       />
@@ -82,7 +81,6 @@ const LinkedinSearchSkills = ({ name, form }: FormField) => {
             aria-invalid={
               form.formState.errors.linkedinSearchSkill4 ? "true" : "false"
             }
-            id={name + "4Id"}
           />
         )}
       />

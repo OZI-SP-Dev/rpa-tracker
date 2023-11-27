@@ -68,7 +68,6 @@ const LinkedinSearchStudies = ({ name, form }: FormField) => {
             aria-invalid={
               form.formState.errors.linkedinSearchStudy3 ? "true" : "false"
             }
-            id={name + "3Id"}
           />
         )}
       />
@@ -85,7 +84,6 @@ const LinkedinSearchStudies = ({ name, form }: FormField) => {
             aria-invalid={
               form.formState.errors.linkedinSearchStudy4 ? "true" : "false"
             }
-            id={name + "4Id"}
           />
         )}
       />

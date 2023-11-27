@@ -65,7 +65,6 @@ const LinkedinSearchEmployers = ({ name, form }: FormField) => {
             aria-invalid={
               form.formState.errors.linkedinSearchEmployer3 ? "true" : "false"
             }
-            id={name + "3Id"}
           />
         )}
       />
@@ -82,7 +81,6 @@ const LinkedinSearchEmployers = ({ name, form }: FormField) => {
             aria-invalid={
               form.formState.errors.linkedinSearchEmployer4 ? "true" : "false"
             }
-            id={name + "4Id"}
           />
         )}
       />

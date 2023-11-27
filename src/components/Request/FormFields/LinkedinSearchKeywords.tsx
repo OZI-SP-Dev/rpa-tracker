@@ -63,7 +63,6 @@ const LinkedinSearchKeywords = ({ name, form }: FormField) => {
             aria-invalid={
               form.formState.errors.linkedinSearchKeyword3 ? "true" : "false"
             }
-            id={name + "3Id"}
           />
         )}
       />
@@ -80,7 +79,6 @@ const LinkedinSearchKeywords = ({ name, form }: FormField) => {
             aria-invalid={
               form.formState.errors.linkedinSearchKeyword4 ? "true" : "false"
             }
-            id={name + "4Id"}
           />
         )}
       />

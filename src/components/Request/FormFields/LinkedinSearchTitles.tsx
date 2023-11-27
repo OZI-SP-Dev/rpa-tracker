@@ -63,7 +63,6 @@ const LinkedinSearchTitles = ({ name, form }: FormField) => {
             aria-invalid={
               form.formState.errors.linkedinSearchTitle3 ? "true" : "false"
             }
-            id={name + "3Id"}
           />
         )}
       />
@@ -80,7 +79,6 @@ const LinkedinSearchTitles = ({ name, form }: FormField) => {
             aria-invalid={
               form.formState.errors.linkedinSearchTitle4 ? "true" : "false"
             }
-            id={name + "4Id"}
           />
         )}
       />
