@@ -3,7 +3,7 @@ import { RPARequest } from "api/requestsApi";
 
 const ViewRequestLCMCDetails = (props: { data: RPARequest }) => {
   return (
-    <section>
+    <section className="viewRequestDetails">
       <Label weight="semibold" htmlFor="closeDateLCMC">
         Close Date:
       </Label>

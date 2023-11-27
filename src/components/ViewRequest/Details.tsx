@@ -34,7 +34,7 @@ const ViewRequestDetails = () => {
       <br />
       {request.data && (
         <>
-          <article id="viewRequestDetails">
+          <article className="viewRequestDetails">
             <Label weight="semibold" htmlFor="requestor">
               Requestor
             </Label>
@@ -120,7 +120,7 @@ const ViewRequestDetails = () => {
             </Label>
             <Text id="hireType">{request.data.hireType}</Text>
           </article>
-
+          <br />
           <Title3>Announcement Method(s) and details</Title3>
           <Accordion
             openItems={openItems}

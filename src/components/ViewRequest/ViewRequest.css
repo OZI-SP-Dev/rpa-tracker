@@ -39,7 +39,7 @@
   padding: 0.25em;
 }
 
-#viewRequestDetails {
+.viewRequestDetails {
   display: grid;
   grid-template-columns: auto auto;
   row-gap: 0.5em;

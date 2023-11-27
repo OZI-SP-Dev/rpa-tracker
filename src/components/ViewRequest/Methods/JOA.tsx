@@ -3,7 +3,7 @@ import { RPARequest } from "api/requestsApi";
 
 const ViewRequestJOADetails = (props: { data: RPARequest }) => {
   return (
-    <section>
+    <section className="viewRequestDetails">
       <Label weight="semibold" htmlFor="closeDateJOA">
         Close Date
       </Label>
@@ -49,12 +49,16 @@ const ViewRequestJOADetails = (props: { data: RPARequest }) => {
       <Label weight="semibold" htmlFor="joaQualifications">
         Qualifications/Requirements
       </Label>
-      <Text id="joaQualifications">{props.data.joaQualifications}</Text>
+      <Text style={{ whiteSpace: "pre-wrap" }} id="joaQualifications">
+        {props.data.joaQualifications}
+      </Text>
 
       <Label weight="semibold" htmlFor="joaIdealCandidate">
         Ideal Candidate
       </Label>
-      <Text id="joaIdealCandidate">{props.data.joaIdealCandidate}</Text>
+      <Text style={{ whiteSpace: "pre-wrap" }} id="joaIdealCandidate">
+        {props.data.joaIdealCandidate}
+      </Text>
     </section>
   );
 };

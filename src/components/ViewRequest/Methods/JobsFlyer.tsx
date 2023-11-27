@@ -3,7 +3,7 @@ import { RPARequest } from "api/requestsApi";
 
 const ViewRequestJobsFlyerDetails = (props: { data: RPARequest }) => {
   return (
-    <section>
+    <section className="viewRequestDetails">
       <Label weight="semibold" htmlFor="closeDateUsaJobsFlyer">
         Close Date:
       </Label>

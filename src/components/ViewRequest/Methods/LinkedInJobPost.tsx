@@ -1,9 +1,10 @@
 import { Label, Text } from "@fluentui/react-components";
 import { RPARequest } from "api/requestsApi";
+import { DCWFCodes } from "consts/DCWF";
 
 const ViewRequestLIJobPostDetails = (props: { data: RPARequest }) => {
   return (
-    <section>
+    <section className="viewRequestDetails">
       <Label weight="semibold" htmlFor="temporary">
         Type of Appointment
       </Label>
@@ -29,26 +30,33 @@ const ViewRequestLIJobPostDetails = (props: { data: RPARequest }) => {
       <Label weight="semibold" htmlFor="linkedinPositionSummary">
         Position Summary
       </Label>
-      <Text id="linkedinPositionSummary">
+      <Text style={{ whiteSpace: "pre-wrap" }} id="linkedinPositionSummary">
         {props.data.linkedinPositionSummary}
       </Text>
 
       <Label weight="semibold" htmlFor="linkedinQualifications">
         Qualifications
       </Label>
-      <Text id="linkedinQualifications">
-        {props.data.linkedinQualifications}
+      <Text style={{ whiteSpace: "pre-wrap" }} id="linkedinQualifications">
+        {props.data.linkedinQualifications?.map((qual) => qual + "\n")}
       </Text>
 
       <Label weight="semibold" htmlFor="dcwf">
         Certifications/Licensure
       </Label>
-      <Text id="dcwf">{props.data.dcwf}</Text>
+      <Text style={{ whiteSpace: "pre-wrap" }} id="dcwf">
+        {props.data.dcwf?.map((cert) => {
+          const found = DCWFCodes.find((element) => element.Code === cert);
+          return cert + " " + found?.Role + "\n";
+        })}
+      </Text>
 
       <Label weight="semibold" htmlFor="linkedinKSAs">
         KSA's
       </Label>
-      <Text id="linkedinKSAs">{props.data.linkedinKSAs}</Text>
+      <Text style={{ whiteSpace: "pre-wrap" }} id="linkedinKSAs">
+        {props.data.linkedinKSAs}
+      </Text>
     </section>
   );
 };
