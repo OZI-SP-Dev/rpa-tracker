@@ -3,6 +3,7 @@ import {
   AccordionHeader,
   AccordionItem,
   AccordionPanel,
+  AccordionToggleEventHandler,
   Label,
   Text,
   Title2,
@@ -15,10 +16,15 @@ import ViewRequestJOADetails from "./Methods/JOA";
 import ViewRequestLIJobPostDetails from "./Methods/LinkedInJobPost";
 import ViewRequestLISearchDetails from "./Methods/LinkedInSearch";
 import ViewRequestJobsFlyerDetails from "./Methods/JobsFlyer";
+import { useState } from "react";
 
 const ViewRequestDetails = () => {
   const params = useParams();
   const request = useRequest(Number(params.requestId));
+  const [openItems, setOpenItems] = useState<string[]>([]);
+  const handleToggle: AccordionToggleEventHandler<string> = (_e, data) => {
+    setOpenItems(data.openItems);
+  };
 
   return (
     <>
@@ -116,7 +122,12 @@ const ViewRequestDetails = () => {
           </article>
 
           <Title3>Announcement Method(s) and details</Title3>
-          <Accordion>
+          <Accordion
+            openItems={openItems}
+            onToggle={handleToggle}
+            multiple
+            collapsible
+          >
             {request.data.methods.includes("lcmc") && (
               <AccordionItem value="lcmc">
                 <AccordionHeader>LCMC Job Board</AccordionHeader>
