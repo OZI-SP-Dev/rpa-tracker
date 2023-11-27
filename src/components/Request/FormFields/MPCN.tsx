@@ -11,6 +11,7 @@ const MPCN = ({ name, form }: FormField) => {
         htmlFor={name + "Id"}
         weight="semibold"
         className="requestFieldLabel"
+        required
       >
         <NumberFieldIcon className="requestFieldIcon" />
         MPCN

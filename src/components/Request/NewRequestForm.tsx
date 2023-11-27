@@ -7,6 +7,7 @@ import {
   Badge,
   Title2,
   Divider,
+  InfoLabel,
 } from "@fluentui/react-components";
 import { UseFormReturn, useForm } from "react-hook-form";
 import {
@@ -16,45 +17,7 @@ import {
 } from "@fluentui/react-icons-mdl2";
 import { Person, RPARequest, useAddRequest } from "api/requestsApi";
 import { useCurrentUser } from "api/UserApi";
-import {
-  RequestType,
-  MCRRequired,
-  PaySystem,
-  HiringType,
-  AdvertisementLength,
-  Incumbent,
-  Series,
-  Grade,
-  PositionTitle,
-  MPCN,
-  CPCN,
-  FMS,
-  OfficeSymbol,
-  PositionSensitivity,
-  DutyLocation,
-  OSF,
-  OrgApprover,
-  Methods,
-  Supervisor,
-  OrganizationalPOC,
-  IssueTo,
-  FullPartTime,
-  Salary,
-  Telework,
-  Remote,
-  PCS,
-  JOAQualifications,
-  JOAIdealCandidate,
-  Temporary,
-  NTE,
-  Incentives,
-  CloseDateLCMC,
-  CloseDateJOA,
-  LinkedinPositionSummary,
-  LinkedinQualifications,
-  Certifications,
-  LinkedinKSAs,
-} from "components/Request/FormFields/FormFields";
+import * as FormFields from "components/Request/FormFields/FormFields";
 import "components/Request/Request.css";
 import { addDays } from "@fluentui/react";
 
@@ -93,10 +56,32 @@ export type RHFRequest = {
   incentives: string;
   closeDateLCMC?: Date;
   closeDateJOA?: Date;
+  closeDateUsaJobsFlyer?: Date;
   linkedinPositionSummary: string;
   linkedinQualifications: string[];
   dcwf: string[];
   linkedinKSAs: string;
+  linkedinSearchTitle1: string;
+  linkedinSearchTitle2: string;
+  linkedinSearchTitle3: string;
+  linkedinSearchTitle4: string;
+  linkedinSearchSkill1: string;
+  linkedinSearchSkill2: string;
+  linkedinSearchSkill3: string;
+  linkedinSearchSkill4: string;
+  linkedinSearchEmployer1: string;
+  linkedinSearchEmployer2: string;
+  linkedinSearchEmployer3: string;
+  linkedinSearchEmployer4: string;
+  linkedinSearchStudy1: string;
+  linkedinSearchStudy2: string;
+  linkedinSearchStudy3: string;
+  linkedinSearchStudy4: string;
+  linkedinSearchKeyword1: string;
+  linkedinSearchKeyword2: string;
+  linkedinSearchKeyword3: string;
+  linkedinSearchKeyword4: string;
+  linkedinSearchComments: string;
 };
 
 export interface FormField {
@@ -141,6 +126,7 @@ const NewRequestForm = () => {
       incentives: "",
       closeDateLCMC: addDays(today, 7),
       closeDateJOA: addDays(today, 30),
+      closeDateUsaJobsFlyer: addDays(today, 14),
       linkedinPositionSummary: "",
       linkedinQualifications: [
         "citizenship",
@@ -153,6 +139,27 @@ const NewRequestForm = () => {
       ],
       dcwf: [],
       linkedinKSAs: "",
+      linkedinSearchTitle1: "",
+      linkedinSearchTitle2: "",
+      linkedinSearchTitle3: "",
+      linkedinSearchTitle4: "",
+      linkedinSearchSkill1: "",
+      linkedinSearchSkill2: "",
+      linkedinSearchSkill3: "",
+      linkedinSearchSkill4: "",
+      linkedinSearchEmployer1: "",
+      linkedinSearchEmployer2: "",
+      linkedinSearchEmployer3: "",
+      linkedinSearchEmployer4: "",
+      linkedinSearchStudy1: "",
+      linkedinSearchStudy2: "",
+      linkedinSearchStudy3: "",
+      linkedinSearchStudy4: "",
+      linkedinSearchKeyword1: "",
+      linkedinSearchKeyword2: "",
+      linkedinSearchKeyword3: "",
+      linkedinSearchKeyword4: "",
+      linkedinSearchComments: "",
     },
     criteriaMode:
       "all" /* Pass back multiple errors, so we can prioritize which one(s) to show */,
@@ -165,6 +172,7 @@ const NewRequestForm = () => {
   const linkedinPost = methods.includes("linkedinPost");
   const linkedinSearch = methods.includes("linkedinSearch");
   const resumeSearch = methods.includes("resumeSearch");
+  const usaJobsFlyer = methods.includes("usaJobsFlyer");
 
   const linkedinQualifications = myForm.watch("linkedinQualifications");
   const linkedinCertification =
@@ -202,7 +210,6 @@ const NewRequestForm = () => {
         <Divider inset>
           <Title2 align="center">Routing Information</Title2>
         </Divider>
-
         {/* Requestor */}
         <div className="requestFieldContainer">
           <Label
@@ -216,54 +223,39 @@ const NewRequestForm = () => {
           </Label>
           {user.text}
         </div>
-
-        <RequestType name="requestType" form={myForm} />
-
-        <OSF name="osf" form={myForm} />
-
-        <OrgApprover name="orgApprover" form={myForm} />
-
-        <MCRRequired name="mcrRequired" form={myForm} />
+        <FormFields.RequestType name="requestType" form={myForm} />
+        <FormFields.OSF name="osf" form={myForm} />
+        <FormFields.OrgApprover name="orgApprover" form={myForm} />
+        <FormFields.MCRRequired name="mcrRequired" form={myForm} />
 
         <Divider inset>
           <Title2 align="center">Position Information</Title2>
         </Divider>
-
-        <PositionTitle name="positionTitle" form={myForm} />
-
-        <PaySystem name="paySystem" form={myForm} />
-
-        <Series name="series" form={myForm} />
-
-        <Grade name="grade" form={myForm} />
-
-        <OfficeSymbol name="officeSymbol" form={myForm} />
-
-        <Supervisor name="supervisor" form={myForm} />
-
-        <MPCN name="mpcn" form={myForm} />
-
-        <CPCN name="cpcn" form={myForm} />
-
-        <FMS name="fms" form={myForm} />
-
-        <PositionSensitivity name="positionSensitivity" form={myForm} />
-
-        <DutyLocation name="dutyLocation" form={myForm} />
-
-        <Incumbent name="lastIncumbent" form={myForm} />
+        <FormFields.PositionTitle name="positionTitle" form={myForm} />
+        <FormFields.PaySystem name="paySystem" form={myForm} />
+        <FormFields.Series name="series" form={myForm} />
+        <FormFields.Grade name="grade" form={myForm} />
+        <FormFields.OfficeSymbol name="officeSymbol" form={myForm} />
+        <FormFields.Supervisor name="supervisor" form={myForm} />
+        <FormFields.MPCN name="mpcn" form={myForm} />
+        <FormFields.CPCN name="cpcn" form={myForm} />
+        <FormFields.FMS name="fms" form={myForm} />
+        <FormFields.PositionSensitivity
+          name="positionSensitivity"
+          form={myForm}
+        />
+        <FormFields.DutyLocation name="dutyLocation" form={myForm} />
+        <FormFields.Incumbent name="lastIncumbent" form={myForm} />
 
         <Divider inset>
           <Title2 align="center">Hiring Information</Title2>
         </Divider>
-
-        <HiringType name="hiringType" form={myForm} />
-
-        <AdvertisementLength name="advertisementLength" form={myForm} />
-
-        <Methods name="methods" form={myForm} />
-
-        {/* TODO: Possibly make below sections their own "pages" in a wizard like sequence? */}
+        <FormFields.HiringType name="hiringType" form={myForm} />
+        <FormFields.AdvertisementLength
+          name="advertisementLength"
+          form={myForm}
+        />
+        <FormFields.Methods name="methods" form={myForm} />
 
         {lcmc && (
           <>
@@ -272,8 +264,7 @@ const NewRequestForm = () => {
                 Additional LCMC Job Board Information
               </Title2>
             </Divider>
-
-            <CloseDateLCMC name="closeDateLCMC" form={myForm} />
+            <FormFields.CloseDateLCMC name="closeDateLCMC" form={myForm} />
           </>
         )}
 
@@ -282,26 +273,26 @@ const NewRequestForm = () => {
             <Divider inset>
               <Title2 align="center">JOA Additional Information</Title2>
             </Divider>
+            <FormFields.CloseDateJOA name="closeDateJOA" form={myForm} />
+            <FormFields.OrganizationalPOC
+              name="organizationalPOC"
+              form={myForm}
+            />
+            <FormFields.IssueTo name="issueTo" form={myForm} />
+            <FormFields.FullPartTime name="fullPartTime" form={myForm} />
+            <FormFields.Salary name="salary" form={myForm} />
+            <FormFields.Telework name="telework" form={myForm} />
+            <FormFields.Remote name="remote" form={myForm} />
+            <FormFields.PCS name="pcs" form={myForm} />
+            <FormFields.JOAQualifications
+              name="joaQualifications"
+              form={myForm}
+            />
 
-            <CloseDateJOA name="closeDateJOA" form={myForm} />
-
-            <OrganizationalPOC name="organizationalPOC" form={myForm} />
-
-            <IssueTo name="issueTo" form={myForm} />
-
-            <FullPartTime name="fullPartTime" form={myForm} />
-
-            <Salary name="salary" form={myForm} />
-
-            <Telework name="telework" form={myForm} />
-
-            <Remote name="remote" form={myForm} />
-
-            <PCS name="pcs" form={myForm} />
-
-            <JOAQualifications name="joaQualifications" form={myForm} />
-
-            <JOAIdealCandidate name="joaIdealCandidate" form={myForm} />
+            <FormFields.JOAIdealCandidate
+              name="joaIdealCandidate"
+              form={myForm}
+            />
           </>
         )}
 
@@ -310,36 +301,31 @@ const NewRequestForm = () => {
             <Divider inset>
               <Title2 align="center">
                 LinkedIn Job Posting Additional Information
+                <InfoLabel
+                  size="large"
+                  info="LinkedIn anouncements are posted for 30 days"
+                />
               </Title2>
             </Divider>
-
-            <Temporary name="temporary" form={myForm} />
-
+            <FormFields.Temporary name="temporary" form={myForm} />
             {(temporary === "Term" || temporary === "Temp") && (
-              <NTE name="nte" form={myForm} />
+              <FormFields.NTE name="nte" form={myForm} />
             )}
-
-            <Salary name="salary" form={myForm} />
-
-            <Incentives name="incentives" form={myForm} />
-
-            <Telework name="telework" form={myForm} />
-
-            <LinkedinPositionSummary
+            <FormFields.Salary name="salary" form={myForm} />
+            <FormFields.Incentives name="incentives" form={myForm} />
+            <FormFields.Telework name="telework" form={myForm} />
+            <FormFields.LinkedinPositionSummary
               name="linkedinPositionSummary"
               form={myForm}
             />
-
-            <LinkedinQualifications
+            <FormFields.LinkedinQualifications
               name="linkedinQualifications"
               form={myForm}
             />
-
             {linkedinCertification && (
-              <Certifications name="dcwf" form={myForm} />
+              <FormFields.Certifications name="dcwf" form={myForm} />
             )}
-
-            <LinkedinKSAs name="linkedinKSAs" form={myForm} />
+            <FormFields.LinkedinKSAs name="linkedinKSAs" form={myForm} />
           </>
         )}
 
@@ -350,6 +336,30 @@ const NewRequestForm = () => {
                 LinkedIn Profile Search Additional Information
               </Title2>
             </Divider>
+            <FormFields.LinkedinSearchTitles
+              name="linkedinTitles"
+              form={myForm}
+            />
+            <FormFields.LinkedinSearchSkills
+              name="linkedinSkills"
+              form={myForm}
+            />
+            <FormFields.LinkedinSearchEmployers
+              name="linkedinEmployers"
+              form={myForm}
+            />
+            <FormFields.LinkedinSearchStudies
+              name="linkedinStudies"
+              form={myForm}
+            />
+            <FormFields.LinkedinSearchKeywords
+              name="linkedinKeyWords"
+              form={myForm}
+            />
+            <FormFields.LinkedinSearchComments
+              name="linkedinComments"
+              form={myForm}
+            />
           </>
         )}
 
@@ -360,6 +370,20 @@ const NewRequestForm = () => {
                 Resume Search Additional Information
               </Title2>
             </Divider>
+          </>
+        )}
+
+        {usaJobsFlyer && (
+          <>
+            <Divider inset>
+              <Title2 align="center">
+                USA Jobs Flyer Additional Information
+              </Title2>
+            </Divider>
+            <FormFields.CloseDateUsaJobs
+              name="closeDateUsaJobs"
+              form={myForm}
+            />
           </>
         )}
 

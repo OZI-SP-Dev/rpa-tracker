@@ -15,7 +15,7 @@ const Temporary = ({ name, form }: FormField) => {
         required
       >
         <DropdownIcon className="requestFieldIcon" />
-        Duration
+        Type of Appointment
       </Label>
       <Controller
         name="temporary"

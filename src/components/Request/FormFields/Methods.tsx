@@ -4,6 +4,15 @@ import "components/Request/Request.css";
 import { FormField } from "components/Request/NewRequestForm";
 import { ClipboardCheckmarkRegular } from "@fluentui/react-icons";
 
+const options = [
+  { id: "lcmc", text: "LCMC Job Announcement Board" },
+  { id: "joa", text: "Job Opportunity Announcement (JOA)" },
+  { id: "linkedinPost", text: "LinkedIn Job Posting" },
+  { id: "linkedinSearch", text: "LinkedIn Profile Search" },
+  { id: "resumeSearch", text: "COS Resume Repository Search" },
+  { id: "usaJobsFlyer", text: "USA Jobs Flyer" },
+];
+
 const Methods = ({ name, form }: FormField) => {
   return (
     <div className="requestFieldContainer">
@@ -24,81 +33,26 @@ const Methods = ({ name, form }: FormField) => {
         }}
         render={({ field }) => (
           <>
-            <Checkbox
-              id="lcmcId"
-              label="LCMC Job Announcement Board"
-              checked={field.value?.some((item) => item === "lcmc")}
-              aria-describedby={name + "Err"}
-              onChange={(e) => {
-                let values = [...field.value];
-                if (e.target.checked) {
-                  values.push("lcmc");
-                } else {
-                  values = values.filter((v) => v !== "lcmc");
-                }
-                field.onChange(values);
-              }}
-            />
-            <Checkbox
-              id="joaId"
-              label="Job Opportunity Announcement (JOA)"
-              checked={field.value?.some((item) => item === "joa")}
-              aria-describedby={name + "Err"}
-              onChange={(e) => {
-                let values = [...field.value];
-                if (e.target.checked) {
-                  values.push("joa");
-                } else {
-                  values = values.filter((v) => v !== "joa");
-                }
-                field.onChange(values);
-              }}
-            />
-            <Checkbox
-              id="linkedinPostId"
-              label="LinkedIn Job Posting"
-              checked={field.value?.some((item) => item === "linkedinPost")}
-              aria-describedby={name + "Err"}
-              onChange={(e) => {
-                let values = [...field.value];
-                if (e.target.checked) {
-                  values.push("linkedinPost");
-                } else {
-                  values = values.filter((v) => v !== "linkedinPost");
-                }
-                field.onChange(values);
-              }}
-            />
-            <Checkbox
-              id="linkedinSearchId"
-              label="LinkedIn Profile Search"
-              checked={field.value?.some((item) => item === "linkedinSearch")}
-              aria-describedby={name + "Err"}
-              onChange={(e) => {
-                let values = [...field.value];
-                if (e.target.checked) {
-                  values.push("linkedinSearch");
-                } else {
-                  values = values.filter((v) => v !== "linkedinSearch");
-                }
-                field.onChange(values);
-              }}
-            />
-            <Checkbox
-              id="resumeSearchId"
-              label="Resume Search"
-              checked={field.value?.some((item) => item === "resumeSearch")}
-              aria-describedby={name + "Err"}
-              onChange={(e) => {
-                let values = [...field.value];
-                if (e.target.checked) {
-                  values.push("resumeSearch");
-                } else {
-                  values = values.filter((v) => v !== "resumeSearch");
-                }
-                field.onChange(values);
-              }}
-            />
+            {options.map((option) => {
+              return (
+                <Checkbox
+                  id={option.id + "Id"}
+                  key={option.id}
+                  label={option.text}
+                  checked={field.value?.some((item) => item === option.id)}
+                  aria-describedby={name + "Err"}
+                  onChange={(e) => {
+                    let values = [...field.value];
+                    if (e.target.checked) {
+                      values.push(option.id);
+                    } else {
+                      values = values.filter((v) => v !== option.id);
+                    }
+                    field.onChange(values);
+                  }}
+                />
+              );
+            })}
           </>
         )}
       />

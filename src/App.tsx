@@ -15,15 +15,19 @@ import Home from "Home";
 
 // const Home = lazy(() => import("Home"));
 
-// Begin module download immediately, but still utilize lazy() for code splitting
+// Begin module downloads immediately, but still utilize lazy() for code splitting
 const newRequestFormPromise = import("components/Request/NewRequestForm");
 const NewRequestForm = lazy(() => newRequestFormPromise);
+
+const viewRequestPromise = import("components/ViewRequest/ViewRequest");
+const ViewRequestPage = lazy(() => viewRequestPromise);
 
 const router = createHashRouter(
   createRoutesFromElements(
     <Route element={<MainLayout />}>
       <Route path="/" element={<Home />} />
-      <Route path="new" element={<NewRequestForm />} />
+      <Route path="/New" element={<NewRequestForm />} />
+      <Route path="/Request/:requestId" element={<ViewRequestPage />} />
     </Route>
   )
 );

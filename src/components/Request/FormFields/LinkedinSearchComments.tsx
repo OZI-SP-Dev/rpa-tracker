@@ -1,47 +1,42 @@
-import { Input, Label, Text } from "@fluentui/react-components";
+import { Label, Text, Textarea } from "@fluentui/react-components";
 import { Controller } from "react-hook-form";
 import { FormField } from "components/Request/NewRequestForm";
 import "components/Request/Request.css";
 import { TextFieldIcon } from "@fluentui/react-icons-mdl2";
 
-const OfficeSymbol = ({ name, form }: FormField) => {
+const LinkedinSearchComments = ({ name, form }: FormField) => {
   return (
     <div className="requestFieldContainer">
       <Label
         htmlFor={name + "Id"}
         weight="semibold"
         className="requestFieldLabel"
-        required
       >
         <TextFieldIcon className="requestFieldIcon" />
-        Office Symbol
+        Additional Comments/Information
       </Label>
       <Controller
-        name="officeSymbol"
+        name="linkedinSearchComments"
         control={form.control}
-        rules={{
-          maxLength: {
-            value: 255,
-            message: "Office Symbol can be no longer than 255 characters",
-          },
-          required: "Office Symbol is required",
-        }}
         render={({ field }) => (
-          <Input
+          <Textarea
             {...field}
+            resize="vertical"
+            rows={10}
             aria-describedby={name + "Err"}
-            aria-invalid={form.formState.errors.officeSymbol ? "true" : "false"}
+            aria-invalid={
+              form.formState.errors.linkedinSearchComments ? "true" : "false"
+            }
             id={name + "Id"}
-            placeholder="Example format: 'AFLCMC/OZIP'"
           />
         )}
       />
-      {form.formState.errors.officeSymbol && (
+      {form.formState.errors.linkedinSearchComments && (
         <Text role="alert" id={name + "Err"} className="requestErrorText">
-          {form.formState.errors.officeSymbol.message}
+          {form.formState.errors.linkedinSearchComments.message}
         </Text>
       )}
     </div>
   );
 };
-export default OfficeSymbol;
+export default LinkedinSearchComments;

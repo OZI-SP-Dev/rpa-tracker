@@ -13,7 +13,6 @@ const options = [
     id: "financial",
     text: "Financial Management Statement - OGE-450 Financial Disclosure Report",
   },
-  { id: "physical", text: "Must be able to pass a pre-employment physical" },
   {
     id: "travel",
     text: "Travel - Select if travel is more than occasional. For more detail, reference the SPRD.",
@@ -27,7 +26,6 @@ const LinkedinQualifications = ({ name, form }: FormField) => {
         htmlFor={name + "Id"}
         weight="semibold"
         className="requestFieldLabel"
-        required
         info="De-select what is not applicable for your position from the following
         list"
       >
