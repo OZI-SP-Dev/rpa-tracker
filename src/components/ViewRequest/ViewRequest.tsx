@@ -10,7 +10,7 @@ const ViewRequest = () => {
       <section id="viewRequestHeader" className="gray-gradiant">
         Request Header
       </section>
-      <section>
+      <section id="viewRequestDetailsContainer">
         <ViewRequestDetails />
       </section>
       <section id="viewRequestNotes" className="gray-gradiant">
