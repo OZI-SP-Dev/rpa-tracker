@@ -181,8 +181,9 @@ export const useAddRequest = () => {
         .getByTitle("requests")
         .items.getById(newFolderFields.Id)
         .update({
-          ContentTypeId: contentTypeId,
-          Title: folderName,
+          FileLeafRef: newFolderFields.Id.toString(), // rename folder
+          Title: newFolderFields.Id.toString(),
+          ContentTypeId: contentTypeId, // update to RPADocSet content type
           ...(await transformRequestToSP(newRequest)),
         });
 

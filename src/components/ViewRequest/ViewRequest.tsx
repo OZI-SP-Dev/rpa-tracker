@@ -1,4 +1,5 @@
 import ViewRequestDetails from "components/ViewRequest/Details";
+import ViewRequestDocuments from "components/ViewRequest/Documents";
 import "./ViewRequest.css";
 
 const ViewRequest = () => {
@@ -17,7 +18,7 @@ const ViewRequest = () => {
         Notes!
       </section>
       <aside id="viewRequestDocuments" className="gray-gradiant">
-        Documents
+        <ViewRequestDocuments />
       </aside>
     </section>
   );
