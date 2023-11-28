@@ -25,10 +25,10 @@ const getDocuments = async (requestId: number) => {
       "ModifiedBy/Title",
       "UniqueId"
     )
-    .expand("ModifiedBy")();
+    .expand("ModifiedBy")<SPDocument[]>();
 };
 
-export interface Document {
+export interface SPDocument {
   Name: string;
   ModifiedBy: { Id: string; EMail: string; Title: string };
   TimeLastModified: string;

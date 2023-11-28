@@ -4,8 +4,10 @@ import App from "./App.tsx";
 import "./index.css";
 import { initializeIcons } from "@fluentui/font-icons-mdl2";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { initializeFileTypeIcons } from "@fluentui/react-file-type-icons";
 
 initializeIcons();
+initializeFileTypeIcons();
 
 const queryClient = new QueryClient();
 

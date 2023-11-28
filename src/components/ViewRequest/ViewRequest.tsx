@@ -17,7 +17,7 @@ const ViewRequest = () => {
       <section id="viewRequestNotes" className="gray-gradiant">
         Notes!
       </section>
-      <aside id="viewRequestDocuments" className="gray-gradiant">
+      <aside id="viewRequestDocuments">
         <ViewRequestDocuments />
       </aside>
     </section>

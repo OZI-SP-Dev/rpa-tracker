@@ -1,6 +1,7 @@
-import { Title2, Text } from "@fluentui/react-components";
+import { Title2 } from "@fluentui/react-components";
 import { useDocuments } from "api/documentsApi";
 import { useParams } from "react-router-dom";
+import { DocumentView } from "./Documents/DocumentView";
 
 const ViewRequestDocuments = () => {
   const params = useParams();
@@ -15,7 +16,13 @@ const ViewRequestDocuments = () => {
       {documents.data && (
         <section>
           {documents.data.map((document) => {
-            return <Text>{document.Name}</Text>;
+            return (
+              <DocumentView
+                key={document.UniqueId}
+                readonly={false}
+                document={document}
+              />
+            );
           })}
         </section>
       )}
