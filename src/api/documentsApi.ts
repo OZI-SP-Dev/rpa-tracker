@@ -1,5 +1,5 @@
 import { spWebContext } from "api/SPWebContext";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 /**
  * Gets all requests
@@ -26,6 +26,21 @@ const getDocuments = async (requestId: number) => {
       "UniqueId"
     )
     .expand("ModifiedBy")<SPDocument[]>();
+};
+
+export const useDeleteDocument = (document: SPDocument) => {
+  const queryClient = useQueryClient();
+  return useMutation(
+    ["deleteDocument", document.Name],
+    async () => {
+      return spWebContext.web.getFileById(document.UniqueId).recycle();
+    },
+    {
+      onSuccess: async () => {
+        queryClient.invalidateQueries(["documents"]);
+      },
+    }
+  );
 };
 
 export interface SPDocument {

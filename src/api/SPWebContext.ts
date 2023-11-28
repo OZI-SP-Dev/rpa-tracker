@@ -8,6 +8,7 @@ import "@pnp/sp/profiles";
 import "@pnp/sp/batching";
 import "@pnp/sp/folders";
 import "@pnp/sp/files/folder";
+import "@pnp/sp/files/web";
 
 declare const _spPageContextInfo: { webAbsoluteUrl: string };
 

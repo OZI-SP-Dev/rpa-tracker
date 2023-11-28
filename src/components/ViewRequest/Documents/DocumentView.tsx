@@ -9,12 +9,14 @@ import {
 } from "@fluentui/react-components";
 import { getFileTypeIconProps } from "@fluentui/react-file-type-icons";
 import { DeleteIcon } from "@fluentui/react-icons-mdl2";
-import { SPDocument } from "api/documentsApi";
+import { SPDocument, useDeleteDocument } from "api/documentsApi";
 
 export const DocumentView = (props: {
   document: SPDocument;
   readonly?: boolean;
 }) => {
+  const deleteDocument = useDeleteDocument(props.document);
+
   const extension = props.document.ServerRelativeUrl.substring(
     props.document.ServerRelativeUrl.lastIndexOf(".") + 1
   );
@@ -67,6 +69,8 @@ export const DocumentView = (props: {
             appearance="transparent"
             icon={<DeleteIcon />}
             aria-label="Delete"
+            onClick={() => deleteDocument.mutate()}
+            disabled={deleteDocument.isLoading}
           />
         }
       />
