@@ -42,9 +42,10 @@ const Salary = ({ name, form }: FormField) => {
               contentBefore={<Text>$</Text>}
               value={field.value.toString()}
               type="number"
+              aria-label="Min Salary"
               aria-describedby={name + "Err"}
               aria-invalid={form.formState.errors.salaryLow ? "true" : "false"}
-              id={name + "Id"}
+              id={name + "LowId"}
               style={{ marginInline: "0em 1em" }}
               onChange={(ev, data) => {
                 field.onChange(ev, data);
@@ -79,9 +80,10 @@ const Salary = ({ name, form }: FormField) => {
               contentBefore={<Text>$</Text>}
               value={field.value.toString()}
               type="number"
+              aria-label="Max Salary"
               aria-describedby={name + "Err"}
               aria-invalid={form.formState.errors.salaryHigh ? "true" : "false"}
-              id={name + "Id"}
+              id={name + "HighId"}
               style={{ marginInline: "1em 0em" }}
               onChange={(ev, data) => {
                 field.onChange(ev, data);
