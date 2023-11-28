@@ -26,8 +26,8 @@ const Certifications = ({ name, form }: FormField) => {
         }}
         render={({ field }) => (
           <Dropdown
+            id={name + "Id"}
             aria-describedby={name + "Err"}
-            aria-labelledby={name + "Id"}
             aria-invalid={form.formState.errors.dcwf ? "true" : "false"}
             multiselect={true}
             aria-required
