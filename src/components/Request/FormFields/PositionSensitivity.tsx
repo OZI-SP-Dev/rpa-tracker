@@ -22,6 +22,7 @@ const PositionSensitivity = ({ name, form }: FormField) => {
         control={form.control}
         render={({ field }) => (
           <Combobox
+            required
             aria-describedby={name + "Err"}
             aria-labelledby={name + "Id"}
             aria-invalid={
