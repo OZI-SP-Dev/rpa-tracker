@@ -20,9 +20,11 @@ const PositionSensitivity = ({ name, form }: FormField) => {
       <Controller
         name="positionSensitivity"
         control={form.control}
+        rules={{
+          required: "Position Sensitivity is required",
+        }}
         render={({ field }) => (
           <Combobox
-            required
             aria-describedby={name + "Err"}
             aria-labelledby={name + "Id"}
             aria-invalid={
