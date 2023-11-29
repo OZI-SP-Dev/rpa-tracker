@@ -25,7 +25,8 @@ const getDocuments = async (requestId: number) => {
       "ModifiedBy/Title",
       "UniqueId"
     )
-    .expand("ModifiedBy")<SPDocument[]>();
+    .expand("ModifiedBy")
+    .orderBy("Name")<SPDocument[]>();
 };
 
 export const useDeleteDocument = (document: SPDocument) => {
@@ -38,6 +39,23 @@ export const useDeleteDocument = (document: SPDocument) => {
     {
       onSuccess: async () => {
         queryClient.invalidateQueries(["documents"]);
+      },
+    }
+  );
+};
+
+export const useAddDocument = (requestId: number) => {
+  const queryClient = useQueryClient();
+  return useMutation(
+    ["addDocument"],
+    async (file: File) => {
+      return spWebContext.web
+        .getFolderByServerRelativePath(`requests/${requestId}`)
+        .files.addUsingPath(file.name, file, { Overwrite: true });
+    },
+    {
+      onSuccess: async () => {
+        queryClient.invalidateQueries(["documents", requestId]);
       },
     }
   );

@@ -2,15 +2,17 @@ import { Title2 } from "@fluentui/react-components";
 import { useDocuments } from "api/documentsApi";
 import { useParams } from "react-router-dom";
 import { DocumentView } from "./Documents/DocumentView";
+import { DocumentUploader } from "./Documents/DocumentUploader";
 
 const ViewRequestDocuments = () => {
   const params = useParams();
-  const documents = useDocuments(Number(params.requestId));
+  const requestId = Number(params.requestId);
+  const documents = useDocuments(requestId);
 
   return (
     <>
       <Title2>Documents</Title2>
-      <br />
+      <DocumentUploader requestId={requestId} />
       {documents.isLoading && <div>Fetching data...</div>}
       <br />
       {documents.data && (

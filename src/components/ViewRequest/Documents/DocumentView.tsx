@@ -5,7 +5,7 @@ import {
   Card,
   CardHeader,
   Link,
-  Text,
+  Title3,
 } from "@fluentui/react-components";
 import { getFileTypeIconProps } from "@fluentui/react-file-type-icons";
 import { DeleteIcon } from "@fluentui/react-icons-mdl2";
@@ -20,6 +20,10 @@ export const DocumentView = (props: {
   const extension = props.document.ServerRelativeUrl.substring(
     props.document.ServerRelativeUrl.lastIndexOf(".") + 1
   );
+
+  const lastModified = new Date(
+    props.document.TimeLastModified
+  ).toLocaleString();
 
   const isOfficeFile: boolean = wordExtensions
     .concat(excelExtensions)
@@ -52,16 +56,14 @@ export const DocumentView = (props: {
         }
         header={
           <Link download={!isOfficeFile} href={downloadUrl}>
-            <Text size={600} weight="semibold">
-              {props.document.Name}
-            </Text>
+            <Title3>{props.document.Name}</Title3>
           </Link>
         }
         description={
           <Caption1>
             Last Updated By: {props.document.ModifiedBy.Title}
             <br />
-            Last Updated On: {props.document.TimeLastModified}
+            Last Updated On: {lastModified}
           </Caption1>
         }
         action={
