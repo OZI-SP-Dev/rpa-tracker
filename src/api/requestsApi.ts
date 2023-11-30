@@ -201,6 +201,15 @@ export const useAddRequest = () => {
   );
 };
 
+export const useDeleteRequest = () => {
+  return useMutation(["deleteRequest"], async (requestId: number) => {
+    await spWebContext.web.lists
+      .getByTitle("requests")
+      .items.getById(requestId)
+      .recycle();
+  });
+};
+
 type InternalRequestItem = Omit<
   RPARequest,
   | "orgApprover"

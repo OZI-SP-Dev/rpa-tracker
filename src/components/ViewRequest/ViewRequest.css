@@ -1,6 +1,6 @@
 #viewRequestContainer {
   display: grid;
-  grid-template-columns: 5em 1fr;
+  grid-template-columns: 3.5em 1fr;
   grid-template-areas:
     "action header"
     "action details"
@@ -51,9 +51,16 @@
   column-gap: 1em;
 }
 
+span.document-name {
+  max-width: 80vw;
+  display: inline-block;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
 @media (min-width: 1024px) {
   #viewRequestContainer {
-    grid-template-columns: 5em 1fr 1fr;
+    grid-template-columns: 3.5em 1fr 1fr;
     grid-template-areas:
       "action header header"
       "action details documents"
@@ -61,9 +68,6 @@
   }
   span.document-name {
     max-width: 40vw;
-    display: inline-block;
-    text-overflow: ellipsis;
-    overflow: hidden;
   }
 }
 
@@ -71,7 +75,23 @@
   opacity: 0.7;
 }
 
+#documentDropZone * {
+  cursor: pointer;
+}
+
 #documentDropZone.inDropZone::after {
   border-color: blue;
   border-style: dashed;
+}
+
+.orange {
+  color: orange;
+}
+
+.blue {
+  color: #09f;
+}
+
+.red {
+  color: #c23f38;
 }
