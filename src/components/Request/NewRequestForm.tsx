@@ -182,6 +182,7 @@ const NewRequestForm = () => {
 
   const createNewRequest = async (data: RHFRequest) => {
     const data2 = {
+      stage: "Draft",
       ...data,
     } as RPARequest;
 

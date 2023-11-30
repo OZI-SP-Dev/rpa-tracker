@@ -5,6 +5,7 @@ import { PAYSYSTEMS } from "consts/PaySystems";
 import { POSITIONSENSITIVIES } from "consts/PositionSensitivities";
 import { GENERALGRADES, ACQGRADES } from "consts/Grades";
 import { OSFS } from "consts/OSFs";
+import { STAGES } from "consts/Stages";
 
 export interface Person {
   Id: string;
@@ -15,6 +16,7 @@ export interface Person {
 export interface RPARequest {
   Author?: Person;
   Id?: string;
+  stage: (typeof STAGES)[number]["key"];
   requestType: (typeof REQUESTTYPES)[number];
   mcrRequired: "Yes" | "No";
   paySystem: (typeof PAYSYSTEMS)[number]["key"];
@@ -313,6 +315,7 @@ const transformRequestToSP = async (
 const transformRequestFromSP = (request: any): RPARequest => {
   return {
     Id: request.Id,
+    stage: request.stage,
     Author: request.Author,
     requestType: request.requestType,
     mcrRequired: request.mcrRequired,
