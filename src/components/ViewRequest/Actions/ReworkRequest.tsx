@@ -10,10 +10,25 @@ import {
   Tooltip,
 } from "@fluentui/react-components";
 import { NavigateBackIcon } from "@fluentui/react-icons-mdl2";
-//import { useParams } from "react-router-dom";
+import { useRequest, useUpdateStage } from "api/requestsApi";
+import { STAGES } from "consts/Stages";
+import { useParams } from "react-router-dom";
 
 const ReworkRequest = () => {
-  //const params = useParams();
+  const params = useParams();
+  const requestId = Number(params.requestId);
+  const request = useRequest(requestId);
+  const updateStage = useUpdateStage();
+
+  const updateHandler = () => {
+    if (request.data) {
+      const currentStage = STAGES.find(({ key }) => key === request.data.stage);
+      if (currentStage && currentStage.previous !== "") {
+        const newStage = currentStage.previous;
+        updateStage.mutate({ requestId, newStage });
+      }
+    }
+  };
 
   return (
     <Dialog modalType="alert">
@@ -46,7 +61,9 @@ const ReworkRequest = () => {
               <Button appearance="secondary">Cancel</Button>
             </DialogTrigger>
             <DialogTrigger>
-              <Button appearance="primary">Submit</Button>
+              <Button appearance="primary" onClick={updateHandler}>
+                Submit
+              </Button>
             </DialogTrigger>
           </DialogActions>
         </DialogBody>

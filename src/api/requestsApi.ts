@@ -212,6 +212,21 @@ export const useDeleteRequest = () => {
   });
 };
 
+export const useUpdateStage = () => {
+  return useMutation(
+    ["updateStage"],
+    async (request: {
+      requestId: number;
+      newStage: (typeof STAGES)[number]["key"];
+    }) => {
+      await spWebContext.web.lists
+        .getByTitle("requests")
+        .items.getById(request.requestId)
+        .update({ stage: request.newStage });
+    }
+  );
+};
+
 type InternalRequestItem = Omit<
   RPARequest,
   | "orgApprover"
