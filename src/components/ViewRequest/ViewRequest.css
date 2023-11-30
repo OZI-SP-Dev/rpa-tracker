@@ -59,8 +59,19 @@
       "action details documents"
       "action notes documents";
   }
+  span.document-name {
+    max-width: 40vw;
+    display: inline-block;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
 }
 
 .inDropZone {
   opacity: 0.7;
+}
+
+#documentDropZone.inDropZone::after {
+  border-color: blue;
+  border-style: dashed;
 }

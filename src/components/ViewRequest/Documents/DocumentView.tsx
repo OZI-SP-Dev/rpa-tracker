@@ -5,6 +5,7 @@ import {
   Card,
   CardHeader,
   Link,
+  Spinner,
   Title3,
 } from "@fluentui/react-components";
 import { getFileTypeIconProps } from "@fluentui/react-file-type-icons";
@@ -55,8 +56,8 @@ export const DocumentView = (props: {
           />
         }
         header={
-          <Link download={!isOfficeFile} href={downloadUrl}>
-            <Title3>{props.document.Name}</Title3>
+          <Link download={!isOfficeFile} href={encodeURI(downloadUrl)}>
+            <Title3 className="document-name">{props.document.Name}</Title3>
           </Link>
         }
         description={
@@ -67,13 +68,17 @@ export const DocumentView = (props: {
           </Caption1>
         }
         action={
-          <Button
-            appearance="transparent"
-            icon={<DeleteIcon />}
-            aria-label="Delete"
-            onClick={() => deleteDocument.mutate()}
-            disabled={deleteDocument.isLoading}
-          />
+          <>
+            {!deleteDocument.isLoading && (
+              <Button
+                appearance="transparent"
+                icon={<DeleteIcon />}
+                aria-label="Delete"
+                onClick={() => deleteDocument.mutate()}
+              />
+            )}
+            {deleteDocument.isLoading && <Spinner />}
+          </>
         }
       />
     </Card>

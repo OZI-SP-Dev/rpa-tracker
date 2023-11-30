@@ -1,5 +1,5 @@
 import { Icon } from "@fluentui/react";
-import { Button, Card, Label } from "@fluentui/react-components";
+import { Card, Label, Spinner } from "@fluentui/react-components";
 import { useAddDocument } from "api/documentsApi";
 import { ChangeEvent, DragEventHandler, useRef, useState } from "react";
 
@@ -71,24 +71,29 @@ export const DocumentUploader = (props: { requestId: number }) => {
       appearance="outline"
       style={{ textAlign: "center" }}
       className={inDropZone ? "inDropZone" : ""}
+      id="documentDropZone"
     >
       <input
-        //ref={inputRef}
         type="file"
         style={{ display: "none" }}
         onChange={fileInputOnChange}
         id="fileUploader"
         multiple
+        disabled={addDocument.isLoading}
       />
-      <Label size="large" htmlFor="fileUploader" weight="semibold">
-        <Button
-          appearance="transparent"
-          style={{ width: "100%", height: "100%" }}
-        >
+      {addDocument.isLoading && (
+        <Spinner
+          role="status"
+          labelPosition="after"
+          label="Uploading document(s)..."
+        />
+      )}
+      {!addDocument.isLoading && (
+        <Label size="large" htmlFor="fileUploader" weight="semibold">
           <Icon iconName="Upload" />
           <strong>Choose one or more files, or drag them here.</strong>
-        </Button>
-      </Label>
+        </Label>
+      )}
     </Card>
   );
 };
