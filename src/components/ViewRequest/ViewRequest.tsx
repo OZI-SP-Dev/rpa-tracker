@@ -1,4 +1,5 @@
-import ActionBar from "components/ViewRequest//ActionBar";
+import ActionBar from "components/ViewRequest/ActionBar";
+import StatusBar from "components/ViewRequest/StatusBar";
 import ViewRequestDetails from "components/ViewRequest/Details";
 import ViewRequestDocuments from "components/ViewRequest/Documents";
 import "./ViewRequest.css";
@@ -10,7 +11,7 @@ const ViewRequest = () => {
         <ActionBar />
       </aside>
       <section id="viewRequestHeader" className="gray-gradiant">
-        Request Header
+        <StatusBar />
       </section>
       <section id="viewRequestDetailsContainer">
         <ViewRequestDetails />

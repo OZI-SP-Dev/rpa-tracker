@@ -95,3 +95,68 @@ span.document-name {
 .red {
   color: #c23f38;
 }
+
+ul.request-status {
+  padding-inline-start: 0px;
+}
+
+ul.request-status li:before {
+  left: -2px;
+  border-color: transparent transparent transparent #fff;
+  z-index: 0;
+}
+
+ul.request-status li {
+  display: inline-block;
+  height: 30px;
+  line-height: 30px;
+  margin: 5px 3px 0 0;
+  text-indent: 22px;
+  position: relative;
+}
+
+ul.request-status li div:after,
+ul.request-status li:before {
+  content: " ";
+  height: 0;
+  width: 0;
+  position: absolute;
+  border-style: solid;
+  border-width: 15px 0 15px 15px;
+}
+
+ul.request-status li:first-child:before {
+  border-color: transparent;
+}
+
+ul.request-status li div:after {
+  right: -15px;
+  border-color: transparent transparent transparent #ccc;
+  z-index: 10;
+  padding-right: 1px;
+}
+
+ul.request-status li.completed-stage div {
+  background: #337ab7;
+  color: #fff;
+  z-index: 100;
+}
+
+ul.request-status li.completed-stage div:after {
+  border-left-color: #337ab7;
+}
+
+ul.request-status li div {
+  display: block;
+  background: #ccc;
+  padding-right: 0.75rem;
+}
+
+ul.request-status li.active-stage div {
+  background-color: orange;
+  color: #fff;
+}
+
+ul.request-status li.active-stage div:after {
+  border-color: transparent transparent transparent orange;
+}
