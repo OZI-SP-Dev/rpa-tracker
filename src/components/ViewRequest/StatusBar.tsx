@@ -22,7 +22,7 @@ const StatusBar = () => {
         <Title2>
           {request.data.requestType} for {request.data.paySystem}-
           {request.data.series}-{request.data.grade} in{" "}
-          {request.data.officeSymbol}{" "}
+          {request.data.officeSymbol}
         </Title2>
       )}
       <br />
