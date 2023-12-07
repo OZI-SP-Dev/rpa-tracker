@@ -4,9 +4,17 @@ import {
   Caption1,
   Card,
   CardHeader,
+  Dialog,
+  DialogActions,
+  DialogBody,
+  DialogContent,
+  DialogSurface,
+  DialogTitle,
+  DialogTrigger,
   Link,
   Spinner,
   Title3,
+  Tooltip,
 } from "@fluentui/react-components";
 import { getFileTypeIconProps } from "@fluentui/react-file-type-icons";
 import { DeleteIcon } from "@fluentui/react-icons-mdl2";
@@ -68,17 +76,41 @@ export const DocumentView = (props: {
           </Caption1>
         }
         action={
-          <>
-            {!deleteDocument.isLoading && (
-              <Button
-                appearance="transparent"
-                icon={<DeleteIcon />}
-                aria-label="Delete"
-                onClick={() => deleteDocument.mutate()}
-              />
-            )}
-            {deleteDocument.isLoading && <Spinner />}
-          </>
+          <Dialog modalType="alert">
+            <DialogTrigger disableButtonEnhancement>
+              <Tooltip withArrow content="Delete" relationship="label">
+                <Button
+                  appearance="transparent"
+                  icon={deleteDocument.isLoading ? <Spinner /> : <DeleteIcon />}
+                  aria-label="Delete"
+                  disabled={deleteDocument.isLoading}
+                />
+              </Tooltip>
+            </DialogTrigger>
+            <DialogSurface>
+              <DialogBody>
+                <DialogTitle>Delete document</DialogTitle>
+                <DialogContent>
+                  Are you sure you wish to delete this document?
+                  <br />
+                  {props.document.Name}
+                </DialogContent>
+                <DialogActions>
+                  <DialogTrigger disableButtonEnhancement>
+                    <Button appearance="secondary">Cancel</Button>
+                  </DialogTrigger>
+                  <DialogTrigger disableButtonEnhancement>
+                    <Button
+                      appearance="primary"
+                      onClick={() => deleteDocument.mutate()}
+                    >
+                      Delete
+                    </Button>
+                  </DialogTrigger>
+                </DialogActions>
+              </DialogBody>
+            </DialogSurface>
+          </Dialog>
         }
       />
     </Card>
