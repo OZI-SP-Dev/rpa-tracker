@@ -19,14 +19,12 @@ const ReworkRequest = () => {
   const requestId = Number(params.requestId);
   const request = useRequest(requestId);
   const updateStage = useUpdateStage();
+  const currentStage = STAGES.find(({ key }) => key === request.data?.stage);
 
   const updateHandler = () => {
-    if (request.data) {
-      const currentStage = STAGES.find(({ key }) => key === request.data.stage);
-      if (currentStage && currentStage.previous !== "") {
-        const newStage = currentStage.previous;
-        updateStage.mutate({ requestId, newStage });
-      }
+    if (request.data && currentStage && currentStage.previous !== "") {
+      const newStage = currentStage.previous;
+      updateStage.mutate({ requestId, newStage });
     }
   };
 
@@ -42,6 +40,7 @@ const ReworkRequest = () => {
             }}
             icon={<NavigateBackIcon className="orange" />}
             size="large"
+            disabled={(currentStage?.previous ?? "") === ""}
           />
         </Tooltip>
       </DialogTrigger>
@@ -60,7 +59,7 @@ const ReworkRequest = () => {
             <DialogTrigger disableButtonEnhancement>
               <Button appearance="secondary">Cancel</Button>
             </DialogTrigger>
-            <DialogTrigger>
+            <DialogTrigger disableButtonEnhancement>
               <Button appearance="primary" onClick={updateHandler}>
                 Submit
               </Button>

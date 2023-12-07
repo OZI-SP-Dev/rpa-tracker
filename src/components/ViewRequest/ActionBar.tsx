@@ -5,17 +5,12 @@ import DeleteRequest from "./Actions/DeleteRequest";
 
 const ActionBar = () => {
   return (
-    <>
+    <div style={{ display: "flex", flexDirection: "column" }}>
       <SendRequest />
-      <br />
-
       <ReworkRequest />
-      <br />
-
       <EditRequest />
-      <br />
       <DeleteRequest />
-    </>
+    </div>
   );
 };
 

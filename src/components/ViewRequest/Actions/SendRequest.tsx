@@ -14,19 +14,18 @@ import { useRequest, useUpdateStage } from "api/requestsApi";
 import { STAGES } from "consts/Stages";
 import { useParams } from "react-router-dom";
 
-const ReworkRequest = () => {
+const SendRequest = () => {
   const params = useParams();
   const requestId = Number(params.requestId);
   const request = useRequest(requestId);
   const updateStage = useUpdateStage();
 
+  const currentStage = STAGES.find(({ key }) => key === request.data?.stage);
+
   const updateHandler = () => {
-    if (request.data) {
-      const currentStage = STAGES.find(({ key }) => key === request.data.stage);
-      if (currentStage && currentStage.next !== "") {
-        const newStage = currentStage.next;
-        updateStage.mutate({ requestId, newStage });
-      }
+    if (request.data && currentStage && currentStage.next !== "") {
+      const newStage = currentStage.next;
+      updateStage.mutate({ requestId, newStage });
     }
   };
 
@@ -42,6 +41,7 @@ const ReworkRequest = () => {
             }}
             icon={<NavigateForwardIcon className="orange" />}
             size="large"
+            disabled={(currentStage?.next ?? "") === ""}
           />
         </Tooltip>
       </DialogTrigger>
@@ -59,7 +59,7 @@ const ReworkRequest = () => {
             <DialogTrigger disableButtonEnhancement>
               <Button appearance="secondary">Cancel</Button>
             </DialogTrigger>
-            <DialogTrigger>
+            <DialogTrigger disableButtonEnhancement>
               <Button appearance="primary" onClick={updateHandler}>
                 Send
               </Button>
@@ -71,4 +71,4 @@ const ReworkRequest = () => {
   );
 };
 
-export default ReworkRequest;
+export default SendRequest;

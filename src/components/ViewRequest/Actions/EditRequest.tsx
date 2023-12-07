@@ -41,7 +41,7 @@ const EditRequest = () => {
             <DialogTrigger disableButtonEnhancement>
               <Button appearance="secondary">Cancel</Button>
             </DialogTrigger>
-            <DialogTrigger>
+            <DialogTrigger disableButtonEnhancement>
               <Button appearance="primary">Save</Button>
             </DialogTrigger>
           </DialogActions>

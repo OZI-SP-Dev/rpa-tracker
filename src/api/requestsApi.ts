@@ -213,6 +213,8 @@ export const useDeleteRequest = () => {
 };
 
 export const useUpdateStage = () => {
+  const queryClient = useQueryClient();
+
   return useMutation(
     ["updateStage"],
     async (request: {
@@ -223,6 +225,11 @@ export const useUpdateStage = () => {
         .getByTitle("requests")
         .items.getById(request.requestId)
         .update({ stage: request.newStage });
+    },
+    {
+      onSuccess: async () => {
+        queryClient.invalidateQueries(["requests"]);
+      },
     }
   );
 };

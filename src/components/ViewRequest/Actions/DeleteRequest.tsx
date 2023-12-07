@@ -49,7 +49,7 @@ const DeleteRequest = () => {
                 <DialogTrigger disableButtonEnhancement>
                   <Button appearance="secondary">Cancel</Button>
                 </DialogTrigger>
-                <DialogTrigger>
+                <DialogTrigger disableButtonEnhancement>
                   <Button appearance="primary" onClick={deleteHandler}>
                     Delete
                   </Button>
