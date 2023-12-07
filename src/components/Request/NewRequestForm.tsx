@@ -20,6 +20,7 @@ import { useCurrentUser } from "api/UserApi";
 import * as FormFields from "components/Request/FormFields/FormFields";
 import "components/Request/Request.css";
 import { addDays } from "@fluentui/react";
+import { Navigate } from "react-router-dom";
 
 export type RHFRequest = {
   requestType: string;
@@ -208,6 +209,9 @@ const NewRequestForm = () => {
         className="requestFormContainer"
         onSubmit={myForm.handleSubmit(createNewRequest)}
       >
+        {addRequest.isSuccess && (
+          <Navigate to={"/Request/" + addRequest.data.Id} />
+        )}
         <Divider inset>
           <Title2 align="center">Routing Information</Title2>
         </Divider>

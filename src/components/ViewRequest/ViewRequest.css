@@ -98,6 +98,8 @@ span.document-name {
 
 ul.request-status {
   padding-inline-start: 0px;
+  margin-block-start: 0px;
+  margin-block-end: 0px;
 }
 
 ul.request-status li:before {
