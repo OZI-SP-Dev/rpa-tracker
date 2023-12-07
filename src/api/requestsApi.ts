@@ -227,8 +227,8 @@ export const useUpdateStage = () => {
         .update({ stage: request.newStage });
     },
     {
-      onSuccess: async () => {
-        queryClient.invalidateQueries(["requests"]);
+      onSuccess: async (_data, request) => {
+        queryClient.invalidateQueries(["requests", request.requestId]);
       },
     }
   );
