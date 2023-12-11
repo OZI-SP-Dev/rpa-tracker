@@ -5,6 +5,7 @@ import { PAYSYSTEMS } from "consts/PaySystems";
 import { POSITIONSENSITIVIES } from "consts/PositionSensitivities";
 import { GENERALGRADES, ACQGRADES } from "consts/Grades";
 import { OSFS } from "consts/OSFs";
+import { STAGES } from "consts/Stages";
 
 export interface Person {
   Id: string;
@@ -15,6 +16,7 @@ export interface Person {
 export interface RPARequest {
   Author?: Person;
   Id?: string;
+  stage: (typeof STAGES)[number]["key"];
   requestType: (typeof REQUESTTYPES)[number];
   mcrRequired: "Yes" | "No";
   paySystem: (typeof PAYSYSTEMS)[number]["key"];
@@ -181,8 +183,9 @@ export const useAddRequest = () => {
         .getByTitle("requests")
         .items.getById(newFolderFields.Id)
         .update({
-          ContentTypeId: contentTypeId,
-          Title: folderName,
+          FileLeafRef: newFolderFields.Id.toString(), // rename folder
+          Title: newFolderFields.Id.toString(),
+          ContentTypeId: contentTypeId, // update to RPADocSet content type
           ...(await transformRequestToSP(newRequest)),
         });
 
@@ -195,6 +198,37 @@ export const useAddRequest = () => {
       onSuccess: async () => {
         // Mark requests as needing refreshed
         queryClient.invalidateQueries(["requests"]);
+      },
+    }
+  );
+};
+
+export const useDeleteRequest = () => {
+  return useMutation(["deleteRequest"], async (requestId: number) => {
+    await spWebContext.web.lists
+      .getByTitle("requests")
+      .items.getById(requestId)
+      .recycle();
+  });
+};
+
+export const useUpdateStage = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation(
+    ["updateStage"],
+    async (request: {
+      requestId: number;
+      newStage: (typeof STAGES)[number]["key"];
+    }) => {
+      await spWebContext.web.lists
+        .getByTitle("requests")
+        .items.getById(request.requestId)
+        .update({ stage: request.newStage });
+    },
+    {
+      onSuccess: async (_data, request) => {
+        queryClient.invalidateQueries(["requests", request.requestId]);
       },
     }
   );
@@ -303,6 +337,7 @@ const transformRequestToSP = async (
 const transformRequestFromSP = (request: any): RPARequest => {
   return {
     Id: request.Id,
+    stage: request.stage,
     Author: request.Author,
     requestType: request.requestType,
     mcrRequired: request.mcrRequired,

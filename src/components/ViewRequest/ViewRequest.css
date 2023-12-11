@@ -1,10 +1,11 @@
 #viewRequestContainer {
   display: grid;
-  grid-template-columns: 5em 1fr;
-  grid-template-areas: 'action header'
-    'action details'
-    'action documents'
-    'action notes';
+  grid-template-columns: 3.5em 1fr;
+  grid-template-areas:
+    "action header"
+    "action details"
+    "action documents"
+    "action notes";
   column-gap: 0.5em;
   row-gap: 0.5em;
   margin: 0.5em;
@@ -50,11 +51,114 @@
   column-gap: 1em;
 }
 
+span.document-name {
+  max-width: 80vw;
+  display: inline-block;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
 @media (min-width: 1024px) {
   #viewRequestContainer {
-    grid-template-columns: 5em 1fr 1fr;
-    grid-template-areas: 'action header header'
-      'action details documents'
-      'action notes documents';
+    grid-template-columns: 3.5em 1fr 1fr;
+    grid-template-areas:
+      "action header header"
+      "action details documents"
+      "action notes documents";
   }
+  span.document-name {
+    max-width: 40vw;
+  }
+}
+
+.inDropZone {
+  opacity: 0.7;
+}
+
+#documentDropZone * {
+  cursor: pointer;
+}
+
+#documentDropZone.inDropZone::after {
+  border-color: blue;
+  border-style: dashed;
+}
+
+.orange {
+  color: orange;
+}
+
+.blue {
+  color: #09f;
+}
+
+.red {
+  color: #c23f38;
+}
+
+ul.request-status {
+  padding-inline-start: 0px;
+  margin-block-start: 0px;
+  margin-block-end: 0px;
+}
+
+ul.request-status li:before {
+  left: -2px;
+  border-color: transparent transparent transparent #fff;
+  z-index: 0;
+}
+
+ul.request-status li {
+  display: inline-block;
+  height: 30px;
+  line-height: 30px;
+  margin: 5px 3px 0 0;
+  text-indent: 22px;
+  position: relative;
+}
+
+ul.request-status li div:after,
+ul.request-status li:before {
+  content: " ";
+  height: 0;
+  width: 0;
+  position: absolute;
+  border-style: solid;
+  border-width: 15px 0 15px 15px;
+}
+
+ul.request-status li:first-child:before {
+  border-color: transparent;
+}
+
+ul.request-status li div:after {
+  right: -15px;
+  border-color: transparent transparent transparent #ccc;
+  z-index: 10;
+  padding-right: 1px;
+}
+
+ul.request-status li.completed-stage div {
+  background: #337ab7;
+  color: #fff;
+  z-index: 100;
+}
+
+ul.request-status li.completed-stage div:after {
+  border-left-color: #337ab7;
+}
+
+ul.request-status li div {
+  display: block;
+  background: #ccc;
+  padding-right: 0.75rem;
+}
+
+ul.request-status li.active-stage div {
+  background-color: orange;
+  color: #fff;
+}
+
+ul.request-status li.active-stage div:after {
+  border-color: transparent transparent transparent orange;
 }
