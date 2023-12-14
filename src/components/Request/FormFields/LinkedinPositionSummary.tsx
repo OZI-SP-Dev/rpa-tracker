@@ -1,46 +1,19 @@
-import { InfoLabel, Text, Textarea } from "@fluentui/react-components";
-import { Controller } from "react-hook-form";
-import { FormField } from "components/Request/NewRequestForm";
+import { RHFRequest } from "components/Request/NewRequestForm";
 import "components/Request/Request.css";
-import { TextFieldIcon } from "@fluentui/react-icons-mdl2";
+import BACTextarea from "components/BaseFormFields/BACTextarea";
 
-const LinkedinPositionSummary = ({ name, form }: FormField) => {
+const LinkedinPositionSummary = () => {
   return (
     <div className="requestFieldContainer">
-      <InfoLabel
-        htmlFor={name + "Id"}
-        weight="semibold"
-        className="requestFieldLabel"
-        required
-        info="A brief summary of the job description (3-4 sentences)"
-      >
-        <TextFieldIcon className="requestFieldIcon" />
-        Position Summary
-      </InfoLabel>
-      <Controller
+      <BACTextarea<RHFRequest>
         name="linkedinPositionSummary"
-        control={form.control}
+        labelText="Position Summary"
+        labelInfo="A brief summary of the job description (3-4 sentences)"
         rules={{
           required: "Position Summary is required",
         }}
-        render={({ field }) => (
-          <Textarea
-            {...field}
-            resize="vertical"
-            rows={10}
-            aria-describedby={name + "Err"}
-            aria-invalid={
-              form.formState.errors.linkedinPositionSummary ? "true" : "false"
-            }
-            id={name + "Id"}
-          />
-        )}
+        fieldProps={{ resize: "vertical", rows: 10 }}
       />
-      {form.formState.errors.linkedinPositionSummary && (
-        <Text role="alert" id={name + "Err"} className="requestErrorText">
-          {form.formState.errors.linkedinPositionSummary.message}
-        </Text>
-      )}
     </div>
   );
 };

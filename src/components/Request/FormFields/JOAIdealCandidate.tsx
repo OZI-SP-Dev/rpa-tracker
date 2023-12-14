@@ -1,45 +1,18 @@
-import { Label, Text, Textarea } from "@fluentui/react-components";
-import { Controller } from "react-hook-form";
-import { FormField } from "components/Request/NewRequestForm";
+import { RHFRequest } from "components/Request/NewRequestForm";
 import "components/Request/Request.css";
-import { TextFieldIcon } from "@fluentui/react-icons-mdl2";
+import BACTextarea from "components/BaseFormFields/BACTextarea";
 
-const JOAIdealCandidate = ({ name, form }: FormField) => {
+const JOAIdealCandidate = () => {
   return (
     <div className="requestFieldContainer">
-      <Label
-        htmlFor={name + "Id"}
-        weight="semibold"
-        className="requestFieldLabel"
-        required
-      >
-        <TextFieldIcon className="requestFieldIcon" />
-        Ideal Candidate
-      </Label>
-      <Controller
+      <BACTextarea<RHFRequest>
         name="joaIdealCandidate"
-        control={form.control}
+        labelText="Ideal Candidate"
         rules={{
           required: "Ideal Candidate text is required",
         }}
-        render={({ field }) => (
-          <Textarea
-            {...field}
-            resize="vertical"
-            rows={10}
-            aria-describedby={name + "Err"}
-            aria-invalid={
-              form.formState.errors.joaIdealCandidate ? "true" : "false"
-            }
-            id={name + "Id"}
-          />
-        )}
+        fieldProps={{ resize: "vertical", rows: 10 }}
       />
-      {form.formState.errors.joaIdealCandidate && (
-        <Text role="alert" id={name + "Err"} className="requestErrorText">
-          {form.formState.errors.joaIdealCandidate.message}
-        </Text>
-      )}
     </div>
   );
 };

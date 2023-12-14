@@ -1,8 +1,6 @@
-import { Label, Checkbox, Text } from "@fluentui/react-components";
-import { Controller } from "react-hook-form";
 import "components/Request/Request.css";
-import { FormField } from "components/Request/NewRequestForm";
-import { ClipboardCheckmarkRegular } from "@fluentui/react-icons";
+import { RHFRequest } from "components/Request/NewRequestForm";
+import BACCheckbox from "components/BaseFormFields/BACCheckbox";
 
 const options = [
   { id: "lcmc", text: "LCMC Job Announcement Board" },
@@ -13,54 +11,17 @@ const options = [
   { id: "usaJobsFlyer", text: "USA Jobs Flyer" },
 ];
 
-const Methods = ({ name, form }: FormField) => {
+const Methods = () => {
   return (
     <div className="requestFieldContainer">
-      <Label
-        htmlFor={name + "Id"}
-        weight="semibold"
-        className="requestFieldLabel"
-        required
-      >
-        <ClipboardCheckmarkRegular className="requestFieldIcon" />
-        Announcement Method(s)
-      </Label>
-      <Controller
+      <BACCheckbox<RHFRequest>
         name="methods"
-        control={form.control}
+        labelText="Announcement Method(s)"
         rules={{
           required: "At least one Announcement Method is required",
         }}
-        render={({ field }) => (
-          <>
-            {options.map((option) => {
-              return (
-                <Checkbox
-                  id={option.id + "Id"}
-                  key={option.id}
-                  label={option.text}
-                  checked={field.value?.some((item) => item === option.id)}
-                  aria-describedby={name + "Err"}
-                  onChange={(e) => {
-                    let values = [...field.value];
-                    if (e.target.checked) {
-                      values.push(option.id);
-                    } else {
-                      values = values.filter((v) => v !== option.id);
-                    }
-                    field.onChange(values);
-                  }}
-                />
-              );
-            })}
-          </>
-        )}
+        options={options}
       />
-      {form.formState.errors.methods && (
-        <Text role="alert" id={name + "Err"} className="requestErrorText">
-          {form.formState.errors.methods.message}
-        </Text>
-      )}
     </div>
   );
 };

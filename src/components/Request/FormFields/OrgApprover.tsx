@@ -2,14 +2,17 @@ import { Label, Text } from "@fluentui/react-components";
 import { ContactIcon } from "@fluentui/react-icons-mdl2";
 import { Controller } from "react-hook-form";
 import "components/Request/Request.css";
-import { FormField } from "components/Request/NewRequestForm";
+import { RHFRequest } from "components/Request/NewRequestForm";
 import { PeoplePicker } from "components/PeoplePicker/PeoplePicker";
+import { useFormContext } from "react-hook-form";
 
-const OrgApprover = ({ name, form }: FormField) => {
+const OrgApprover = () => {
+  const form = useFormContext<RHFRequest>();
+  const name = "orgApprover";
   return (
     <div className="requestFieldContainer">
-      <Label id={name + "Id"} weight="semibold" className="requestFieldLabel">
-        <ContactIcon className="requestFieldIcon" />
+      <Label id={name + "Id"} weight="semibold" className="fieldLabel">
+        <ContactIcon className="fieldIcon" />
         Org Approver
       </Label>
       <Controller
@@ -36,12 +39,11 @@ const OrgApprover = ({ name, form }: FormField) => {
         For orgs that have additional internal approvals such as CROWS and WAC
       </Text>
       {form.formState.errors.orgApprover && (
-        <Text role="alert" id={name + "Err"} className="requestErrorText">
+        <Text role="alert" id={name + "Err"} className="fieldErrorText">
           {form.formState.errors.orgApprover.message}
         </Text>
       )}
     </div>
   );
 };
-
 export default OrgApprover;

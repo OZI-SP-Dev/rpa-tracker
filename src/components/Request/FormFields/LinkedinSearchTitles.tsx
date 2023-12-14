@@ -1,8 +1,9 @@
-import { Input, Text } from "@fluentui/react-components";
-import { Controller } from "react-hook-form";
-import { FormField } from "components/Request/NewRequestForm";
-import "components/Request/Request.css";
+import { Text } from "@fluentui/react-components";
 import { TextFieldIcon } from "@fluentui/react-icons-mdl2";
+import { RHFRequest } from "components/Request/NewRequestForm";
+import "components/Request/Request.css";
+import BACInput from "components/BaseFormFields/BACInput";
+import { useFormContext } from "react-hook-form";
 
 const rules = {
   maxLength: {
@@ -11,82 +12,50 @@ const rules = {
   },
 };
 
-const LinkedinSearchTitles = ({ name, form }: FormField) => {
+const LinkedinSearchTitles = () => {
+  const form = useFormContext<RHFRequest>();
   return (
     <fieldset>
       <legend>
-        <TextFieldIcon className="requestFieldIcon" />
+        <TextFieldIcon className="fieldIcon" />
         <Text weight="semibold">Similar Job Titles</Text>
       </legend>
-      <Controller
-        name="linkedinSearchTitle1"
-        control={form.control}
-        rules={rules}
-        render={({ field }) => (
-          <Input
-            {...field}
-            title="LinkedIn Search Title 1"
-            style={{ width: "100%" }}
-            aria-describedby={name + "Err"}
-            aria-invalid={
-              form.formState.errors.linkedinSearchTitle1 ? "true" : "false"
-            }
-          />
-        )}
-      />
-      <Controller
-        name="linkedinSearchTitle2"
-        control={form.control}
-        rules={rules}
-        render={({ field }) => (
-          <Input
-            {...field}
-            title="LinkedIn Search Title 2"
-            style={{ width: "100%", marginTop: "1em" }}
-            aria-describedby={name + "Err"}
-            aria-invalid={
-              form.formState.errors.linkedinSearchTitle2 ? "true" : "false"
-            }
-          />
-        )}
-      />
-      <Controller
-        name="linkedinSearchTitle3"
-        control={form.control}
-        rules={rules}
-        render={({ field }) => (
-          <Input
-            {...field}
-            title="LinkedIn Search Title 3"
-            style={{ width: "100%", marginTop: "1em" }}
-            aria-describedby={name + "Err"}
-            aria-invalid={
-              form.formState.errors.linkedinSearchTitle3 ? "true" : "false"
-            }
-          />
-        )}
-      />
-      <Controller
-        name="linkedinSearchTitle4"
-        control={form.control}
-        rules={rules}
-        render={({ field }) => (
-          <Input
-            {...field}
-            title="LinkedIn Search Title 4"
-            style={{ width: "100%", marginTop: "1em" }}
-            aria-describedby={name + "Err"}
-            aria-invalid={
-              form.formState.errors.linkedinSearchTitle4 ? "true" : "false"
-            }
-          />
-        )}
-      />
-      <br />
+      <div style={{ display: "grid" }}>
+        <BACInput<RHFRequest>
+          name="linkedinSearchTitle1"
+          rules={rules}
+          fieldProps={{ title: "LinkedIn Search Title 1" }}
+          disableError
+        />
+      </div>
+      <div style={{ display: "grid", marginTop: "1em" }}>
+        <BACInput<RHFRequest>
+          name="linkedinSearchTitle2"
+          rules={rules}
+          fieldProps={{ title: "LinkedIn Search Title 2" }}
+          disableError
+        />
+      </div>
+      <div style={{ display: "grid", marginTop: "1em" }}>
+        <BACInput<RHFRequest>
+          name="linkedinSearchTitle3"
+          rules={rules}
+          fieldProps={{ title: "LinkedIn Search Title 3" }}
+          disableError
+        />
+      </div>
+      <div style={{ display: "grid", marginTop: "1em" }}>
+        <BACInput<RHFRequest>
+          name="linkedinSearchTitle4"
+          rules={rules}
+          fieldProps={{ title: "LinkedIn Search Title 4" }}
+          disableError
+        />
+      </div>
       {(form.formState.errors.linkedinSearchTitle1 && (
         <>
           <br />
-          <Text role="alert" id={name + "Err"} className="requestErrorText">
+          <Text role="alert" id={name + "Err"} className="fieldErrorText">
             {form.formState.errors.linkedinSearchTitle1.message}
           </Text>
         </>
@@ -94,7 +63,7 @@ const LinkedinSearchTitles = ({ name, form }: FormField) => {
         (form.formState.errors.linkedinSearchTitle2 && (
           <>
             <br />
-            <Text role="alert" id={name + "Err"} className="requestErrorText">
+            <Text role="alert" id={name + "Err"} className="fieldErrorText">
               {form.formState.errors.linkedinSearchTitle2.message}
             </Text>
           </>
@@ -102,7 +71,7 @@ const LinkedinSearchTitles = ({ name, form }: FormField) => {
         (form.formState.errors.linkedinSearchTitle3 && (
           <>
             <br />
-            <Text role="alert" id={name + "Err"} className="requestErrorText">
+            <Text role="alert" id={name + "Err"} className="fieldErrorText">
               {form.formState.errors.linkedinSearchTitle3.message}
             </Text>
           </>
@@ -110,7 +79,7 @@ const LinkedinSearchTitles = ({ name, form }: FormField) => {
         (form.formState.errors.linkedinSearchTitle4 && (
           <>
             <br />
-            <Text role="alert" id={name + "Err"} className="requestErrorText">
+            <Text role="alert" id={name + "Err"} className="fieldErrorText">
               {form.formState.errors.linkedinSearchTitle4.message}
             </Text>
           </>

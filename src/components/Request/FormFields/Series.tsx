@@ -1,24 +1,13 @@
-import { Input, Label, Text } from "@fluentui/react-components";
-import { Controller } from "react-hook-form";
-import { FormField } from "components/Request/NewRequestForm";
+import { RHFRequest } from "components/Request/NewRequestForm";
 import "components/Request/Request.css";
-import { NumberFieldIcon } from "@fluentui/react-icons-mdl2";
+import BACInput from "components/BaseFormFields/BACInput";
 
-const Series = ({ name, form }: FormField) => {
+const Series = () => {
   return (
     <div className="requestFieldContainer">
-      <Label
-        htmlFor={name + "Id"}
-        weight="semibold"
-        className="requestFieldLabel"
-        required
-      >
-        <NumberFieldIcon className="requestFieldIcon" />
-        Series number
-      </Label>
-      <Controller
+      <BACInput<RHFRequest>
         name="series"
-        control={form.control}
+        labelText="Series number"
         rules={{
           required: "Series is required",
           minLength: {
@@ -34,21 +23,8 @@ const Series = ({ name, form }: FormField) => {
             message: "Series can only consist of numbers",
           },
         }}
-        render={({ field }) => (
-          <Input
-            {...field}
-            aria-describedby={name + "Err"}
-            aria-invalid={form.formState.errors.series ? "true" : "false"}
-            id={name + "Id"}
-            placeholder="Example: 2210"
-          />
-        )}
+        fieldProps={{ placeholder: "Example: 2210" }}
       />
-      {form.formState.errors.series && (
-        <Text role="alert" id={name + "Err"} className="requestErrorText">
-          {form.formState.errors.series.message}
-        </Text>
-      )}
     </div>
   );
 };

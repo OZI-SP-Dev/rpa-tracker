@@ -1,59 +1,30 @@
-import { Combobox, Label, Option, Text } from "@fluentui/react-components";
-import { Controller } from "react-hook-form";
-import { FormField } from "components/Request/NewRequestForm";
+import { Option } from "@fluentui/react-components";
 import "components/Request/Request.css";
-import { DropdownIcon } from "@fluentui/react-icons-mdl2";
+import { RHFRequest } from "components/Request/NewRequestForm";
+import BACCombobox from "components/BaseFormFields/BACCombobox";
 import { POSITIONSENSITIVIES } from "consts/PositionSensitivities";
 
-const PositionSensitivity = ({ name, form }: FormField) => {
+const PositionSensitivity = () => {
   return (
     <div className="requestFieldContainer">
-      <Label
-        id={name + "Id"}
-        weight="semibold"
-        className="requestFieldLabel"
-        required
-      >
-        <DropdownIcon className="requestFieldIcon" />
-        Position Sensitivity
-      </Label>
-      <Controller
+      <BACCombobox<RHFRequest>
         name="positionSensitivity"
-        control={form.control}
+        labelText="Position Sensitivity"
         rules={{
           required: "Position Sensitivity is required",
         }}
-        render={({ field }) => (
-          <Combobox
-            aria-describedby={name + "Err"}
-            aria-labelledby={name + "Id"}
-            aria-invalid={
-              form.formState.errors.positionSensitivity ? "true" : "false"
-            }
-            autoComplete="on"
-            {...field}
-            value={
-              POSITIONSENSITIVIES.find(({ key }) => key === field.value)
-                ?.text ?? ""
-            }
-            selectedOptions={[field.value ?? ""]}
-            onOptionSelect={(_event, data) => {
-              field.onChange(data.optionValue ?? "");
-            }}
-          >
-            {POSITIONSENSITIVIES.map((sensitivity) => (
-              <Option key={sensitivity.key} value={sensitivity.key}>
-                {sensitivity.text}
-              </Option>
-            ))}
-          </Combobox>
-        )}
-      />
-      {form.formState.errors.positionSensitivity && (
-        <Text role="alert" id={name + "Id"} className="requestErrorText">
-          {form.formState.errors.positionSensitivity.message}
-        </Text>
-      )}
+        customValue={(value) => {
+          return (
+            POSITIONSENSITIVIES.find(({ key }) => key === value)?.text ?? ""
+          );
+        }}
+      >
+        {POSITIONSENSITIVIES.map((sensitivity) => (
+          <Option key={sensitivity.key} value={sensitivity.key}>
+            {sensitivity.text}
+          </Option>
+        ))}
+      </BACCombobox>
     </div>
   );
 };

@@ -1,24 +1,15 @@
-import { Input, Label, Text } from "@fluentui/react-components";
-import { Controller } from "react-hook-form";
-import { FormField } from "components/Request/NewRequestForm";
+import { RHFRequest } from "components/Request/NewRequestForm";
 import "components/Request/Request.css";
+import BACInput from "components/BaseFormFields/BACInput";
 import { NumberFieldIcon } from "@fluentui/react-icons-mdl2";
 
-const MPCN = ({ name, form }: FormField) => {
+const MPCN = () => {
   return (
     <div className="requestFieldContainer">
-      <Label
-        htmlFor={name + "Id"}
-        weight="semibold"
-        className="requestFieldLabel"
-        required
-      >
-        <NumberFieldIcon className="requestFieldIcon" />
-        MPCN
-      </Label>
-      <Controller
+      <BACInput<RHFRequest>
         name="mpcn"
-        control={form.control}
+        labelText="MPCN"
+        labelIcon={<NumberFieldIcon className="fieldIcon" />}
         rules={{
           required: "MPCN is required",
           minLength: {
@@ -34,20 +25,7 @@ const MPCN = ({ name, form }: FormField) => {
             message: "MPCN can only consist of numbers",
           },
         }}
-        render={({ field }) => (
-          <Input
-            {...field}
-            aria-describedby={name + "Err"}
-            aria-invalid={form.formState.errors.mpcn ? "true" : "false"}
-            id={name + "Id"}
-          />
-        )}
       />
-      {form.formState.errors.mpcn && (
-        <Text role="alert" id={name + "Err"} className="requestErrorText">
-          {form.formState.errors.mpcn.message}
-        </Text>
-      )}
     </div>
   );
 };

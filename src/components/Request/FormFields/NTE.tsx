@@ -1,9 +1,6 @@
-import { DatePicker } from "@fluentui/react";
-import { Label, Text } from "@fluentui/react-components";
-import { CalendarIcon } from "@fluentui/react-icons-mdl2";
-import { Controller } from "react-hook-form";
 import "components/Request/Request.css";
-import { FormField } from "components/Request/NewRequestForm";
+import { RHFRequest } from "components/Request/NewRequestForm";
+import BACDatePicker from "components/BaseFormFields/BACDatePicker";
 
 const onFormatDate = (date?: Date): string => {
   return !date
@@ -11,42 +8,18 @@ const onFormatDate = (date?: Date): string => {
     : date.getMonth() + 1 + "/" + date.getDate() + "/" + date.getFullYear();
 };
 
-const NTE = ({ name, form }: FormField) => {
+const NTE = () => {
   return (
     <div className="requestFieldContainer">
-      <Label
-        id={name + "Id"}
-        weight="semibold"
-        className="requestFieldLabel"
-        required
-      >
-        <CalendarIcon className="requestFieldIcon" />
-        Not to exceed date
-      </Label>
-      <Controller
+      <BACDatePicker<RHFRequest>
         name="nte"
-        control={form.control}
+        labelText="Not to exceed date"
         rules={{
           required: "A date is required",
         }}
-        render={({ field }) => (
-          <DatePicker
-            aria-describedby={name + "Err"}
-            aria-labelledby={name + "Id"}
-            aria-invalid={form.formState.errors.nte ? "true" : "false"}
-            formatDate={onFormatDate}
-            onSelectDate={field.onChange}
-            {...field}
-          />
-        )}
+        fieldProps={{ formatDate: onFormatDate }}
       />
-      {form.formState.errors.nte && (
-        <Text role="alert" id={name + "Err"} className="requestErrorText">
-          {form.formState.errors.nte.message}
-        </Text>
-      )}
     </div>
   );
 };
-
 export default NTE;

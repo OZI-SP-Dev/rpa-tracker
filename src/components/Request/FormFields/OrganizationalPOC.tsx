@@ -1,20 +1,18 @@
 import { Label, Text } from "@fluentui/react-components";
 import { ContactIcon } from "@fluentui/react-icons-mdl2";
-import { Controller } from "react-hook-form";
+import { Controller, useFormContext } from "react-hook-form";
 import "components/Request/Request.css";
-import { FormField } from "components/Request/NewRequestForm";
+import { RHFRequest } from "components/Request/NewRequestForm";
 import { PeoplePicker } from "components/PeoplePicker/PeoplePicker";
 
-const OrganizationalPOC = ({ name, form }: FormField) => {
+const OrganizationalPOC = () => {
+  const form = useFormContext<RHFRequest>();
+  const name = "organizationalPOC";
+
   return (
     <div className="requestFieldContainer">
-      <Label
-        id={name + "Id"}
-        weight="semibold"
-        className="requestFieldLabel"
-        required
-      >
-        <ContactIcon className="requestFieldIcon" />
+      <Label id={name + "Id"} weight="semibold" className="fieldLabel" required>
+        <ContactIcon className="fieldIcon" />
         Organizational POC
       </Label>
       <Controller
@@ -43,12 +41,11 @@ const OrganizationalPOC = ({ name, form }: FormField) => {
         )}
       />
       {form.formState.errors.organizationalPOC && (
-        <Text role="alert" id={name + "Err"} className="requestErrorText">
+        <Text role="alert" id={name + "Err"} className="fieldErrorText">
           {form.formState.errors.organizationalPOC.message}
         </Text>
       )}
     </div>
   );
 };
-
 export default OrganizationalPOC;

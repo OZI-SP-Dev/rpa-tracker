@@ -1,60 +1,38 @@
-import { Dropdown, InfoLabel, Option, Text } from "@fluentui/react-components";
-import { DropdownIcon } from "@fluentui/react-icons-mdl2";
 import { DCWFCodes } from "consts/DCWF";
-import { Controller } from "react-hook-form";
+import { Option } from "@fluentui/react-components";
 import "components/Request/Request.css";
-import { FormField } from "components/Request/NewRequestForm";
+import { RHFRequest } from "components/Request/NewRequestForm";
+import BACDropdown from "components/BaseFormFields/BACDropdown";
 
-const Certifications = ({ name, form }: FormField) => {
+const Certifications = () => {
   return (
     <div className="requestFieldContainer">
-      <InfoLabel
-        htmlFor={name + "Id"}
-        weight="semibold"
-        className="requestFieldLabel"
-        required
-        info="Select one to three options"
-      >
-        <DropdownIcon className="requestFieldIcon" />
-        Certifications/Licensure
-      </InfoLabel>
-      <Controller
+      <BACDropdown<RHFRequest>
         name="dcwf"
-        control={form.control}
+        labelText="Certifications/Licensure"
+        labelInfo="Select one to three options"
         rules={{
           required: "Certifications/Licensure is required",
         }}
-        render={({ field }) => (
-          <Dropdown
-            id={name + "Id"}
-            aria-describedby={name + "Err"}
-            aria-invalid={form.formState.errors.dcwf ? "true" : "false"}
-            multiselect={true}
-            aria-required
-            selectedOptions={field.value}
-            onOptionSelect={(_e, data) => {
-              if (data.selectedOptions.length <= 3) {
-                field.onChange(data.selectedOptions);
-              }
-            }}
+        fieldProps={{
+          multiselect: true,
+        }}
+        customOnOptionSelect={(_e, data, field) => {
+          if (data.selectedOptions.length <= 3) {
+            field.onChange(data.selectedOptions);
+          }
+        }}
+      >
+        {DCWFCodes.map((item) => (
+          <Option
+            key={item.Code}
+            text={item.Code + " " + item.Role}
+            value={item.Code}
           >
-            {DCWFCodes.map((item) => (
-              <Option
-                key={item.Code}
-                text={item.Code + " " + item.Role}
-                value={item.Code}
-              >
-                {item.Code}&nbsp;{item.Role}
-              </Option>
-            ))}
-          </Dropdown>
-        )}
-      />
-      {form.formState.errors.dcwf && (
-        <Text role="alert" id={name + "Err"} className="requestErrorText">
-          {form.formState.errors.dcwf.message}
-        </Text>
-      )}
+            {item.Code}&nbsp;{item.Role}
+          </Option>
+        ))}
+      </BACDropdown>
     </div>
   );
 };
