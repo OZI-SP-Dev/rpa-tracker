@@ -7,6 +7,8 @@ import { GENERALGRADES, ACQGRADES } from "consts/Grades";
 import { OSFS } from "consts/OSFs";
 import { STAGES } from "consts/Stages";
 
+const PAGESIZE = 5;
+
 export interface Person {
   Id: string;
   EMail: string;
@@ -16,6 +18,7 @@ export interface Person {
 export interface RPARequest {
   Author?: Person;
   Id?: string;
+  Created?: Date;
   stage: (typeof STAGES)[number]["key"];
   requestType: (typeof REQUESTTYPES)[number];
   mcrRequired: "Yes" | "No";
@@ -93,15 +96,21 @@ const useContentTypes = () => {
   });
 };
 
-/**
- * Gets all requests
- */
-export const useRequests = () => {
+export const usePagedRequests = (page = 0) => {
+  const queryClient = useQueryClient();
+
   return useQuery({
-    queryKey: ["requests"],
-    queryFn: () => getRequests(),
-    retry: false, // disable retries for initial setup
-    //select: transformRequestsFromSP,
+    queryKey: ["paged-requests", page],
+    queryFn: () =>
+      getPagedRequests(queryClient.getQueryData(["paged-requests", page - 1])),
+    // results must remain cached
+    // if results are not kept in cache a scenario may arise where you are on
+    //  a page > 1, but the previous page has been removed from cache. The
+    //  query function depends on the previous page's results. Going "back"
+    //  would result in page-1 actually holding the results for page 0.
+    cacheTime: Infinity,
+    select: transformPagedRequestsFromSP,
+    keepPreviousData: true,
   });
 };
 
@@ -116,23 +125,25 @@ export const useRequest = (requestId: number) => {
   });
 };
 
-const getRequests = async () => {
-  // Grab all fields, and expand Person fields
-  const requestedFields =
-    "*," +
-    "orgApprover/Id,orgApprover/EMail,orgApprover/Title," +
-    "supervisor/Id,supervisor/EMail,supervisor/Title," +
-    "organizationalPOC/Id,organizationalPOC/EMail,organizationalPOC/Title," +
-    "issueTo/Id,issueTo/EMail,issueTo/Title";
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const getPagedRequests = async (data: any) => {
+  if (data?.hasNext) {
+    return data.getNext();
+  }
 
-  const expandedFields = "orgApprover,supervisor,organizationalPOC,issueTo";
+  const requestedFields =
+    "Id,positionTitle,requestType,paySystem,series,grade,officeSymbol,stage,Created," +
+    "Author/Id,Author/EMail,Author/Title";
+
+  const expandedFields = "Author";
 
   return spWebContext.web.lists
     .getByTitle("requests")
     .items.select(requestedFields)
     .expand(expandedFields)
     .filter("ContentType eq 'RPADocSet'")
-    .top(5000)();
+    .top(PAGESIZE)
+    .getPaged();
 };
 
 const getRequest = async (Id: number) => {
@@ -243,6 +254,7 @@ type InternalRequestItem = Omit<
   | "supervisor"
   | "organizationalPOC"
   | "issueTo"
+  | "Created"
 > & {
   orgApproverId?: string;
   methods: string;
@@ -337,6 +349,7 @@ const transformRequestToSP = async (
 const transformRequestFromSP = (request: any): RPARequest => {
   return {
     Id: request.Id,
+    Created: new Date(request.Created),
     stage: request.stage,
     Author: request.Author,
     requestType: request.requestType,
@@ -401,3 +414,47 @@ const transformRequestFromSP = (request: any): RPARequest => {
     linkedinSearchComments: request.linkedinSearchComments,
   };
 };
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const transformPagedRequestsFromSP = (requests: any) => {
+  const returnObject: {
+    results: PagedRequest[];
+    hasNext: boolean;
+    getNext: () => void;
+  } = {
+    results: [],
+    hasNext: requests.hasNext,
+    getNext: requests?.getNext,
+  };
+
+  //eslint-disable-next-line @typescript-eslint/no-explicit-any
+  requests.results.forEach((request: any) => {
+    returnObject.results.push({
+      Id: request.Id,
+      Author: request.Author,
+      requestType: request.requestType,
+      paySystem: request.paySystem,
+      series: request.series,
+      grade: request.grade,
+      positionTitle: request.positionTitle,
+      officeSymbol: request.officeSymbol,
+      stage: request.stage,
+      Created: new Date(request.Created),
+    });
+  });
+
+  return returnObject;
+};
+
+interface PagedRequest {
+  Id: string;
+  Author: Person;
+  requestType: (typeof REQUESTTYPES)[number];
+  paySystem: (typeof PAYSYSTEMS)[number]["key"];
+  series: string;
+  grade: (typeof GENERALGRADES)[number] | (typeof ACQGRADES)[number];
+  positionTitle: string;
+  officeSymbol: string;
+  stage: (typeof STAGES)[number]["key"];
+  Created: Date;
+}
