@@ -27,7 +27,6 @@ const BACDatePicker = <T extends FieldValues>({
   return (
     <>
       <InfoLabel
-        htmlFor={name + "Id"}
         weight="semibold"
         className="fieldLabel"
         required={isRequired}
@@ -39,10 +38,15 @@ const BACDatePicker = <T extends FieldValues>({
       <DatePicker
         {...fieldProps}
         aria-describedby={name + "Err"}
-        aria-labelledby={name + "Id"}
         aria-invalid={fieldState.error ? "true" : "false"}
         placeholder="Select a date..."
-        ariaLabel="Select a date"
+        ariaLabel={
+          field.value
+            ? labelText +
+              " has selected date of " +
+              field.value.toLocaleDateString()
+            : "Select a date"
+        }
         onSelectDate={field.onChange}
         {...field}
       />
