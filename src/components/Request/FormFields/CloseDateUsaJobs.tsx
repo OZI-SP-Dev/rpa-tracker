@@ -2,8 +2,6 @@ import "components/Request/Request.css";
 import { RHFRequest } from "components/Request/NewRequestForm";
 import BACDatePicker from "components/BaseFormFields/BACDatePicker";
 
-const today = new Date(Date.now());
-
 const onFormatDate = (date?: Date): string => {
   return !date
     ? ""
@@ -11,6 +9,8 @@ const onFormatDate = (date?: Date): string => {
 };
 
 const CloseDateUsaJobs = () => {
+  const today = new Date(Date.now());
+
   return (
     <div className="requestFieldContainer">
       <BACDatePicker<RHFRequest>

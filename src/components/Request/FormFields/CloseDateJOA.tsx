@@ -3,10 +3,6 @@ import { RHFRequest } from "components/Request/NewRequestForm";
 import BACDatePicker from "components/BaseFormFields/BACDatePicker";
 import { addDays } from "@fluentui/react";
 
-const today = new Date(Date.now());
-const minDate = addDays(today, 0);
-const maxDate = addDays(today, 120);
-
 const onFormatDate = (date?: Date): string => {
   return !date
     ? ""
@@ -14,6 +10,10 @@ const onFormatDate = (date?: Date): string => {
 };
 
 const CloseDateJOA = () => {
+  const today = new Date(Date.now());
+  const minDate = addDays(today, 0);
+  const maxDate = addDays(today, 120);
+
   return (
     <div className="requestFieldContainer">
       <BACDatePicker<RHFRequest>
