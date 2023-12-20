@@ -1,17 +1,9 @@
+@import "../BaseFormFields/BaseFormFields.css";
+
 .requestFormContainer {
   display: grid;
   max-width: 800px;
   width: 100%;
-}
-
-.requestErrorText {
-  color: #bc2f32;
-  font-size: 12px;
-  display: block;
-}
-
-.requestFieldIcon {
-  margin-right: 0.5em;
 }
 
 .requestFieldContainer {
@@ -20,13 +12,6 @@
   position: relative;
 }
 
-.requestFieldLabel {
-  padding-bottom: 0.5em;
-  display: flex;
-}
-.requestFieldDescription {
-  display: block;
-}
 .requestCreateButton {
   display: grid;
   justify-content: end;
@@ -34,9 +19,6 @@
   margin-right: 1em;
   margin-top: 0.5em;
   margin-bottom: 0.5em;
-}
-.requestListBox {
-  max-height: 15em;
 }
 
 .fui-Title1 {

@@ -1,45 +1,22 @@
-import { Label, Radio, RadioGroup, Text } from "@fluentui/react-components";
-import { Controller } from "react-hook-form";
+import { Radio } from "@fluentui/react-components";
 import "components/Request/Request.css";
-import { FormField } from "components/Request/NewRequestForm";
-import { RadioButtonFilled } from "@fluentui/react-icons";
+import { RHFRequest } from "components/Request/NewRequestForm";
+import BACRadioGroup from "components/BaseFormFields/BACRadioGroup";
 
-const HiringType = ({ name, form }: FormField) => {
+const HiringType = () => {
   return (
     <div className="requestFieldContainer">
-      <Label
-        htmlFor={name + "Id"}
-        weight="semibold"
-        className="requestFieldLabel"
-        required
-      >
-        <RadioButtonFilled className="requestFieldIcon" />
-        Hiring Type
-      </Label>
-      <Controller
+      <BACRadioGroup<RHFRequest>
         name="hireType"
-        control={form.control}
+        labelText="Hiring Type"
         rules={{
           required: "Hiring Type is required",
         }}
-        render={({ field }) => (
-          <RadioGroup
-            id={name + "Id"}
-            aria-describedby={name + "Err"}
-            aria-invalid={form.formState.errors.hireType ? "true" : "false"}
-            layout="horizontal"
-            {...field}
-          >
-            <Radio key="Internal" value="Internal" label="Internal" />
-            <Radio key="External" value="External" label="External" />
-          </RadioGroup>
-        )}
-      />
-      {form.formState.errors.hireType && (
-        <Text role="alert" id={name + "Err"} className="requestErrorText">
-          {form.formState.errors.hireType.message}
-        </Text>
-      )}
+        fieldProps={{ layout: "horizontal" }}
+      >
+        <Radio key="Internal" value="Internal" label="Internal" />
+        <Radio key="External" value="External" label="External" />
+      </BACRadioGroup>
     </div>
   );
 };

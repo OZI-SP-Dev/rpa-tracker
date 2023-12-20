@@ -1,53 +1,25 @@
-import { Combobox, Label, Option, Text } from "@fluentui/react-components";
-import { DropdownIcon } from "@fluentui/react-icons-mdl2";
 import { REQUESTTYPES } from "consts/RequestTypes";
-import { Controller } from "react-hook-form";
-import { FormField } from "components/Request/NewRequestForm";
+import { Option } from "@fluentui/react-components";
 import "components/Request/Request.css";
+import { RHFRequest } from "components/Request/NewRequestForm";
+import BACCombobox from "components/BaseFormFields/BACCombobox";
 
-const RequestType = ({ name, form }: FormField) => {
+const RequestType = () => {
   return (
     <div className="requestFieldContainer">
-      <Label
-        id={name + "Id"}
-        weight="semibold"
-        className="requestFieldLabel"
-        required
-      >
-        <DropdownIcon className="requestFieldIcon" />
-        Request Type
-      </Label>
-      <Controller
+      <BACCombobox<RHFRequest>
         name="requestType"
-        control={form.control}
+        labelText="Request Type"
         rules={{
           required: "Request Type is required",
         }}
-        render={({ field }) => (
-          <Combobox
-            aria-describedby={name + "Err"}
-            aria-labelledby={name + "Id"}
-            aria-invalid={form.formState.errors.requestType ? "true" : "false"}
-            autoComplete="on"
-            {...field}
-            selectedOptions={[field.value ?? ""]}
-            onOptionSelect={(_event, data) => {
-              field.onChange(data.optionValue ?? "");
-            }}
-          >
-            {REQUESTTYPES.map((reqType) => (
-              <Option key={reqType} value={reqType}>
-                {reqType}
-              </Option>
-            ))}
-          </Combobox>
-        )}
-      />
-      {form.formState.errors.requestType && (
-        <Text role="alert" id={name + "Err"} className="requestErrorText">
-          {form.formState.errors.requestType.message}
-        </Text>
-      )}
+      >
+        {REQUESTTYPES.map((reqType) => (
+          <Option key={reqType} value={reqType}>
+            {reqType}
+          </Option>
+        ))}
+      </BACCombobox>
     </div>
   );
 };

@@ -1,9 +1,7 @@
-import { addDays, DatePicker } from "@fluentui/react";
-import { Label, Text } from "@fluentui/react-components";
-import { CalendarIcon } from "@fluentui/react-icons-mdl2";
-import { Controller } from "react-hook-form";
 import "components/Request/Request.css";
-import { FormField } from "components/Request/NewRequestForm";
+import { RHFRequest } from "components/Request/NewRequestForm";
+import BACDatePicker from "components/BaseFormFields/BACDatePicker";
+import { addDays } from "@fluentui/react";
 
 const onFormatDate = (date?: Date): string => {
   return !date
@@ -11,53 +9,26 @@ const onFormatDate = (date?: Date): string => {
     : date.getMonth() + 1 + "/" + date.getDate() + "/" + date.getFullYear();
 };
 
-const CloseDateLCMC = ({ name, form }: FormField) => {
+const CloseDateLCMC = () => {
   const today = new Date(Date.now());
   const minDate = addDays(today, 7);
   const maxDate = addDays(today, 30);
 
   return (
     <div className="requestFieldContainer">
-      <Label
-        id={name + "Id"}
-        weight="semibold"
-        className="requestFieldLabel"
-        required
-      >
-        <CalendarIcon className="requestFieldIcon" />
-        Close date for AFLCMC Posting
-      </Label>
-      <Controller
+      <BACDatePicker<RHFRequest>
         name="closeDateLCMC"
-        control={form.control}
+        labelText="Close date for AFLCMC Posting"
         rules={{
           required: "A date is required",
         }}
-        render={({ field }) => (
-          <DatePicker
-            aria-describedby={name + "Err"}
-            aria-labelledby={name + "Id"}
-            aria-invalid={
-              form.formState.errors.closeDateLCMC ? "true" : "false"
-            }
-            //isRequired
-            placeholder="Select a date..."
-            ariaLabel="Select a date"
-            formatDate={onFormatDate}
-            minDate={minDate}
-            maxDate={maxDate}
-            onSelectDate={field.onChange}
-            {...field}
-          />
-        )}
+        fieldProps={{
+          formatDate: onFormatDate,
+          minDate: minDate,
+          maxDate: maxDate,
+        }}
       />
-      {form.formState.errors.closeDateLCMC && (
-        <Text role="alert" id={name + "Err"} className="requestErrorText">
-          {form.formState.errors.closeDateLCMC.message}
-        </Text>
-      )}
     </div>
   );
 };
-
 export default CloseDateLCMC;

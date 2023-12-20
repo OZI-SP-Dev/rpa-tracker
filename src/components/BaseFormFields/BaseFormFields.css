@@ -1,0 +1,14 @@
+.fieldIcon {
+    margin-right: 0.5em;
+}
+
+.fieldLabel {
+    padding-bottom: 0.5em;
+    display: flex;
+}
+
+.fieldErrorText {
+    color: #bc2f32;
+    font-size: 12px;
+    display: block;
+}

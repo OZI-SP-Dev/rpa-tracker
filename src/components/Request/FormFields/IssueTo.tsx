@@ -1,20 +1,18 @@
 import { Label, Text } from "@fluentui/react-components";
 import { ContactIcon } from "@fluentui/react-icons-mdl2";
-import { Controller } from "react-hook-form";
+import { Controller, useFormContext } from "react-hook-form";
 import "components/Request/Request.css";
-import { FormField } from "components/Request/NewRequestForm";
+import { RHFRequest } from "components/Request/NewRequestForm";
 import { PeoplePicker } from "components/PeoplePicker/PeoplePicker";
 
-const IssueTo = ({ name, form }: FormField) => {
+const IssueTo = () => {
+  const form = useFormContext<RHFRequest>();
+  const name = "issueTo";
+
   return (
     <div className="requestFieldContainer">
-      <Label
-        id={name + "Id"}
-        weight="semibold"
-        className="requestFieldLabel"
-        required
-      >
-        <ContactIcon className="requestFieldIcon" />
+      <Label id={name + "Id"} weight="semibold" className="fieldLabel" required>
+        <ContactIcon className="fieldIcon" />
         Issue Certificate To
       </Label>
       <Controller
@@ -41,12 +39,11 @@ const IssueTo = ({ name, form }: FormField) => {
         )}
       />
       {form.formState.errors.issueTo && (
-        <Text role="alert" id={name + "Err"} className="requestErrorText">
+        <Text role="alert" id={name + "Err"} className="fieldErrorText">
           {form.formState.errors.issueTo.message}
         </Text>
       )}
     </div>
   );
 };
-
 export default IssueTo;

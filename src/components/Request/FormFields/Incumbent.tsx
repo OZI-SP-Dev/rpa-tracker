@@ -1,46 +1,17 @@
-import { Input, Label, Text } from "@fluentui/react-components";
-import { Controller } from "react-hook-form";
-import { FormField } from "components/Request/NewRequestForm";
+import { RHFRequest } from "components/Request/NewRequestForm";
 import "components/Request/Request.css";
+import BACInput from "components/BaseFormFields/BACInput";
 import { ContactIcon } from "@fluentui/react-icons-mdl2";
 
-const Incumbent = ({ name, form }: FormField) => {
+const Incumbent = () => {
   return (
     <div className="requestFieldContainer">
-      <Label
-        htmlFor={name + "Id"}
-        weight="semibold"
-        className="requestFieldLabel"
-      >
-        <ContactIcon className="requestFieldIcon" />
-        Name of last incubment (if applicable)
-      </Label>
-      <Controller
+      <BACInput<RHFRequest>
         name="lastIncumbent"
-        control={form.control}
-        rules={{
-          maxLength: {
-            value: 255,
-            message: "Last Incumbent can be no longer than 255 characters",
-          },
-        }}
-        render={({ field }) => (
-          <Input
-            {...field}
-            aria-describedby={name + "Err"}
-            aria-invalid={
-              form.formState.errors.lastIncumbent ? "true" : "false"
-            }
-            id={name + "Id"}
-            placeholder="Example format: 'Last, First MI'"
-          />
-        )}
+        labelText="Name of last incubment (if applicable)"
+        labelIcon={<ContactIcon className="fieldIcon" />}
+        fieldProps={{ placeholder: "Example format: 'Last, First MI'" }}
       />
-      {form.formState.errors.lastIncumbent && (
-        <Text role="alert" id={name + "Err"} className="requestErrorText">
-          {form.formState.errors.lastIncumbent.message}
-        </Text>
-      )}
     </div>
   );
 };

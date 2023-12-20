@@ -1,8 +1,9 @@
-import { InfoLabel, Input, Text } from "@fluentui/react-components";
-import { Controller } from "react-hook-form";
-import { FormField } from "components/Request/NewRequestForm";
-import "components/Request/Request.css";
+import { InfoLabel, Text } from "@fluentui/react-components";
 import { TextFieldIcon } from "@fluentui/react-icons-mdl2";
+import { RHFRequest } from "components/Request/NewRequestForm";
+import "components/Request/Request.css";
+import BACInput from "components/BaseFormFields/BACInput";
+import { useFormContext } from "react-hook-form";
 
 const rules = {
   maxLength: {
@@ -11,84 +12,52 @@ const rules = {
   },
 };
 
-const LinkedinSearchEmployers = ({ name, form }: FormField) => {
+const LinkedinSearchEmployers = () => {
+  const form = useFormContext<RHFRequest>();
   return (
     <fieldset>
       <legend>
-        <TextFieldIcon className="requestFieldIcon" />
+        <TextFieldIcon className="fieldIcon" />
         <InfoLabel weight="semibold" info="Google, Boeing, Raytheon, etc.">
           Preferred Current/Past Employers
         </InfoLabel>
       </legend>
-      <Controller
-        name="linkedinSearchEmployer1"
-        control={form.control}
-        rules={rules}
-        render={({ field }) => (
-          <Input
-            {...field}
-            title="LinkedIn Search Employer 1"
-            style={{ width: "100%" }}
-            aria-describedby={name + "Err"}
-            aria-invalid={
-              form.formState.errors.linkedinSearchEmployer1 ? "true" : "false"
-            }
-          />
-        )}
-      />
-      <Controller
-        name="linkedinSearchEmployer2"
-        control={form.control}
-        rules={rules}
-        render={({ field }) => (
-          <Input
-            {...field}
-            title="LinkedIn Search Employer 2"
-            style={{ width: "100%", marginTop: "1em" }}
-            aria-describedby={name + "Err"}
-            aria-invalid={
-              form.formState.errors.linkedinSearchEmployer2 ? "true" : "false"
-            }
-          />
-        )}
-      />
-      <Controller
-        name="linkedinSearchEmployer3"
-        control={form.control}
-        rules={rules}
-        render={({ field }) => (
-          <Input
-            {...field}
-            title="LinkedIn Search Employer 3"
-            style={{ width: "100%", marginTop: "1em" }}
-            aria-describedby={name + "Err"}
-            aria-invalid={
-              form.formState.errors.linkedinSearchEmployer3 ? "true" : "false"
-            }
-          />
-        )}
-      />
-      <Controller
-        name="linkedinSearchEmployer4"
-        control={form.control}
-        rules={rules}
-        render={({ field }) => (
-          <Input
-            {...field}
-            title="LinkedIn Search Employer 4"
-            style={{ width: "100%", marginTop: "1em" }}
-            aria-describedby={name + "Err"}
-            aria-invalid={
-              form.formState.errors.linkedinSearchEmployer4 ? "true" : "false"
-            }
-          />
-        )}
-      />
-      <br />
+      <div style={{ display: "grid" }}>
+        <BACInput<RHFRequest>
+          name="linkedinSearchEmployer1"
+          rules={rules}
+          fieldProps={{ title: "LinkedIn Search Employer 1" }}
+          disableError
+        />
+      </div>
+      <div style={{ display: "grid", marginTop: "1em" }}>
+        <BACInput<RHFRequest>
+          name="linkedinSearchEmployer2"
+          rules={rules}
+          fieldProps={{ title: "LinkedIn Search Employer 2" }}
+          disableError
+        />
+      </div>
+      <div style={{ display: "grid", marginTop: "1em" }}>
+        <BACInput<RHFRequest>
+          name="linkedinSearchEmployer3"
+          rules={rules}
+          fieldProps={{ title: "LinkedIn Search Employer 3" }}
+          disableError
+        />
+      </div>
+      <div style={{ display: "grid", marginTop: "1em" }}>
+        <BACInput<RHFRequest>
+          name="linkedinSearchEmployer4"
+          rules={rules}
+          fieldProps={{ title: "LinkedIn Search Employer 4" }}
+          disableError
+        />
+      </div>
       {(form.formState.errors.linkedinSearchEmployer1 && (
         <>
           <br />
-          <Text role="alert" id={name + "Err"} className="requestErrorText">
+          <Text role="alert" id={name + "Err"} className="fieldErrorText">
             {form.formState.errors.linkedinSearchEmployer1.message}
           </Text>
         </>
@@ -96,7 +65,7 @@ const LinkedinSearchEmployers = ({ name, form }: FormField) => {
         (form.formState.errors.linkedinSearchEmployer2 && (
           <>
             <br />
-            <Text role="alert" id={name + "Err"} className="requestErrorText">
+            <Text role="alert" id={name + "Err"} className="fieldErrorText">
               {form.formState.errors.linkedinSearchEmployer2.message}
             </Text>
           </>
@@ -104,7 +73,7 @@ const LinkedinSearchEmployers = ({ name, form }: FormField) => {
         (form.formState.errors.linkedinSearchEmployer3 && (
           <>
             <br />
-            <Text role="alert" id={name + "Err"} className="requestErrorText">
+            <Text role="alert" id={name + "Err"} className="fieldErrorText">
               {form.formState.errors.linkedinSearchEmployer3.message}
             </Text>
           </>
@@ -112,7 +81,7 @@ const LinkedinSearchEmployers = ({ name, form }: FormField) => {
         (form.formState.errors.linkedinSearchEmployer4 && (
           <>
             <br />
-            <Text role="alert" id={name + "Err"} className="requestErrorText">
+            <Text role="alert" id={name + "Err"} className="fieldErrorText">
               {form.formState.errors.linkedinSearchEmployer4.message}
             </Text>
           </>
