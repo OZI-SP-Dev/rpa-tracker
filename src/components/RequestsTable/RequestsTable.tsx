@@ -9,6 +9,13 @@ import {
   DataGridHeaderCell,
   DataGridProps,
   DataGridRow,
+  Field,
+  Input,
+  Popover,
+  PopoverSurface,
+  PopoverTrigger,
+  Radio,
+  RadioGroup,
   Spinner,
   TableCellLayout,
   TableColumnDefinition,
@@ -17,6 +24,8 @@ import {
 import { ArrowNextRegular, ArrowPreviousRegular } from "@fluentui/react-icons";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { FilterRegular } from "@fluentui/react-icons/lib/fonts";
+import { SortDownIcon, SortUpIcon } from "@fluentui/react-icons-mdl2";
 
 const columnSizingOptions = {
   positionTitle: {
@@ -47,23 +56,6 @@ const columnSizingOptions = {
     minWidth: 80,
   },
 };
-
-const PositionTitle = createTableColumn<RPARequest>({
-  columnId: "positionTitle",
-  compare: (a, b) => {
-    return a.positionTitle.localeCompare(b.positionTitle);
-  },
-  renderHeaderCell: () => {
-    return "Position Title";
-  },
-  renderCell: (item) => {
-    return (
-      <TableCellLayout truncate>
-        <Link to={"/Request/" + item.Id}>{item.positionTitle}</Link>
-      </TableCellLayout>
-    );
-  },
-});
 
 const RequestType = createTableColumn<RPARequest>({
   columnId: "requestType",
@@ -157,16 +149,6 @@ const CreatedDate = createTableColumn<RPARequest>({
   },
 });
 
-const columns: TableColumnDefinition<RPARequest>[] = [
-  PositionTitle,
-  RequestType,
-  SystemSeriesGrade,
-  OfficeSymbol,
-  Requestor,
-  CurrentStage,
-  CreatedDate,
-];
-
 const RequestsTable = () => {
   const [page, setPage] = useState(0);
   const [sortState, setSortState] = useState<
@@ -181,6 +163,77 @@ const RequestsTable = () => {
     setSortState(nextSortState);
     setPage(0);
   };
+
+  const PositionTitle = createTableColumn<RPARequest>({
+    columnId: "positionTitle",
+    renderHeaderCell: () => {
+      return (
+        <>
+          {/* TODO: make first button take full width with second button floated to the right */}
+          <Button
+            appearance="transparent"
+            iconPosition="after"
+            icon={
+              sortState.sortColumn === "positionTitle" ? (
+                sortState.sortDirection === "ascending" ? (
+                  <SortUpIcon />
+                ) : (
+                  <SortDownIcon />
+                )
+              ) : undefined
+            }
+            onClick={() => {
+              /* TODO: make this onClick generic for all columns */
+              setSortState({
+                sortColumn: "positionTitle",
+                sortDirection:
+                  sortState.sortColumn === "positionTitle"
+                    ? sortState.sortDirection === "ascending"
+                      ? "descending"
+                      : "ascending"
+                    : "ascending",
+              });
+            }}
+          >
+            Position Title
+          </Button>
+          <Popover withArrow>
+            <PopoverTrigger disableButtonEnhancement>
+              <Button icon={<FilterRegular />} appearance="transparent" />
+            </PopoverTrigger>
+            <PopoverSurface>
+              <Field label="Position Title Filter Type">
+                <RadioGroup>
+                  <Radio value="Contains" label="Contains" />
+                  <Radio value="Starts With" label="Starts With" />
+                </RadioGroup>
+              </Field>
+              <Field label="Position Title Filter Text">
+                <Input />
+              </Field>
+            </PopoverSurface>
+          </Popover>
+        </>
+      );
+    },
+    renderCell: (item) => {
+      return (
+        <TableCellLayout truncate>
+          <Link to={"/Request/" + item.Id}>{item.positionTitle}</Link>
+        </TableCellLayout>
+      );
+    },
+  });
+
+  const columns: TableColumnDefinition<RPARequest>[] = [
+    PositionTitle,
+    RequestType,
+    SystemSeriesGrade,
+    OfficeSymbol,
+    Requestor,
+    CurrentStage,
+    CreatedDate,
+  ];
 
   return (
     <>
