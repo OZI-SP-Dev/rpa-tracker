@@ -96,13 +96,20 @@ const useContentTypes = () => {
   });
 };
 
-export const usePagedRequests = (page = 0) => {
+const defaultSortParams: SortParams = {
+  sortColumn: "Created",
+  sortDirection: "ascending",
+};
+export const usePagedRequests = (page = 0, sortParams = defaultSortParams) => {
   const queryClient = useQueryClient();
 
   return useQuery({
-    queryKey: ["paged-requests", page],
+    queryKey: ["paged-requests", sortParams, page],
     queryFn: () =>
-      getPagedRequests(queryClient.getQueryData(["paged-requests", page - 1])),
+      getPagedRequests(
+        queryClient.getQueryData(["paged-requests", sortParams, page - 1]),
+        sortParams
+      ),
     // results must remain cached
     // if results are not kept in cache a scenario may arise where you are on
     //  a page > 1, but the previous page has been removed from cache. The
@@ -126,7 +133,7 @@ export const useRequest = (requestId: number) => {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const getPagedRequests = async (data: any) => {
+const getPagedRequests = async (data: any, sortParams: SortParams) => {
   if (data?.hasNext) {
     return data.getNext();
   }
@@ -143,6 +150,10 @@ const getPagedRequests = async (data: any) => {
     .expand(expandedFields)
     .filter("ContentType eq 'RPADocSet'")
     .top(PAGESIZE)
+    .orderBy(
+      sortParams.sortColumn?.toString() || "Created",
+      sortParams.sortDirection !== "descending"
+    )
     .getPaged();
 };
 
@@ -457,4 +468,9 @@ interface PagedRequest {
   officeSymbol: string;
   stage: (typeof STAGES)[number]["key"];
   Created: Date;
+}
+
+interface SortParams {
+  sortColumn: string | number | undefined;
+  sortDirection: "ascending" | "descending";
 }

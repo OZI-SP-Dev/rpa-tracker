@@ -7,6 +7,7 @@ import {
   DataGridCell,
   DataGridHeader,
   DataGridHeaderCell,
+  DataGridProps,
   DataGridRow,
   Spinner,
   TableCellLayout,
@@ -49,6 +50,9 @@ const columnSizingOptions = {
 
 const PositionTitle = createTableColumn<RPARequest>({
   columnId: "positionTitle",
+  compare: (a, b) => {
+    return a.positionTitle.localeCompare(b.positionTitle);
+  },
   renderHeaderCell: () => {
     return "Position Title";
   },
@@ -63,6 +67,9 @@ const PositionTitle = createTableColumn<RPARequest>({
 
 const RequestType = createTableColumn<RPARequest>({
   columnId: "requestType",
+  compare: (a, b) => {
+    return a.requestType.localeCompare(b.requestType);
+  },
   renderHeaderCell: () => {
     return "Request Type";
   },
@@ -87,6 +94,9 @@ const SystemSeriesGrade = createTableColumn<RPARequest>({
 
 const OfficeSymbol = createTableColumn<RPARequest>({
   columnId: "officeSymbol",
+  compare: (a, b) => {
+    return a.officeSymbol.localeCompare(b.officeSymbol);
+  },
   renderHeaderCell: () => {
     return "Office Symbol";
   },
@@ -96,7 +106,10 @@ const OfficeSymbol = createTableColumn<RPARequest>({
 });
 
 const Requestor = createTableColumn<RPARequest>({
-  columnId: "requestor",
+  columnId: "Author",
+  compare: (a, b) => {
+    return a.Author?.Title.localeCompare(b.Author?.Title || "") || 0;
+  },
   renderHeaderCell: () => {
     return "Requestor";
   },
@@ -115,7 +128,10 @@ const Requestor = createTableColumn<RPARequest>({
 });
 
 const CurrentStage = createTableColumn<RPARequest>({
-  columnId: "currentStage",
+  columnId: "stage",
+  compare: (a, b) => {
+    return a.stage.localeCompare(b.stage);
+  },
   renderHeaderCell: () => {
     return "Current Stage";
   },
@@ -125,7 +141,10 @@ const CurrentStage = createTableColumn<RPARequest>({
 });
 
 const CreatedDate = createTableColumn<RPARequest>({
-  columnId: "createdDate",
+  columnId: "Created",
+  compare: (a, b) => {
+    return (a.Created?.valueOf() || 0) - (b.Created?.valueOf() || 0);
+  },
   renderHeaderCell: () => {
     return "Created Date";
   },
@@ -150,7 +169,18 @@ const columns: TableColumnDefinition<RPARequest>[] = [
 
 const RequestsTable = () => {
   const [page, setPage] = useState(0);
-  const pagedItems = usePagedRequests(page);
+  const [sortState, setSortState] = useState<
+    Parameters<NonNullable<DataGridProps["onSortChange"]>>[1]
+  >({
+    sortColumn: "Created",
+    sortDirection: "ascending",
+  });
+  const pagedItems = usePagedRequests(page, sortState);
+
+  const onSortChange: DataGridProps["onSortChange"] = (_e, nextSortState) => {
+    setSortState(nextSortState);
+    setPage(0);
+  };
 
   return (
     <>
@@ -160,6 +190,9 @@ const RequestsTable = () => {
         getRowId={(item) => item.Id}
         resizableColumns
         columnSizingOptions={columnSizingOptions}
+        sortable
+        sortState={sortState}
+        onSortChange={onSortChange}
       >
         <DataGridHeader>
           <DataGridRow>
