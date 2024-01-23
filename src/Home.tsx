@@ -1,4 +1,5 @@
 import { Body1, Title1, Title3, makeStyles } from "@fluentui/react-components";
+import RequestsTable from "components/RequestsTable/RequestsTable";
 import { FunctionComponent } from "react";
 
 const useStyles = makeStyles({
@@ -84,6 +85,7 @@ const Home: FunctionComponent = () => {
           </Body1>
         </section>
       </div>
+      <RequestsTable />
     </div>
   );
 };
