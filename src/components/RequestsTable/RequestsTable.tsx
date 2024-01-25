@@ -9,88 +9,91 @@ import {
   DataGridHeaderCell,
   DataGridProps,
   DataGridRow,
-  Field,
-  Input,
-  Popover,
-  PopoverSurface,
-  PopoverTrigger,
-  Radio,
-  RadioGroup,
+  Menu,
+  MenuItem,
+  MenuList,
+  MenuPopover,
+  MenuTrigger,
   Spinner,
   TableCellLayout,
   TableColumnDefinition,
+  TableColumnId,
+  TableColumnSizingOptions,
   createTableColumn,
 } from "@fluentui/react-components";
-import { ArrowNextRegular, ArrowPreviousRegular } from "@fluentui/react-icons";
-import { useState } from "react";
+import {
+  ArrowNextRegular,
+  ArrowPreviousRegular,
+  FilterRegular,
+} from "@fluentui/react-icons";
+import { useCallback, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { FilterRegular } from "@fluentui/react-icons/lib/fonts";
-import { SortDownIcon, SortUpIcon } from "@fluentui/react-icons-mdl2";
+import { FilterIcon } from "@fluentui/react-icons-mdl2";
 
-const columnSizingOptions = {
-  positionTitle: {
-    minWidth: 80,
-    defaultWidth: 280,
+const PositionTitle = createTableColumn<RPARequest>({
+  columnId: "positionTitle",
+  compare: (_a, _b) => 1, // Change nothing, but utilize table's sorting icons
+  renderHeaderCell: (filtered = false) => {
+    return <>Position Title {filtered && <FilterIcon />}</>;
   },
-  requestType: {
-    minWidth: 80,
-    defaultWidth: 220,
+  renderCell: (item) => {
+    return (
+      <TableCellLayout truncate>
+        <Link to={"/Request/" + item.Id}>{item.positionTitle}</Link>
+      </TableCellLayout>
+    );
   },
-  systemSeriesGrade: {
-    minWidth: 80,
-    defaultWidth: 100,
-  },
-  officeSymbol: {
-    minWidth: 80,
-    defaultWidth: 120,
-  },
-  requestor: {
-    minWidth: 80,
-    defaultWidth: 430,
-  },
-  currentStage: {
-    minWidth: 80,
-    defaultWidth: 100,
-  },
-  createdDate: {
-    minWidth: 80,
-  },
-};
+});
 
 const RequestType = createTableColumn<RPARequest>({
   columnId: "requestType",
-  compare: (a, b) => {
-    return a.requestType.localeCompare(b.requestType);
-  },
-  renderHeaderCell: () => {
-    return "Request Type";
+  compare: (_a, _b) => 1, // Change nothing, but utilize table's sorting icons
+  renderHeaderCell: (filtered = false) => {
+    return <>Request Type {filtered && <FilterIcon />}</>;
   },
   renderCell: (item) => {
     return <TableCellLayout truncate>{item.requestType}</TableCellLayout>;
   },
 });
 
-const SystemSeriesGrade = createTableColumn<RPARequest>({
-  columnId: "systemSeriesGrade",
-  renderHeaderCell: () => {
-    return "PS-SS-GR";
+const PaySystem = createTableColumn<RPARequest>({
+  columnId: "paySystem",
+  compare: (_a, _b) => 1, // Change nothing, but utilize table's sorting icons
+  renderHeaderCell: (filtered = false) => {
+    return <>System {filtered && <FilterIcon />}</>;
   },
   renderCell: (item) => {
-    return (
-      <TableCellLayout truncate>
-        {item.paySystem + "-" + item.series + "-" + item.grade}
-      </TableCellLayout>
-    );
+    return <TableCellLayout truncate>{item.paySystem}</TableCellLayout>;
+  },
+});
+
+const Series = createTableColumn<RPARequest>({
+  columnId: "series",
+  compare: (_a, _b) => 1, // Change nothing, but utilize table's sorting icons
+  renderHeaderCell: (filtered = false) => {
+    return <>Series {filtered && <FilterIcon />}</>;
+  },
+  renderCell: (item) => {
+    return <TableCellLayout truncate>{item.series}</TableCellLayout>;
+  },
+});
+
+const Grade = createTableColumn<RPARequest>({
+  columnId: "grade",
+  compare: (_a, _b) => 1, // Change nothing, but utilize table's sorting icons
+  renderHeaderCell: (filtered = false) => {
+    return <>Grade {filtered && <FilterIcon />}</>;
+  },
+  renderCell: (item) => {
+    return <TableCellLayout truncate>{item.grade}</TableCellLayout>;
   },
 });
 
 const OfficeSymbol = createTableColumn<RPARequest>({
   columnId: "officeSymbol",
-  compare: (a, b) => {
-    return a.officeSymbol.localeCompare(b.officeSymbol);
-  },
-  renderHeaderCell: () => {
-    return "Office Symbol";
+  compare: (_a, _b) => 1, // Change nothing, but utilize table's sorting icons
+  renderHeaderCell: (filtered = false) => {
+    return <>Office Symbol {filtered && <FilterIcon />}</>;
   },
   renderCell: (item) => {
     return <TableCellLayout truncate>{item.officeSymbol}</TableCellLayout>;
@@ -99,11 +102,9 @@ const OfficeSymbol = createTableColumn<RPARequest>({
 
 const Requestor = createTableColumn<RPARequest>({
   columnId: "Author",
-  compare: (a, b) => {
-    return a.Author?.Title.localeCompare(b.Author?.Title || "") || 0;
-  },
-  renderHeaderCell: () => {
-    return "Requestor";
+  compare: (_a, _b) => 1, // Change nothing, but utilize table's sorting icons
+  renderHeaderCell: (filtered = false) => {
+    return <>Requestor {filtered && <FilterIcon />}</>;
   },
   renderCell: (item) => {
     return (
@@ -121,11 +122,9 @@ const Requestor = createTableColumn<RPARequest>({
 
 const CurrentStage = createTableColumn<RPARequest>({
   columnId: "stage",
-  compare: (a, b) => {
-    return a.stage.localeCompare(b.stage);
-  },
-  renderHeaderCell: () => {
-    return "Current Stage";
+  compare: (_a, _b) => 1, // Change nothing, but utilize table's sorting icons
+  renderHeaderCell: (filtered = false) => {
+    return <>Current Stage {filtered && <FilterIcon />}</>;
   },
   renderCell: (item) => {
     return <TableCellLayout truncate>{item.stage}</TableCellLayout>;
@@ -134,11 +133,9 @@ const CurrentStage = createTableColumn<RPARequest>({
 
 const CreatedDate = createTableColumn<RPARequest>({
   columnId: "Created",
-  compare: (a, b) => {
-    return (a.Created?.valueOf() || 0) - (b.Created?.valueOf() || 0);
-  },
-  renderHeaderCell: () => {
-    return "Created Date";
+  compare: (_a, _b) => 1, // Change nothing, but utilize table's sorting icons
+  renderHeaderCell: (filtered = false) => {
+    return <>Created {filtered && <FilterIcon />}</>;
   },
   renderCell: (item) => {
     return (
@@ -150,6 +147,7 @@ const CreatedDate = createTableColumn<RPARequest>({
 });
 
 const RequestsTable = () => {
+  // HOOKS
   const [page, setPage] = useState(0);
   const [sortState, setSortState] = useState<
     Parameters<NonNullable<DataGridProps["onSortChange"]>>[1]
@@ -157,84 +155,62 @@ const RequestsTable = () => {
     sortColumn: "Created",
     sortDirection: "ascending",
   });
+  const [filterState, setFilterState] = useState([
+    {
+      column: "positionTitle",
+      filter: "*",
+    },
+  ]);
   const pagedItems = usePagedRequests(page, sortState);
+  const refMap = useRef<Record<string, HTMLElement | null>>({});
+  const [columnSizingOptions, setColumnSizingOptions] =
+    useState<TableColumnSizingOptions>({
+      positionTitle: { minWidth: 120, idealWidth: 280 },
+      requestType: { minWidth: 120, idealWidth: 220 },
+      paySystem: { minWidth: 80, idealWidth: 80 },
+      series: { minWidth: 80, idealWidth: 80 },
+      grade: { minWidth: 80, idealWidth: 80 },
+      officeSymbol: { minWidth: 120, idealWidth: 120 },
+      requestor: { minWidth: 120, idealWidth: 430 },
+      currentStage: { minWidth: 120, idealWidth: 165 },
+      createdDate: { minWidth: 120, idealWidth: 120 },
+    });
 
+  const onColumnResize = useCallback(
+    (
+      _e: any,
+      { columnId, width }: { columnId: TableColumnId; width: number }
+    ) => {
+      setColumnSizingOptions((state) => ({
+        ...state,
+        [columnId]: {
+          ...state[columnId],
+          idealWidth: width,
+        },
+      }));
+    },
+    []
+  );
+
+  // Sort/Filter Functions
   const onSortChange: DataGridProps["onSortChange"] = (_e, nextSortState) => {
     setSortState(nextSortState);
     setPage(0);
   };
 
-  const PositionTitle = createTableColumn<RPARequest>({
-    columnId: "positionTitle",
-    renderHeaderCell: () => {
-      return (
-        <>
-          {/* TODO: make first button take full width with second button floated to the right */}
-          <Button
-            appearance="transparent"
-            iconPosition="after"
-            icon={
-              sortState.sortColumn === "positionTitle" ? (
-                sortState.sortDirection === "ascending" ? (
-                  <SortUpIcon />
-                ) : (
-                  <SortDownIcon />
-                )
-              ) : undefined
-            }
-            onClick={() => {
-              /* TODO: make this onClick generic for all columns */
-              setSortState({
-                sortColumn: "positionTitle",
-                sortDirection:
-                  sortState.sortColumn === "positionTitle"
-                    ? sortState.sortDirection === "ascending"
-                      ? "descending"
-                      : "ascending"
-                    : "ascending",
-              });
-            }}
-          >
-            Position Title
-          </Button>
-          <Popover withArrow>
-            <PopoverTrigger disableButtonEnhancement>
-              <Button icon={<FilterRegular />} appearance="transparent" />
-            </PopoverTrigger>
-            <PopoverSurface>
-              <Field label="Position Title Filter Type">
-                <RadioGroup>
-                  <Radio value="Contains" label="Contains" />
-                  <Radio value="Starts With" label="Starts With" />
-                </RadioGroup>
-              </Field>
-              <Field label="Position Title Filter Text">
-                <Input />
-              </Field>
-            </PopoverSurface>
-          </Popover>
-        </>
-      );
-    },
-    renderCell: (item) => {
-      return (
-        <TableCellLayout truncate>
-          <Link to={"/Request/" + item.Id}>{item.positionTitle}</Link>
-        </TableCellLayout>
-      );
-    },
-  });
-
   const columns: TableColumnDefinition<RPARequest>[] = [
     PositionTitle,
     RequestType,
-    SystemSeriesGrade,
+    PaySystem,
+    Series,
+    Grade,
     OfficeSymbol,
     Requestor,
     CurrentStage,
     CreatedDate,
   ];
 
+  // RENDER
   return (
     <>
       <DataGrid
@@ -243,14 +219,44 @@ const RequestsTable = () => {
         getRowId={(item) => item.Id}
         resizableColumns
         columnSizingOptions={columnSizingOptions}
+        onColumnResize={onColumnResize}
         sortable
         sortState={sortState}
         onSortChange={onSortChange}
       >
         <DataGridHeader>
           <DataGridRow>
-            {({ renderHeaderCell }) => (
-              <DataGridHeaderCell>{renderHeaderCell()}</DataGridHeaderCell>
+            {({ renderHeaderCell, columnId }) => (
+              <Menu openOnContext>
+                <MenuTrigger>
+                  <DataGridHeaderCell
+                    ref={(el) => (refMap.current[columnId] = el)}
+                  >
+                    {renderHeaderCell(
+                      filterState.filter((obj) => {
+                        return obj.column === columnId;
+                      }).length > 0
+                    )}
+                  </DataGridHeaderCell>
+                </MenuTrigger>
+                <MenuPopover>
+                  <MenuList>
+                    <MenuItem
+                      onClick={() =>
+                        setFilterState([
+                          {
+                            column: columnId.toString(),
+                            filter: "*",
+                          },
+                        ])
+                      }
+                      icon={<FilterRegular />}
+                    >
+                      Filter
+                    </MenuItem>
+                  </MenuList>
+                </MenuPopover>
+              </Menu>
             )}
           </DataGridRow>
         </DataGridHeader>
