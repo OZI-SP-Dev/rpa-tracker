@@ -29,6 +29,12 @@ import {
 import { useCallback, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { FilterIcon } from "@fluentui/react-icons-mdl2";
+import FilterRequestsDrawer from "./FilterRequests";
+
+interface requestFilter {
+  column: string;
+  filter: string | Date | number;
+}
 
 const PositionTitle = createTableColumn<RPARequest>({
   columnId: "positionTitle",
@@ -155,12 +161,7 @@ const RequestsTable = () => {
     sortColumn: "Created",
     sortDirection: "ascending",
   });
-  const [filterState, setFilterState] = useState([
-    {
-      column: "positionTitle",
-      filter: "*",
-    },
-  ]);
+  const [filterState, setFilterState] = useState<requestFilter[]>([]);
   const pagedItems = usePagedRequests(page, sortState);
   const refMap = useRef<Record<string, HTMLElement | null>>({});
   const [columnSizingOptions, setColumnSizingOptions] =
@@ -175,6 +176,7 @@ const RequestsTable = () => {
       currentStage: { minWidth: 120, idealWidth: 165 },
       createdDate: { minWidth: 120, idealWidth: 120 },
     });
+  const [drawerIsOpen, setDrawerIsOpen] = useState(false);
 
   const onColumnResize = useCallback(
     (
@@ -213,6 +215,12 @@ const RequestsTable = () => {
   // RENDER
   return (
     <>
+      <FilterRequestsDrawer
+        isOpen={drawerIsOpen}
+        setIsOpen={setDrawerIsOpen}
+        filterState={filterState}
+        setFilterState={setFilterState}
+      />
       <DataGrid
         items={pagedItems.data?.results || []}
         columns={columns}
@@ -243,12 +251,8 @@ const RequestsTable = () => {
                   <MenuList>
                     <MenuItem
                       onClick={() =>
-                        setFilterState([
-                          {
-                            column: columnId.toString(),
-                            filter: "*",
-                          },
-                        ])
+                        // Send focus to this input?
+                        setDrawerIsOpen(true)
                       }
                       icon={<FilterRegular />}
                     >
