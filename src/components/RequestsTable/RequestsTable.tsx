@@ -1,4 +1,4 @@
-import { RPARequest, usePagedRequests } from "api/requestsApi";
+import { RPARequest, RequestFilter, usePagedRequests } from "api/requestsApi";
 import {
   Avatar,
   Button,
@@ -31,11 +31,6 @@ import { useCallback, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { FilterIcon } from "@fluentui/react-icons-mdl2";
 import FilterRequestsDrawer from "./FilterRequests";
-
-interface requestFilter {
-  column: string;
-  filter: string | Date | number;
-}
 
 const PositionTitle = createTableColumn<RPARequest>({
   columnId: "positionTitle",
@@ -162,8 +157,8 @@ const RequestsTable = () => {
     sortColumn: "Created",
     sortDirection: "ascending",
   });
-  const [filterState, setFilterState] = useState<requestFilter[]>([]);
-  const pagedItems = usePagedRequests(page, sortState);
+  const [filterState, setFilterState] = useState<RequestFilter[]>([]);
+  const pagedItems = usePagedRequests(page, sortState, filterState);
   const refMap = useRef<Record<string, HTMLElement | null>>({});
   const [columnSizingOptions, setColumnSizingOptions] =
     useState<TableColumnSizingOptions>({

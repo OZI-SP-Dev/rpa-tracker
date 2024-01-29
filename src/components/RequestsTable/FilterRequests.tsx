@@ -17,12 +17,7 @@ import { PAYSYSTEMS } from "consts/PaySystems";
 import { GENERALGRADES, ACQGRADES } from "consts/Grades";
 import { STAGES } from "consts/Stages";
 import { FormEventHandler } from "react";
-
-interface requestFilter {
-  column: string;
-  filter: string | Date | number;
-  modifier?: string;
-}
+import { RequestFilter } from "api/requestsApi";
 
 const FilterRequestsDrawer = ({
   isOpen,
@@ -32,8 +27,8 @@ const FilterRequestsDrawer = ({
 }: {
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
-  filterState: requestFilter[];
-  setFilterState: (filters: requestFilter[]) => void;
+  filterState: RequestFilter[];
+  setFilterState: (filters: RequestFilter[]) => void;
 }) => {
   const filter: FormEventHandler = (e) => {
     e.preventDefault();
@@ -50,12 +45,13 @@ const FilterRequestsDrawer = ({
       afterDate?: { value: Date };
     };
 
-    const newFilter: requestFilter[] = [];
+    const newFilter: RequestFilter[] = [];
 
     if (target.positionTitle?.value) {
       newFilter.push({
         column: "positionTitle",
         filter: target.positionTitle.value.toString(),
+        queryString: `substringof('${target.positionTitle.value.toString()}',positionTitle)`,
       });
     }
 
@@ -63,6 +59,7 @@ const FilterRequestsDrawer = ({
       newFilter.push({
         column: "requestType",
         filter: target.requestType.value.toString(),
+        queryString: `(requestType eq '${target.requestType.value.toString()}')`,
       });
     }
 
@@ -70,6 +67,7 @@ const FilterRequestsDrawer = ({
       newFilter.push({
         column: "paySystem",
         filter: target.paySystem.value.toString(),
+        queryString: `(paySystem eq '${target.paySystem.value.toString()}')`,
       });
     }
 
@@ -77,6 +75,7 @@ const FilterRequestsDrawer = ({
       newFilter.push({
         column: "series",
         filter: target.series.value.toString(),
+        queryString: `(series eq '${target.series.value.toString()}')`,
       });
     }
 
@@ -84,6 +83,7 @@ const FilterRequestsDrawer = ({
       newFilter.push({
         column: "grade",
         filter: target.grade.value.toString(),
+        queryString: `(grade eq '${target.grade.value.toString()}')`,
       });
     }
 
@@ -91,6 +91,7 @@ const FilterRequestsDrawer = ({
       newFilter.push({
         column: "officeSymbol",
         filter: target.officeSymbol.value.toString(),
+        queryString: `substringof('${target.officeSymbol.value.toString()}',officeSymbol)`,
       });
     }
 
@@ -101,26 +102,32 @@ const FilterRequestsDrawer = ({
     //   });
     // }
 
+    // FIX: Not currently matching up w/ displayed stages
     if (target.stage?.value) {
       newFilter.push({
         column: "stage",
         filter: target.stage.value.toString(),
+        queryString: `(stage eq '${target.stage.value.toString()}')`,
       });
     }
 
+    // FIX: "toISOString is not a function"
     if (target.beforeDate?.value) {
       newFilter.push({
         column: "Created",
         modifier: "beforeDate",
         filter: target.beforeDate.value,
+        queryString: `(Created le '${target.beforeDate.value.toISOString()}')`,
       });
     }
 
+    // FIX: "toISOString is not a function"
     if (target.afterDate?.value) {
       newFilter.push({
         column: "Created",
         modifier: "afterDate",
         filter: target.afterDate.value,
+        queryString: `(Created ge '${target.afterDate.value.toISOString()}')`,
       });
     }
 

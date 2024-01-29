@@ -100,15 +100,26 @@ const defaultSortParams: SortParams = {
   sortColumn: "Created",
   sortDirection: "ascending",
 };
-export const usePagedRequests = (page = 0, sortParams = defaultSortParams) => {
+
+export const usePagedRequests = (
+  page = 0,
+  sortParams = defaultSortParams,
+  filterParams: RequestFilter[]
+) => {
   const queryClient = useQueryClient();
 
   return useQuery({
-    queryKey: ["paged-requests", sortParams, page],
+    queryKey: ["paged-requests", sortParams, filterParams, page],
     queryFn: () =>
       getPagedRequests(
-        queryClient.getQueryData(["paged-requests", sortParams, page - 1]),
-        sortParams
+        queryClient.getQueryData([
+          "paged-requests",
+          sortParams,
+          filterParams,
+          page - 1,
+        ]),
+        sortParams,
+        filterParams
       ),
     // results must remain cached
     // if results are not kept in cache a scenario may arise where you are on
@@ -133,7 +144,11 @@ export const useRequest = (requestId: number) => {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const getPagedRequests = async (data: any, sortParams: SortParams) => {
+const getPagedRequests = async (
+  data: any,
+  sortParams: SortParams,
+  filterParams: RequestFilter[]
+) => {
   if (data?.hasNext) {
     return data.getNext();
   }
@@ -144,11 +159,16 @@ const getPagedRequests = async (data: any, sortParams: SortParams) => {
 
   const expandedFields = "Author";
 
+  let queryString = "ContentType eq 'RPADocSet'";
+  filterParams.forEach((filter) => {
+    queryString += ` and ${filter.queryString}`;
+  });
+
   return spWebContext.web.lists
     .getByTitle("requests")
     .items.select(requestedFields)
     .expand(expandedFields)
-    .filter("ContentType eq 'RPADocSet'")
+    .filter(queryString)
     .top(PAGESIZE)
     .orderBy(
       sortParams.sortColumn?.toString() || "Created",
@@ -474,4 +494,11 @@ interface PagedRequest {
 interface SortParams {
   sortColumn: string | number | undefined;
   sortDirection: "ascending" | "descending";
+}
+
+export interface RequestFilter {
+  column: string;
+  filter: string | Date | number;
+  modifier?: string;
+  queryString: string;
 }
