@@ -41,8 +41,8 @@ const FilterRequestsDrawer = ({
       officeSymbol?: { value: string };
       Author?: { value: string };
       stage?: { value: string };
-      beforeDate?: { value: Date };
-      afterDate?: { value: Date };
+      beforeDate?: { value: string };
+      afterDate?: { value: string };
     };
 
     const newFilter: RequestFilter[] = [];
@@ -111,23 +111,21 @@ const FilterRequestsDrawer = ({
       });
     }
 
-    // FIX: "toISOString is not a function"
     if (target.beforeDate?.value) {
       newFilter.push({
         column: "Created",
         modifier: "beforeDate",
         filter: target.beforeDate.value,
-        queryString: `(Created le '${target.beforeDate.value.toISOString()}')`,
+        queryString: `(Created le '${target.beforeDate.value.toString()}')`,
       });
     }
 
-    // FIX: "toISOString is not a function"
     if (target.afterDate?.value) {
       newFilter.push({
         column: "Created",
         modifier: "afterDate",
         filter: target.afterDate.value,
-        queryString: `(Created ge '${target.afterDate.value.toISOString()}')`,
+        queryString: `(Created ge '${target.afterDate.value.toString()}')`,
       });
     }
 
@@ -169,6 +167,7 @@ const FilterRequestsDrawer = ({
           <Field label="Position Title">
             <Input
               name="positionTitle"
+              type="search"
               defaultValue={filterState
                 .filter((obj) => {
                   return obj.column === "positionTitle";
@@ -180,6 +179,7 @@ const FilterRequestsDrawer = ({
           <Field label="Request Type">
             <Combobox
               name="requestType"
+              clearable
               defaultValue={filterState
                 .filter((obj) => {
                   return obj.column === "requestType";
@@ -197,6 +197,7 @@ const FilterRequestsDrawer = ({
           <Field label="Pay System">
             <Combobox
               name="paySystem"
+              clearable
               defaultValue={filterState
                 .filter((obj) => {
                   return obj.column === "paySystem";
@@ -214,6 +215,7 @@ const FilterRequestsDrawer = ({
           <Field label="Series">
             <Input
               name="series"
+              type="search"
               defaultValue={filterState
                 .filter((obj) => {
                   return obj.column === "series";
@@ -226,6 +228,7 @@ const FilterRequestsDrawer = ({
           <Field label="Grade">
             <Combobox
               name="grade"
+              clearable
               defaultValue={filterState
                 .filter((obj) => {
                   return obj.column === "grade";
@@ -248,6 +251,7 @@ const FilterRequestsDrawer = ({
           <Field label="Office Symbol">
             <Input
               name="officeSymbol"
+              type="search"
               defaultValue={filterState
                 .filter((obj) => {
                   return obj.column === "officeSymbol";
@@ -270,6 +274,7 @@ const FilterRequestsDrawer = ({
           <Field label="Stage">
             <Combobox
               name="stage"
+              clearable
               defaultValue={filterState
                 .filter((obj) => {
                   return obj.column === "stage";
@@ -277,7 +282,7 @@ const FilterRequestsDrawer = ({
                 ?.filter.toString()}
             >
               {STAGES.map((stage) => (
-                <Option key={stage.key} value={stage.key}>
+                <Option key={stage.key} text={stage.key} value={stage.key}>
                   {stage.text}
                 </Option>
               ))}
@@ -287,14 +292,32 @@ const FilterRequestsDrawer = ({
           <Field label="Created After">
             <DatePicker
               name="afterDate"
-              value={afterDate instanceof Date ? afterDate : undefined}
+              value={afterDate ? new Date(afterDate) : undefined}
+              formatDate={(date?: Date) => {
+                return !date
+                  ? ""
+                  : date.getFullYear() +
+                      "-" +
+                      (date.getUTCMonth() + 1) +
+                      "-" +
+                      date.getDate();
+              }}
             />
           </Field>
           <hr />
           <Field label="Created Before">
             <DatePicker
               name="beforeDate"
-              value={beforeDate instanceof Date ? beforeDate : undefined}
+              value={beforeDate ? new Date(beforeDate) : undefined}
+              formatDate={(date?: Date) => {
+                return !date
+                  ? ""
+                  : date.getFullYear() +
+                      "-" +
+                      (date.getUTCMonth() + 1) +
+                      "-" +
+                      date.getDate();
+              }}
             />
           </Field>
         </DrawerBody>
