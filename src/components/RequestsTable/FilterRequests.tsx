@@ -10,13 +10,18 @@ import {
   Input,
   Option,
 } from "@fluentui/react-components";
+import { DatePicker } from "@fluentui/react-datepicker-compat";
 import { Dismiss24Regular } from "@fluentui/react-icons";
 import { REQUESTTYPES } from "consts/RequestTypes";
+import { PAYSYSTEMS } from "consts/PaySystems";
+import { GENERALGRADES, ACQGRADES } from "consts/Grades";
+import { STAGES } from "consts/Stages";
 import { FormEventHandler } from "react";
 
 interface requestFilter {
   column: string;
   filter: string | Date | number;
+  modifier?: string;
 }
 
 const FilterRequestsDrawer = ({
@@ -35,14 +40,14 @@ const FilterRequestsDrawer = ({
     const target = e.target as typeof e.target & {
       positionTitle?: { value: string };
       requestType?: { value: string };
-      system?: { value: string };
+      paySystem?: { value: string };
       series?: { value: string };
       grade?: { value: string };
-      office?: { value: string };
-      requestor?: { value: string };
+      officeSymbol?: { value: string };
+      Author?: { value: string };
       stage?: { value: string };
-      beforeDate?: { value: string };
-      afterDate?: { value: string };
+      beforeDate?: { value: Date };
+      afterDate?: { value: Date };
     };
 
     const newFilter: requestFilter[] = [];
@@ -61,16 +66,74 @@ const FilterRequestsDrawer = ({
       });
     }
 
-    if (target.system?.value) {
+    if (target.paySystem?.value) {
       newFilter.push({
-        column: "system",
-        filter: target.system.value.toString(),
+        column: "paySystem",
+        filter: target.paySystem.value.toString(),
+      });
+    }
+
+    if (target.series?.value) {
+      newFilter.push({
+        column: "series",
+        filter: target.series.value.toString(),
+      });
+    }
+
+    if (target.grade?.value) {
+      newFilter.push({
+        column: "grade",
+        filter: target.grade.value.toString(),
+      });
+    }
+
+    if (target.officeSymbol?.value) {
+      newFilter.push({
+        column: "officeSymbol",
+        filter: target.officeSymbol.value.toString(),
+      });
+    }
+
+    // if (target.Author?.value) {
+    //   newFilter.push({
+    //     column: "Author",
+    //     filter: target.Author.value.toString(),
+    //   });
+    // }
+
+    if (target.stage?.value) {
+      newFilter.push({
+        column: "stage",
+        filter: target.stage.value.toString(),
+      });
+    }
+
+    if (target.beforeDate?.value) {
+      newFilter.push({
+        column: "Created",
+        modifier: "beforeDate",
+        filter: target.beforeDate.value,
+      });
+    }
+
+    if (target.afterDate?.value) {
+      newFilter.push({
+        column: "Created",
+        modifier: "afterDate",
+        filter: target.afterDate.value,
       });
     }
 
     setFilterState(newFilter);
     setIsOpen(false);
   };
+
+  const afterDate = filterState.filter((obj) => {
+    return obj.modifier === "afterDate";
+  })[0]?.filter;
+  const beforeDate = filterState.filter((obj) => {
+    return obj.modifier === "beforeDate";
+  })[0]?.filter;
 
   return (
     <Drawer
@@ -95,6 +158,7 @@ const FilterRequestsDrawer = ({
           </DrawerHeaderTitle>
         </DrawerHeader>
         <DrawerBody>
+          <hr />
           <Field label="Position Title">
             <Input
               name="positionTitle"
@@ -105,6 +169,7 @@ const FilterRequestsDrawer = ({
                 ?.filter.toString()}
             />
           </Field>
+          <hr />
           <Field label="Request Type">
             <Combobox
               name="requestType"
@@ -121,7 +186,110 @@ const FilterRequestsDrawer = ({
               ))}
             </Combobox>
           </Field>
-          System Series Grade Office Symbol Requestor Current Stage Created
+          <hr />
+          <Field label="Pay System">
+            <Combobox
+              name="paySystem"
+              defaultValue={filterState
+                .filter((obj) => {
+                  return obj.column === "paySystem";
+                })[0]
+                ?.filter.toString()}
+            >
+              {PAYSYSTEMS.map((system) => (
+                <Option key={system.key} value={system.key}>
+                  {system.key}
+                </Option>
+              ))}
+            </Combobox>
+          </Field>
+          <hr />
+          <Field label="Series">
+            <Input
+              name="series"
+              defaultValue={filterState
+                .filter((obj) => {
+                  return obj.column === "series";
+                })[0]
+                ?.filter.toString()}
+              maxLength={4}
+            />
+          </Field>
+          <hr />
+          <Field label="Grade">
+            <Combobox
+              name="grade"
+              defaultValue={filterState
+                .filter((obj) => {
+                  return obj.column === "grade";
+                })[0]
+                ?.filter.toString()}
+            >
+              {ACQGRADES.map((grade) => (
+                <Option key={grade} value={grade}>
+                  {grade}
+                </Option>
+              ))}
+              {GENERALGRADES.map((grade) => (
+                <Option key={grade} value={grade}>
+                  {grade}
+                </Option>
+              ))}
+            </Combobox>
+          </Field>
+          <hr />
+          <Field label="Office Symbol">
+            <Input
+              name="officeSymbol"
+              defaultValue={filterState
+                .filter((obj) => {
+                  return obj.column === "officeSymbol";
+                })[0]
+                ?.filter.toString()}
+            />
+          </Field>
+          <hr />
+          <Field label="Created By">
+            <Input
+              name="Author"
+              defaultValue={filterState
+                .filter((obj) => {
+                  return obj.column === "Author";
+                })[0]
+                ?.filter.toString()}
+            />
+          </Field>
+          <hr />
+          <Field label="Stage">
+            <Combobox
+              name="stage"
+              defaultValue={filterState
+                .filter((obj) => {
+                  return obj.column === "stage";
+                })[0]
+                ?.filter.toString()}
+            >
+              {STAGES.map((stage) => (
+                <Option key={stage.key} value={stage.key}>
+                  {stage.text}
+                </Option>
+              ))}
+            </Combobox>
+          </Field>
+          <hr />
+          <Field label="Created After">
+            <DatePicker
+              name="afterDate"
+              value={afterDate instanceof Date ? afterDate : undefined}
+            />
+          </Field>
+          <hr />
+          <Field label="Created Before">
+            <DatePicker
+              name="beforeDate"
+              value={beforeDate instanceof Date ? beforeDate : undefined}
+            />
+          </Field>
         </DrawerBody>
         <DrawerFooter>
           <Button appearance="primary" type="submit" value="submit">

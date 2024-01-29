@@ -154,6 +154,7 @@ const getPagedRequests = async (data: any, sortParams: SortParams) => {
       sortParams.sortColumn?.toString() || "Created",
       sortParams.sortDirection !== "descending"
     )
+    .orderBy("Id", true) // Include this or non-unique sort values can cause issues
     .getPaged();
 };
 

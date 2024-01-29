@@ -19,6 +19,7 @@ import {
   TableColumnDefinition,
   TableColumnId,
   TableColumnSizingOptions,
+  Text,
   createTableColumn,
 } from "@fluentui/react-components";
 import {
@@ -215,6 +216,9 @@ const RequestsTable = () => {
   // RENDER
   return (
     <>
+      <Text>
+        Click a column to sort by it, right-click a column to start filtering
+      </Text>
       <FilterRequestsDrawer
         isOpen={drawerIsOpen}
         setIsOpen={setDrawerIsOpen}
