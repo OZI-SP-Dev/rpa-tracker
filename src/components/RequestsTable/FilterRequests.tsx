@@ -16,8 +16,20 @@ import { REQUESTTYPES } from "consts/RequestTypes";
 import { PAYSYSTEMS } from "consts/PaySystems";
 import { GENERALGRADES, ACQGRADES } from "consts/Grades";
 import { STAGES } from "consts/Stages";
-import { FormEventHandler } from "react";
 import { RequestFilter } from "api/requestsApi";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
+
+interface IFilterFields {
+  positionTitle: string;
+  requestType: string;
+  paySystem: string;
+  series: string;
+  grade: string;
+  officeSymbol: string;
+  stage: string;
+  afterDate: Date;
+  beforeDate: Date;
+}
 
 const FilterRequestsDrawer = ({
   isOpen,
@@ -30,119 +42,152 @@ const FilterRequestsDrawer = ({
   filterState: RequestFilter[];
   setFilterState: (filters: RequestFilter[]) => void;
 }) => {
-  const filter: FormEventHandler = (e) => {
-    e.preventDefault();
-    const target = e.target as typeof e.target & {
-      positionTitle?: { value: string };
-      requestType?: { value: string };
-      paySystem?: { value: string };
-      series?: { value: string };
-      grade?: { value: string };
-      officeSymbol?: { value: string };
-      Author?: { value: string };
-      stage?: { value: string };
-      beforeDate?: { value: string };
-      afterDate?: { value: string };
-    };
-
-    const newFilter: RequestFilter[] = [];
-
-    if (target.positionTitle?.value) {
-      newFilter.push({
-        column: "positionTitle",
-        filter: target.positionTitle.value.toString(),
-        queryString: `substringof('${target.positionTitle.value.toString()}',positionTitle)`,
-      });
-    }
-
-    if (target.requestType?.value) {
-      newFilter.push({
-        column: "requestType",
-        filter: target.requestType.value.toString(),
-        queryString: `(requestType eq '${target.requestType.value.toString()}')`,
-      });
-    }
-
-    if (target.paySystem?.value) {
-      newFilter.push({
-        column: "paySystem",
-        filter: target.paySystem.value.toString(),
-        queryString: `(paySystem eq '${target.paySystem.value.toString()}')`,
-      });
-    }
-
-    if (target.series?.value) {
-      newFilter.push({
-        column: "series",
-        filter: target.series.value.toString(),
-        queryString: `(series eq '${target.series.value.toString()}')`,
-      });
-    }
-
-    if (target.grade?.value) {
-      newFilter.push({
-        column: "grade",
-        filter: target.grade.value.toString(),
-        queryString: `(grade eq '${target.grade.value.toString()}')`,
-      });
-    }
-
-    if (target.officeSymbol?.value) {
-      newFilter.push({
-        column: "officeSymbol",
-        filter: target.officeSymbol.value.toString(),
-        queryString: `substringof('${target.officeSymbol.value.toString()}',officeSymbol)`,
-      });
-    }
-
-    // if (target.Author?.value) {
-    //   newFilter.push({
-    //     column: "Author",
-    //     filter: target.Author.value.toString(),
-    //   });
-    // }
-
-    // FIX: Not currently matching up w/ displayed stages
-    if (target.stage?.value) {
-      newFilter.push({
-        column: "stage",
-        filter: target.stage.value.toString(),
-        queryString: `(stage eq '${target.stage.value.toString()}')`,
-      });
-    }
-
-    if (target.beforeDate?.value) {
-      newFilter.push({
-        column: "Created",
-        modifier: "beforeDate",
-        filter: target.beforeDate.value,
-        queryString: `(Created le '${new Date(
-          target.beforeDate.value.toString()
-        ).toISOString()}')`,
-      });
-    }
-
-    if (target.afterDate?.value) {
-      newFilter.push({
-        column: "Created",
-        modifier: "afterDate",
-        filter: target.afterDate.value,
-        queryString: `(Created ge '${new Date(
-          target.afterDate.value.toString()
-        ).toISOString()}')`,
-      });
-    }
-
-    setFilterState(newFilter);
-    setIsOpen(false);
-  };
-
   const afterDate = filterState.filter((obj) => {
     return obj.modifier === "afterDate";
   })[0]?.filter;
   const beforeDate = filterState.filter((obj) => {
     return obj.modifier === "beforeDate";
   })[0]?.filter;
+
+  const { control, handleSubmit, reset } = useForm<IFilterFields>({
+    defaultValues: {
+      positionTitle:
+        filterState
+          .filter((obj) => {
+            return obj.column === "positionTitle";
+          })[0]
+          ?.filter.toString() ?? "",
+      requestType:
+        filterState
+          .filter((obj) => {
+            return obj.column === "requestType";
+          })[0]
+          ?.filter.toString() ?? "",
+      paySystem:
+        filterState
+          .filter((obj) => {
+            return obj.column === "paySystem";
+          })[0]
+          ?.filter.toString() ?? "",
+      series:
+        filterState
+          .filter((obj) => {
+            return obj.column === "series";
+          })[0]
+          ?.filter.toString() ?? "",
+      grade:
+        filterState
+          .filter((obj) => {
+            return obj.column === "grade";
+          })[0]
+          ?.filter.toString() ?? "",
+      officeSymbol:
+        filterState
+          .filter((obj) => {
+            return obj.column === "officeSymbol";
+          })[0]
+          ?.filter.toString() ?? "",
+      stage:
+        filterState
+          .filter((obj) => {
+            return obj.column === "stage";
+          })[0]
+          ?.filter.toString() ?? "",
+      afterDate: afterDate ? new Date(afterDate) : undefined,
+      beforeDate: beforeDate ? new Date(beforeDate) : undefined,
+    },
+  });
+  const onSubmit: SubmitHandler<IFilterFields> = (data) => {
+    console.log(data);
+    const newFilter: RequestFilter[] = [];
+
+    if (data.positionTitle) {
+      newFilter.push({
+        column: "positionTitle",
+        filter: data.positionTitle,
+        queryString: `substringof('${data.positionTitle}',positionTitle)`,
+      });
+    }
+
+    if (data.requestType) {
+      newFilter.push({
+        column: "requestType",
+        filter: data.requestType,
+        queryString: `(requestType eq '${data.requestType}')`,
+      });
+    }
+
+    if (data.paySystem) {
+      newFilter.push({
+        column: "paySystem",
+        filter: data.paySystem,
+        queryString: `(paySystem eq '${data.paySystem}')`,
+      });
+    }
+
+    if (data.series) {
+      newFilter.push({
+        column: "series",
+        filter: data.series,
+        queryString: `(series eq '${data.series}')`,
+      });
+    }
+
+    if (data.grade) {
+      newFilter.push({
+        column: "grade",
+        filter: data.grade,
+        queryString: `(grade eq '${data.grade}')`,
+      });
+    }
+
+    if (data.officeSymbol) {
+      newFilter.push({
+        column: "officeSymbol",
+        filter: data.officeSymbol,
+        queryString: `substringof('${data.officeSymbol}',officeSymbol)`,
+      });
+    }
+
+    // if (data.Author?.value) {
+    //   newFilter.push({
+    //     column: "Author",
+    //     filter: data.Author,
+    //   });
+    // }
+
+    // FIX: Not currently matching up w/ displayed stages
+    if (data.stage) {
+      newFilter.push({
+        column: "stage",
+        filter: data.stage,
+        queryString: `(stage eq '${data.stage}')`,
+      });
+    }
+
+    if (data.beforeDate) {
+      newFilter.push({
+        column: "Created",
+        modifier: "beforeDate",
+        filter: data.beforeDate,
+        queryString: `(Created le '${new Date(
+          data.beforeDate
+        ).toISOString()}')`,
+      });
+    }
+
+    if (data.afterDate) {
+      newFilter.push({
+        column: "Created",
+        modifier: "afterDate",
+        filter: data.afterDate,
+        queryString: `(Created ge '${new Date(data.afterDate).toISOString()}')`,
+      });
+    }
+
+    setFilterState(newFilter);
+    setIsOpen(false);
+  };
 
   return (
     <Drawer
@@ -152,7 +197,7 @@ const FilterRequestsDrawer = ({
       open={isOpen}
       onOpenChange={(_e, { open }) => setIsOpen(open)}
     >
-      <form onSubmit={filter}>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <DrawerHeader>
           <DrawerHeaderTitle
             action={
@@ -175,98 +220,108 @@ const FilterRequestsDrawer = ({
         >
           <hr />
           <Field label="Position Title">
-            <Input
+            <Controller
               name="positionTitle"
-              type="search"
-              defaultValue={filterState
-                .filter((obj) => {
-                  return obj.column === "positionTitle";
-                })[0]
-                ?.filter.toString()}
+              control={control}
+              render={({ field }) => <Input type="search" {...field} />}
             />
           </Field>
           <hr />
           <Field label="Request Type">
-            <Combobox
+            <Controller
               name="requestType"
-              clearable
-              defaultValue={filterState
-                .filter((obj) => {
-                  return obj.column === "requestType";
-                })[0]
-                ?.filter.toString()}
-            >
-              {REQUESTTYPES.map((reqType) => (
-                <Option key={reqType} value={reqType}>
-                  {reqType}
-                </Option>
-              ))}
-            </Combobox>
+              control={control}
+              render={({ field }) => (
+                <Combobox
+                  clearable
+                  autoComplete="on"
+                  {...field}
+                  selectedOptions={[field.value ?? ""]}
+                  onOptionSelect={(_event, data) => {
+                    field.onChange(data.optionValue ?? "");
+                  }}
+                  value={field.value}
+                >
+                  {REQUESTTYPES.map((reqType) => (
+                    <Option key={reqType} value={reqType}>
+                      {reqType}
+                    </Option>
+                  ))}
+                </Combobox>
+              )}
+            />
           </Field>
           <hr />
           <Field label="Pay System">
-            <Combobox
+            <Controller
               name="paySystem"
-              clearable
-              defaultValue={filterState
-                .filter((obj) => {
-                  return obj.column === "paySystem";
-                })[0]
-                ?.filter.toString()}
-            >
-              {PAYSYSTEMS.map((system) => (
-                <Option key={system.key} value={system.key}>
-                  {system.key}
-                </Option>
-              ))}
-            </Combobox>
+              control={control}
+              render={({ field }) => (
+                <Combobox
+                  clearable
+                  autoComplete="on"
+                  {...field}
+                  selectedOptions={[field.value ?? ""]}
+                  onOptionSelect={(_event, data) => {
+                    field.onChange(data.optionValue ?? "");
+                  }}
+                  value={field.value}
+                >
+                  {PAYSYSTEMS.map((system) => (
+                    <Option key={system.key} value={system.key}>
+                      {system.key}
+                    </Option>
+                  ))}
+                </Combobox>
+              )}
+            />
           </Field>
           <hr />
           <Field label="Series">
-            <Input
+            <Controller
               name="series"
-              type="search"
-              defaultValue={filterState
-                .filter((obj) => {
-                  return obj.column === "series";
-                })[0]
-                ?.filter.toString()}
-              maxLength={4}
+              control={control}
+              render={({ field }) => (
+                <Input type="search" maxLength={4} {...field} />
+              )}
             />
           </Field>
           <hr />
           <Field label="Grade">
-            <Combobox
+            <Controller
               name="grade"
-              clearable
-              defaultValue={filterState
-                .filter((obj) => {
-                  return obj.column === "grade";
-                })[0]
-                ?.filter.toString()}
-            >
-              {ACQGRADES.map((grade) => (
-                <Option key={grade} value={grade}>
-                  {grade}
-                </Option>
-              ))}
-              {GENERALGRADES.map((grade) => (
-                <Option key={grade} value={grade}>
-                  {grade}
-                </Option>
-              ))}
-            </Combobox>
+              control={control}
+              render={({ field }) => (
+                <Combobox
+                  clearable
+                  autoComplete="on"
+                  {...field}
+                  selectedOptions={[field.value ?? ""]}
+                  onOptionSelect={(_event, data) => {
+                    field.onChange(data.optionValue ?? "");
+                  }}
+                  value={field.value}
+                >
+                  {ACQGRADES.map((grade) => (
+                    <Option key={grade} value={grade}>
+                      {grade}
+                    </Option>
+                  ))}
+                  {GENERALGRADES.map((grade) => (
+                    <Option key={grade} value={grade}>
+                      {grade}
+                    </Option>
+                  ))}
+                </Combobox>
+              )}
+            />
           </Field>
           <hr />
           <Field label="Office Symbol">
-            <Input
+            <Controller
               name="officeSymbol"
-              type="search"
-              defaultValue={filterState
-                .filter((obj) => {
-                  return obj.column === "officeSymbol";
-                })[0]
-                ?.filter.toString()}
+              control={control}
+              render={({ field }) => <Input type="search" {...field} />}
             />
           </Field>
           <hr />
@@ -282,42 +337,81 @@ const FilterRequestsDrawer = ({
           </Field>
           <hr />
           <Field label="Stage">
-            <Combobox
+            <Controller
               name="stage"
-              clearable
-              defaultValue={filterState
-                .filter((obj) => {
-                  return obj.column === "stage";
-                })[0]
-                ?.filter.toString()}
-            >
-              {STAGES.map((stage) => (
-                <Option key={stage.key} text={stage.key} value={stage.key}>
-                  {stage.text}
-                </Option>
-              ))}
-            </Combobox>
+              control={control}
+              render={({ field }) => (
+                <Combobox
+                  clearable
+                  autoComplete="on"
+                  {...field}
+                  selectedOptions={[field.value ?? ""]}
+                  onOptionSelect={(_event, data) => {
+                    field.onChange(data.optionValue ?? "");
+                  }}
+                  value={field.value}
+                >
+                  {STAGES.map((stage) => (
+                    <Option key={stage.key} text={stage.text} value={stage.key}>
+                      {stage.text}
+                    </Option>
+                  ))}
+                </Combobox>
+              )}
+            />
           </Field>
           <hr />
           <Field label="Created After">
-            <DatePicker
+            <Controller
               name="afterDate"
-              allowTextInput
-              value={afterDate ? new Date(afterDate) : undefined}
-              formatDate={(date?: Date) => {
-                return !date ? "" : date.toLocaleDateString();
-              }}
+              control={control}
+              render={({ field }) => (
+                <>
+                  <DatePicker
+                    allowTextInput
+                    formatDate={(date?: Date) => {
+                      return !date ? "" : date.toLocaleDateString();
+                    }}
+                    onSelectDate={field.onChange}
+                    {...field}
+                  />
+                  <Button
+                    appearance="primary"
+                    style={{ marginTop: "2px" }}
+                    onClick={() => field.onChange(undefined)}
+                  >
+                    Clear
+                  </Button>
+                </>
+              )}
             />
           </Field>
           <hr />
           <Field label="Created Before">
-            <DatePicker
+            <Controller
               name="beforeDate"
-              allowTextInput
-              value={beforeDate ? new Date(beforeDate) : undefined}
-              formatDate={(date?: Date) => {
-                return !date ? "" : date.toLocaleDateString();
-              }}
+              control={control}
+              render={({ field }) => (
+                <>
+                  <DatePicker
+                    formatDate={(date?: Date) => {
+                      return date instanceof Date
+                        ? date.toLocaleDateString()
+                        : date ?? "";
+                    }}
+                    onSelectDate={field.onChange}
+                    showCloseButton
+                    {...field}
+                  />
+                  <Button
+                    appearance="primary"
+                    style={{ marginTop: "2px" }}
+                    onClick={() => field.onChange(undefined)}
+                  >
+                    Clear
+                  </Button>
+                </>
+              )}
             />
           </Field>
         </DrawerBody>
@@ -325,7 +419,11 @@ const FilterRequestsDrawer = ({
           <Button appearance="primary" type="submit" value="submit">
             Apply
           </Button>
-          <Button onClick={() => console.log("Clear fields")}>Clear All</Button>
+          <Button
+            onClick={() => reset(undefined, { keepDefaultValues: false })}
+          >
+            Clear All
+          </Button>
         </DrawerFooter>
       </form>
     </Drawer>
