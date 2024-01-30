@@ -144,6 +144,7 @@ const FilterRequestsDrawer = ({
     <Drawer
       type="overlay"
       position="end"
+      style={{ height: "100vh" }}
       open={isOpen}
       onOpenChange={(_e, { open }) => setIsOpen(open)}
     >
@@ -162,7 +163,12 @@ const FilterRequestsDrawer = ({
             Filters
           </DrawerHeaderTitle>
         </DrawerHeader>
-        <DrawerBody>
+        <DrawerBody
+          style={{
+            /* Header/footer padding = 72px */
+            maxHeight: "calc(100vh - 72px - 3em)",
+          }}
+        >
           <hr />
           <Field label="Position Title">
             <Input
@@ -325,6 +331,7 @@ const FilterRequestsDrawer = ({
           <Button appearance="primary" type="submit" value="submit">
             Apply
           </Button>
+          <Button onClick={() => console.log("Clear fields")}>Clear All</Button>
         </DrawerFooter>
       </form>
     </Drawer>

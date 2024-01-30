@@ -11,9 +11,9 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@fluentui/example-data": "^8.4.13",
-    "@fluentui/react": "^8.112.4",
-    "@fluentui/react-components": "^9.46.1",
+    "@fluentui/example-data": "^8.4.15",
+    "@fluentui/react": "^8.115.2",
+    "@fluentui/react-components": "^9.46.2",
     "@fluentui/react-datepicker-compat": "^0.4.21",
     "@fluentui/react-file-type-icons": "^8.10.4",
     "@fluentui/react-icons": "^2.0.221",
