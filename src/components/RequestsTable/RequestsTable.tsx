@@ -31,6 +31,7 @@ import { useCallback, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { FilterIcon } from "@fluentui/react-icons-mdl2";
 import FilterRequestsDrawer from "./FilterRequests";
+import { STAGES } from "consts/Stages";
 
 const PositionTitle = createTableColumn<RPARequest>({
   columnId: "positionTitle",
@@ -129,7 +130,11 @@ const CurrentStage = createTableColumn<RPARequest>({
     return <>Current Stage {filtered && <FilterIcon />}</>;
   },
   renderCell: (item) => {
-    return <TableCellLayout truncate>{item.stage}</TableCellLayout>;
+    return (
+      <TableCellLayout truncate>
+        {STAGES.filter((stage) => stage.key === item.stage)[0].text}
+      </TableCellLayout>
+    );
   },
 });
 

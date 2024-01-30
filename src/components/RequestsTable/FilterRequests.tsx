@@ -116,7 +116,9 @@ const FilterRequestsDrawer = ({
         column: "Created",
         modifier: "beforeDate",
         filter: target.beforeDate.value,
-        queryString: `(Created le '${target.beforeDate.value.toString()}')`,
+        queryString: `(Created le '${new Date(
+          target.beforeDate.value.toString()
+        ).toISOString()}')`,
       });
     }
 
@@ -125,7 +127,9 @@ const FilterRequestsDrawer = ({
         column: "Created",
         modifier: "afterDate",
         filter: target.afterDate.value,
-        queryString: `(Created ge '${target.afterDate.value.toString()}')`,
+        queryString: `(Created ge '${new Date(
+          target.afterDate.value.toString()
+        ).toISOString()}')`,
       });
     }
 
@@ -298,15 +302,10 @@ const FilterRequestsDrawer = ({
           <Field label="Created After">
             <DatePicker
               name="afterDate"
+              allowTextInput
               value={afterDate ? new Date(afterDate) : undefined}
               formatDate={(date?: Date) => {
-                return !date
-                  ? ""
-                  : date.getFullYear() +
-                      "-" +
-                      (date.getUTCMonth() + 1) +
-                      "-" +
-                      date.getDate();
+                return !date ? "" : date.toLocaleDateString();
               }}
             />
           </Field>
@@ -314,15 +313,10 @@ const FilterRequestsDrawer = ({
           <Field label="Created Before">
             <DatePicker
               name="beforeDate"
+              allowTextInput
               value={beforeDate ? new Date(beforeDate) : undefined}
               formatDate={(date?: Date) => {
-                return !date
-                  ? ""
-                  : date.getFullYear() +
-                      "-" +
-                      (date.getUTCMonth() + 1) +
-                      "-" +
-                      date.getDate();
+                return !date ? "" : date.toLocaleDateString();
               }}
             />
           </Field>
