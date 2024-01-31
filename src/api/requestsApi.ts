@@ -23,7 +23,6 @@ export interface RPARequest {
   requestType: (typeof REQUESTTYPES)[number];
   mcrRequired: "Yes" | "No";
   paySystem: (typeof PAYSYSTEMS)[number]["key"];
-  hireType: "Internal" | "External";
   advertisementLength: "Normal" | "Extended";
   lastIncumbent: string;
   series: string;
@@ -387,7 +386,6 @@ const transformRequestFromSP = (request: any): RPARequest => {
     requestType: request.requestType,
     mcrRequired: request.mcrRequired,
     paySystem: request.paySystem,
-    hireType: request.hireType,
     advertisementLength: request.advertisementLength,
     lastIncumbent: request.lastIncumbent,
     series: request.series,
