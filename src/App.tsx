@@ -8,7 +8,11 @@ import {
 import { AppHeader } from "components/AppHeader/AppHeader";
 import { Route } from "react-router-dom";
 import { ThemeProvider } from "@fluentui/react";
-import { FluentProvider, webLightTheme } from "@fluentui/react-components";
+import {
+  FluentProvider,
+  Toaster,
+  webLightTheme,
+} from "@fluentui/react-components";
 import { UserProvider } from "providers/UserProvider";
 import { lazy, Suspense } from "react";
 import Home from "Home";
@@ -45,6 +49,7 @@ function MainLayout() {
             >
               <Outlet />
             </Suspense>
+            <Toaster toasterId={"toaster"} />
           </ThemeProvider>
         </FluentProvider>
       </UserProvider>

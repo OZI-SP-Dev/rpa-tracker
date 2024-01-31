@@ -6,6 +6,12 @@ import { POSITIONSENSITIVIES } from "consts/PositionSensitivities";
 import { GENERALGRADES, ACQGRADES } from "consts/Grades";
 import { OSFS } from "consts/OSFs";
 import { STAGES } from "consts/Stages";
+import {
+  Toast,
+  ToastBody,
+  ToastTitle,
+  useToastController,
+} from "@fluentui/react-components";
 
 const PAGESIZE = 5;
 
@@ -246,16 +252,42 @@ export const useAddRequest = () => {
 };
 
 export const useDeleteRequest = () => {
-  return useMutation(["deleteRequest"], async (requestId: number) => {
-    await spWebContext.web.lists
-      .getByTitle("requests")
-      .items.getById(requestId)
-      .recycle();
-  });
+  const { dispatchToast } = useToastController("toaster");
+  return useMutation(
+    ["deleteRequest"],
+    async (requestId: number) => {
+      await spWebContext.web.lists
+        .getByTitle("requests")
+        .items.getById(requestId)
+        .recycle();
+    },
+    {
+      onSuccess: async () => {
+        dispatchToast(
+          <Toast>
+            <ToastTitle>Deleted request</ToastTitle>
+          </Toast>,
+          { intent: "success" }
+        );
+      },
+      onError: async (error) => {
+        console.log(error);
+        if (error instanceof Error) {
+          dispatchToast(
+            <Toast>
+              <ToastTitle>Error deleting request</ToastTitle>
+            </Toast>,
+            { intent: "error" }
+          );
+        }
+      },
+    }
+  );
 };
 
 export const useUpdateStage = () => {
   const queryClient = useQueryClient();
+  const { dispatchToast } = useToastController("toaster");
 
   return useMutation(
     ["updateStage"],
@@ -271,6 +303,24 @@ export const useUpdateStage = () => {
     {
       onSuccess: async (_data, request) => {
         queryClient.invalidateQueries(["requests", request.requestId]);
+        dispatchToast(
+          <Toast>
+            <ToastTitle>Updated stage</ToastTitle>
+          </Toast>,
+          { intent: "success" }
+        );
+      },
+      onError: async (error) => {
+        console.log(error);
+        if (error instanceof Error) {
+          dispatchToast(
+            <Toast>
+              <ToastTitle>Error updating stage</ToastTitle>
+              <ToastBody>{error.message}</ToastBody>
+            </Toast>,
+            { intent: "error" }
+          );
+        }
       },
     }
   );

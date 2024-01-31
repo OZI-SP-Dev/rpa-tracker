@@ -1,5 +1,11 @@
 import { spWebContext } from "api/SPWebContext";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  Toast,
+  ToastBody,
+  ToastTitle,
+  useToastController,
+} from "@fluentui/react-components";
 
 /**
  * Gets all requests
@@ -31,6 +37,7 @@ const getDocuments = async (requestId: number) => {
 
 export const useDeleteDocument = (document: SPDocument) => {
   const queryClient = useQueryClient();
+  const { dispatchToast } = useToastController("toaster");
   return useMutation(
     ["deleteDocument", document.Name],
     async () => {
@@ -39,6 +46,24 @@ export const useDeleteDocument = (document: SPDocument) => {
     {
       onSuccess: async () => {
         queryClient.invalidateQueries(["documents"]);
+        dispatchToast(
+          <Toast>
+            <ToastTitle>Deleted {document.Name}</ToastTitle>
+          </Toast>,
+          { intent: "success" }
+        );
+      },
+      onError: async (error) => {
+        console.log(error);
+        if (error instanceof Error) {
+          dispatchToast(
+            <Toast>
+              <ToastTitle>Error deleting {document.Name}</ToastTitle>
+              <ToastBody>{error.message}</ToastBody>
+            </Toast>,
+            { intent: "error" }
+          );
+        }
       },
     }
   );
