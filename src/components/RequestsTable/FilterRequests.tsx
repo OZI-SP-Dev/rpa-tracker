@@ -29,9 +29,9 @@ interface IFilterFields {
   grade: string;
   officeSymbol: string;
   stage: string;
-  afterDate: Date;
-  beforeDate: Date;
-  Author: Person;
+  afterDate: Date | null;
+  beforeDate: Date | null;
+  Author: Person | null;
 }
 
 function isPerson(myObj: Person | string | Date | number): myObj is Person {
@@ -103,9 +103,9 @@ const FilterRequestsDrawer = ({
             return obj.column === "stage";
           })[0]
           ?.filter.toString() ?? "",
-      Author: isPerson(author) ? author : undefined,
-      afterDate: afterDate instanceof Date ? new Date(afterDate) : undefined,
-      beforeDate: beforeDate instanceof Date ? new Date(beforeDate) : undefined,
+      Author: isPerson(author) ? author : null,
+      afterDate: afterDate instanceof Date ? new Date(afterDate) : null,
+      beforeDate: beforeDate instanceof Date ? new Date(beforeDate) : null,
     },
   });
   const onSubmit: SubmitHandler<IFilterFields> = (data) => {
@@ -203,11 +203,12 @@ const FilterRequestsDrawer = ({
     <Drawer
       type="overlay"
       position="end"
-      style={{ height: "100vh" }}
+      size="medium"
+      style={{ height: "100vh", minWidth: "fit-content" }}
       open={isOpen}
       onOpenChange={(_e, { open }) => setIsOpen(open)}
     >
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(onSubmit)} style={{ width: "100%" }}>
         <DrawerHeader>
           <DrawerHeaderTitle
             action={
@@ -398,8 +399,8 @@ const FilterRequestsDrawer = ({
                   />
                   <Button
                     appearance="primary"
-                    style={{ marginTop: "2px" }}
-                    onClick={() => field.onChange(undefined)}
+                    style={{ marginTop: "2px", width: "fit-content" }}
+                    onClick={() => field.onChange("")}
                   >
                     Clear
                   </Button>
@@ -424,8 +425,8 @@ const FilterRequestsDrawer = ({
                   />
                   <Button
                     appearance="primary"
-                    style={{ marginTop: "2px" }}
-                    onClick={() => field.onChange(undefined)}
+                    style={{ marginTop: "2px", width: "fit-content" }}
+                    onClick={() => field.onChange("")}
                   >
                     Clear
                   </Button>
