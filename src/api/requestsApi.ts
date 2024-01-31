@@ -498,7 +498,7 @@ interface SortParams {
 
 export interface RequestFilter {
   column: string;
-  filter: string | Date | number;
+  filter: string | Date | number | Person;
   modifier?: string;
   queryString: string;
 }

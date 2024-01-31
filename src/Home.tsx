@@ -1,6 +1,10 @@
 import { Body1, Title1, Title3, makeStyles } from "@fluentui/react-components";
-import RequestsTable from "components/RequestsTable/RequestsTable";
-import { FunctionComponent } from "react";
+//import RequestsTable from "components/RequestsTable/RequestsTable";
+import { FunctionComponent, lazy } from "react";
+
+// Begin module downloads immediately, but still utilize lazy() for code splitting
+const RequestsTablePromise = import("components/RequestsTable/RequestsTable");
+const RequestsTable = lazy(() => RequestsTablePromise);
 
 const useStyles = makeStyles({
   section: {

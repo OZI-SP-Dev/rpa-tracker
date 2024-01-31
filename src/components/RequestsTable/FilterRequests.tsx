@@ -16,8 +16,10 @@ import { REQUESTTYPES } from "consts/RequestTypes";
 import { PAYSYSTEMS } from "consts/PaySystems";
 import { GENERALGRADES, ACQGRADES } from "consts/Grades";
 import { STAGES } from "consts/Stages";
-import { RequestFilter } from "api/requestsApi";
+import { Person, RequestFilter } from "api/requestsApi";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import { PeoplePicker } from "components/PeoplePicker/PeoplePicker";
+import { spWebContext } from "api/SPWebContext";
 
 interface IFilterFields {
   positionTitle: string;
@@ -29,6 +31,11 @@ interface IFilterFields {
   stage: string;
   afterDate: Date;
   beforeDate: Date;
+  Author: Person;
+}
+
+function isPerson(myObj: Person | string | Date | number): myObj is Person {
+  return (myObj as Person)?.EMail !== undefined;
 }
 
 const FilterRequestsDrawer = ({
@@ -47,6 +54,9 @@ const FilterRequestsDrawer = ({
   })[0]?.filter;
   const beforeDate = filterState.filter((obj) => {
     return obj.modifier === "beforeDate";
+  })[0]?.filter;
+  const author = filterState.filter((obj) => {
+    return obj.column === "Author";
   })[0]?.filter;
 
   const { control, handleSubmit, reset } = useForm<IFilterFields>({
@@ -93,12 +103,12 @@ const FilterRequestsDrawer = ({
             return obj.column === "stage";
           })[0]
           ?.filter.toString() ?? "",
-      afterDate: afterDate ? new Date(afterDate) : undefined,
-      beforeDate: beforeDate ? new Date(beforeDate) : undefined,
+      Author: isPerson(author) ? author : undefined,
+      afterDate: afterDate instanceof Date ? new Date(afterDate) : undefined,
+      beforeDate: beforeDate instanceof Date ? new Date(beforeDate) : undefined,
     },
   });
   const onSubmit: SubmitHandler<IFilterFields> = (data) => {
-    console.log(data);
     const newFilter: RequestFilter[] = [];
 
     if (data.positionTitle) {
@@ -149,14 +159,14 @@ const FilterRequestsDrawer = ({
       });
     }
 
-    // if (data.Author?.value) {
-    //   newFilter.push({
-    //     column: "Author",
-    //     filter: data.Author,
-    //   });
-    // }
+    if (data.Author?.Id) {
+      newFilter.push({
+        column: "Author",
+        filter: data.Author,
+        queryString: `AuthorId eq ${data.Author.Id}`,
+      });
+    }
 
-    // FIX: Not currently matching up w/ displayed stages
     if (data.stage) {
       newFilter.push({
         column: "stage",
@@ -326,13 +336,25 @@ const FilterRequestsDrawer = ({
           </Field>
           <hr />
           <Field label="Created By">
-            <Input
+            <Controller
               name="Author"
-              defaultValue={filterState
-                .filter((obj) => {
-                  return obj.column === "Author";
-                })[0]
-                ?.filter.toString()}
+              control={control}
+              render={({ field }) => (
+                <PeoplePicker
+                  ariaLabel="Requestor"
+                  selectedItems={field.value ?? []}
+                  updatePeople={async (items) => {
+                    if (items?.[0]?.Title) {
+                      const userId = (
+                        await spWebContext.web.ensureUser(items?.[0].EMail)
+                      ).data.Id;
+                      field.onChange({ ...items[0], Id: userId });
+                    } else {
+                      field.onChange([]);
+                    }
+                  }}
+                />
+              )}
             />
           </Field>
           <hr />
@@ -368,9 +390,8 @@ const FilterRequestsDrawer = ({
               render={({ field }) => (
                 <>
                   <DatePicker
-                    allowTextInput
                     formatDate={(date?: Date) => {
-                      return !date ? "" : date.toLocaleDateString();
+                      return date?.toLocaleDateString() ?? "";
                     }}
                     onSelectDate={field.onChange}
                     {...field}
@@ -395,9 +416,7 @@ const FilterRequestsDrawer = ({
                 <>
                   <DatePicker
                     formatDate={(date?: Date) => {
-                      return date instanceof Date
-                        ? date.toLocaleDateString()
-                        : date ?? "";
+                      return date?.toLocaleDateString() ?? "";
                     }}
                     onSelectDate={field.onChange}
                     showCloseButton
