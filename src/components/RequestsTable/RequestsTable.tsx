@@ -1,6 +1,5 @@
 import { RPARequest, RequestFilter, usePagedRequests } from "api/requestsApi";
 import {
-  Avatar,
   Button,
   DataGrid,
   DataGridBody,
@@ -32,6 +31,7 @@ import { FilterIcon } from "@fluentui/react-icons-mdl2";
 import FilterRequestsDrawer from "./FilterRequests";
 import { STAGES } from "consts/Stages";
 import TableMessages from "./TableMessages";
+import UserAvatar from "./UserAvatar";
 
 const PositionTitle = createTableColumn<RPARequest>({
   columnId: "positionTitle",
@@ -114,7 +114,8 @@ const Requestor = createTableColumn<RPARequest>({
       <TableCellLayout
         truncate
         media={
-          <Avatar aria-label={item.Author?.Title} name={item.Author?.Title} />
+          <UserAvatar user={item.Author} />
+          // <Avatar aria-label={item.Author?.Title} name={item.Author?.Title} />
         }
       >
         {item.Author?.Title}
