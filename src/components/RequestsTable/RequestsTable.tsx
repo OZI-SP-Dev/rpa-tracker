@@ -19,7 +19,6 @@ import {
   TableColumnDefinition,
   TableColumnId,
   TableColumnSizingOptions,
-  Text,
   createTableColumn,
 } from "@fluentui/react-components";
 import {
@@ -32,6 +31,7 @@ import { Link } from "react-router-dom";
 import { FilterIcon } from "@fluentui/react-icons-mdl2";
 import FilterRequestsDrawer from "./FilterRequests";
 import { STAGES } from "consts/Stages";
+import TableMessages from "./TableMessages";
 
 const PositionTitle = createTableColumn<RPARequest>({
   columnId: "positionTitle",
@@ -216,9 +216,7 @@ const RequestsTable = () => {
   // RENDER
   return (
     <>
-      <Text>
-        Click a column to sort by it, right-click a column to start filtering
-      </Text>
+      <TableMessages />
       <FilterRequestsDrawer
         isOpen={drawerIsOpen}
         setIsOpen={setDrawerIsOpen}
