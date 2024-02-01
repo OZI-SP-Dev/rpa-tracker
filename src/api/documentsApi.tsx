@@ -1,9 +1,11 @@
 import { spWebContext } from "api/SPWebContext";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
+  Link,
   Toast,
   ToastBody,
   ToastTitle,
+  ToastTrigger,
   useToastController,
 } from "@fluentui/react-components";
 
@@ -58,10 +60,18 @@ export const useDeleteDocument = (document: SPDocument) => {
         if (error instanceof Error) {
           dispatchToast(
             <Toast>
-              <ToastTitle>Error deleting {document.Name}</ToastTitle>
+              <ToastTitle
+                action={
+                  <ToastTrigger>
+                    <Link>Dismiss</Link>
+                  </ToastTrigger>
+                }
+              >
+                Error deleting {document.Name}
+              </ToastTitle>
               <ToastBody>{error.message}</ToastBody>
             </Toast>,
-            { intent: "error" }
+            { intent: "error", timeout: -1 }
           );
         }
       },

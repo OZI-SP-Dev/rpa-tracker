@@ -7,9 +7,11 @@ import { GENERALGRADES, ACQGRADES } from "consts/Grades";
 import { OSFS } from "consts/OSFs";
 import { STAGES } from "consts/Stages";
 import {
+  Link,
   Toast,
   ToastBody,
   ToastTitle,
+  ToastTrigger,
   useToastController,
 } from "@fluentui/react-components";
 
@@ -275,9 +277,17 @@ export const useDeleteRequest = () => {
         if (error instanceof Error) {
           dispatchToast(
             <Toast>
-              <ToastTitle>Error deleting request</ToastTitle>
+              <ToastTitle
+                action={
+                  <ToastTrigger>
+                    <Link>Dismiss</Link>
+                  </ToastTrigger>
+                }
+              >
+                Error deleting request
+              </ToastTitle>
             </Toast>,
-            { intent: "error" }
+            { intent: "error", timeout: -1 }
           );
         }
       },
@@ -315,10 +325,18 @@ export const useUpdateStage = () => {
         if (error instanceof Error) {
           dispatchToast(
             <Toast>
-              <ToastTitle>Error updating stage</ToastTitle>
+              <ToastTitle
+                action={
+                  <ToastTrigger>
+                    <Link>Dismiss</Link>
+                  </ToastTrigger>
+                }
+              >
+                Error updating stage
+              </ToastTitle>
               <ToastBody>{error.message}</ToastBody>
             </Toast>,
-            { intent: "error" }
+            { intent: "error", timeout: -1 }
           );
         }
       },
