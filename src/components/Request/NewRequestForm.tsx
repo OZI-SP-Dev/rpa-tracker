@@ -26,7 +26,6 @@ export type RHFRequest = {
   requestType: string;
   mcrRequired: string;
   paySystem: string; // "NH" | "GS" | "GG";
-  hireType: string; // "Internal" | "External";
   advertisementLength: string; // "Normal" | "Extended";
   lastIncumbent: string;
   series: string; // 4 digit string
@@ -96,7 +95,6 @@ const NewRequestForm = () => {
       requestType: "",
       mcrRequired: "",
       paySystem: "NH",
-      hireType: "",
       advertisementLength: "",
       lastIncumbent: "",
       series: "",
@@ -247,7 +245,6 @@ const NewRequestForm = () => {
           <Divider inset>
             <Title2 align="center">Hiring Information</Title2>
           </Divider>
-          <FormFields.HiringType />
           <FormFields.AdvertisementLength />
           <FormFields.Methods />
 

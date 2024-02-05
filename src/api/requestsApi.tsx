@@ -6,6 +6,14 @@ import { POSITIONSENSITIVIES } from "consts/PositionSensitivities";
 import { GENERALGRADES, ACQGRADES } from "consts/Grades";
 import { OSFS } from "consts/OSFs";
 import { STAGES } from "consts/Stages";
+import {
+  Link,
+  Toast,
+  ToastBody,
+  ToastTitle,
+  ToastTrigger,
+  useToastController,
+} from "@fluentui/react-components";
 
 const PAGESIZE = 5;
 
@@ -23,7 +31,6 @@ export interface RPARequest {
   requestType: (typeof REQUESTTYPES)[number];
   mcrRequired: "Yes" | "No";
   paySystem: (typeof PAYSYSTEMS)[number]["key"];
-  hireType: "Internal" | "External";
   advertisementLength: "Normal" | "Extended";
   lastIncumbent: string;
   series: string;
@@ -100,15 +107,26 @@ const defaultSortParams: SortParams = {
   sortColumn: "Created",
   sortDirection: "ascending",
 };
-export const usePagedRequests = (page = 0, sortParams = defaultSortParams) => {
+
+export const usePagedRequests = (
+  page = 0,
+  sortParams = defaultSortParams,
+  filterParams: RequestFilter[]
+) => {
   const queryClient = useQueryClient();
 
   return useQuery({
-    queryKey: ["paged-requests", sortParams, page],
+    queryKey: ["paged-requests", sortParams, filterParams, page],
     queryFn: () =>
       getPagedRequests(
-        queryClient.getQueryData(["paged-requests", sortParams, page - 1]),
-        sortParams
+        queryClient.getQueryData([
+          "paged-requests",
+          sortParams,
+          filterParams,
+          page - 1,
+        ]),
+        sortParams,
+        filterParams
       ),
     // results must remain cached
     // if results are not kept in cache a scenario may arise where you are on
@@ -133,7 +151,11 @@ export const useRequest = (requestId: number) => {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const getPagedRequests = async (data: any, sortParams: SortParams) => {
+const getPagedRequests = async (
+  data: any,
+  sortParams: SortParams,
+  filterParams: RequestFilter[]
+) => {
   if (data?.hasNext) {
     return data.getNext();
   }
@@ -144,16 +166,22 @@ const getPagedRequests = async (data: any, sortParams: SortParams) => {
 
   const expandedFields = "Author";
 
+  let queryString = "ContentType eq 'RPADocSet'";
+  filterParams.forEach((filter) => {
+    queryString += ` and ${filter.queryString}`;
+  });
+
   return spWebContext.web.lists
     .getByTitle("requests")
     .items.select(requestedFields)
     .expand(expandedFields)
-    .filter("ContentType eq 'RPADocSet'")
+    .filter(queryString)
     .top(PAGESIZE)
     .orderBy(
       sortParams.sortColumn?.toString() || "Created",
       sortParams.sortDirection !== "descending"
     )
+    .orderBy("Id", true) // Include this or non-unique sort values can cause issues
     .getPaged();
 };
 
@@ -226,16 +254,50 @@ export const useAddRequest = () => {
 };
 
 export const useDeleteRequest = () => {
-  return useMutation(["deleteRequest"], async (requestId: number) => {
-    await spWebContext.web.lists
-      .getByTitle("requests")
-      .items.getById(requestId)
-      .recycle();
-  });
+  const { dispatchToast } = useToastController("toaster");
+  return useMutation(
+    ["deleteRequest"],
+    async (requestId: number) => {
+      await spWebContext.web.lists
+        .getByTitle("requests")
+        .items.getById(requestId)
+        .recycle();
+    },
+    {
+      onSuccess: async () => {
+        dispatchToast(
+          <Toast>
+            <ToastTitle>Deleted request</ToastTitle>
+          </Toast>,
+          { intent: "success" }
+        );
+      },
+      onError: async (error) => {
+        console.log(error);
+        if (error instanceof Error) {
+          dispatchToast(
+            <Toast>
+              <ToastTitle
+                action={
+                  <ToastTrigger>
+                    <Link>Dismiss</Link>
+                  </ToastTrigger>
+                }
+              >
+                Error deleting request
+              </ToastTitle>
+            </Toast>,
+            { intent: "error", timeout: -1 }
+          );
+        }
+      },
+    }
+  );
 };
 
 export const useUpdateStage = () => {
   const queryClient = useQueryClient();
+  const { dispatchToast } = useToastController("toaster");
 
   return useMutation(
     ["updateStage"],
@@ -251,6 +313,32 @@ export const useUpdateStage = () => {
     {
       onSuccess: async (_data, request) => {
         queryClient.invalidateQueries(["requests", request.requestId]);
+        dispatchToast(
+          <Toast>
+            <ToastTitle>Updated stage</ToastTitle>
+          </Toast>,
+          { intent: "success" }
+        );
+      },
+      onError: async (error) => {
+        console.log(error);
+        if (error instanceof Error) {
+          dispatchToast(
+            <Toast>
+              <ToastTitle
+                action={
+                  <ToastTrigger>
+                    <Link>Dismiss</Link>
+                  </ToastTrigger>
+                }
+              >
+                Error updating stage
+              </ToastTitle>
+              <ToastBody>{error.message}</ToastBody>
+            </Toast>,
+            { intent: "error", timeout: -1 }
+          );
+        }
       },
     }
   );
@@ -366,7 +454,6 @@ const transformRequestFromSP = (request: any): RPARequest => {
     requestType: request.requestType,
     mcrRequired: request.mcrRequired,
     paySystem: request.paySystem,
-    hireType: request.hireType,
     advertisementLength: request.advertisementLength,
     lastIncumbent: request.lastIncumbent,
     series: request.series,
@@ -473,4 +560,11 @@ interface PagedRequest {
 interface SortParams {
   sortColumn: string | number | undefined;
   sortDirection: "ascending" | "descending";
+}
+
+export interface RequestFilter {
+  column: string;
+  filter: string | Date | number | Person;
+  modifier?: string;
+  queryString: string;
 }

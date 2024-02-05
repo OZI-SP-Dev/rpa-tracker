@@ -114,11 +114,6 @@ const ViewRequestDetails = () => {
               Last Incumbument
             </Label>
             <Text id="lastIncumbent">{request.data.lastIncumbent}</Text>
-
-            <Label weight="semibold" htmlFor="hireType">
-              Hiring Type
-            </Label>
-            <Text id="hireType">{request.data.hireType}</Text>
           </article>
           <br />
           <Title3>Announcement Method(s) and details</Title3>
