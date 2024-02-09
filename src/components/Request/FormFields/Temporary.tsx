@@ -8,13 +8,7 @@ const Temporary = () => {
 
   return (
     <div className="requestFieldContainer">
-      <BACCombobox<RHFRequest>
-        name="temporary"
-        labelText="Type of Appointment"
-        rules={{
-          required: "Duration is required",
-        }}
-      >
+      <BACCombobox<RHFRequest> name="temporary" labelText="Type of Appointment">
         {options.map((item) => (
           <Option key={item} value={item}>
             {item}

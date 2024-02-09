@@ -33,7 +33,6 @@ export const DocumentUploader = (props: { requestId: number }) => {
     event.preventDefault();
     setInDropZone(false);
     dropDepth.current = 0;
-    console.log("out");
 
     if (event.dataTransfer.items) {
       // Use DataTransferItemList interface to access the file(s)

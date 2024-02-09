@@ -9,9 +9,6 @@ const Remote = () => {
       <BACRadioGroup<RHFRequest>
         name="remote"
         labelText="Remote Telework"
-        rules={{
-          required: "Remote Telework is required",
-        }}
         fieldProps={{ layout: "horizontal" }}
       >
         <Radio key="Yes" value="Yes" label="Yes" />

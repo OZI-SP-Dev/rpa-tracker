@@ -9,9 +9,6 @@ const AdvertisementLength = () => {
       <BACRadioGroup<RHFRequest>
         name="advertisementLength"
         labelText="Advertisement Length"
-        rules={{
-          required: "Advertisement Length is required",
-        }}
         fieldProps={{ layout: "horizontal" }}
       >
         <Radio value="Normal" label="Normal Period" />

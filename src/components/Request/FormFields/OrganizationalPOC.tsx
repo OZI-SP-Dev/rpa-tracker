@@ -11,16 +11,13 @@ const OrganizationalPOC = () => {
 
   return (
     <div className="requestFieldContainer">
-      <Label id={name + "Id"} weight="semibold" className="fieldLabel" required>
+      <Label id={name + "Id"} weight="semibold" className="fieldLabel">
         <ContactIcon className="fieldIcon" />
         Organizational POC
       </Label>
       <Controller
         name="organizationalPOC"
         control={form.control}
-        rules={{
-          required: "Organizational POC is required",
-        }}
         render={({ field }) => (
           <PeoplePicker
             ariaLabel="Organizational POC"

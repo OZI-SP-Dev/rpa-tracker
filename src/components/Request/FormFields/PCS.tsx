@@ -9,9 +9,6 @@ const PCS = () => {
       <BACRadioGroup<RHFRequest>
         name="pcs"
         labelText="Position Eligible for PCS"
-        rules={{
-          required: "A selection is required",
-        }}
         fieldProps={{ layout: "horizontal" }}
       >
         <Radio key="Yes" value="Yes" label="Yes" />

@@ -14,9 +14,6 @@ const NTE = () => {
       <BACDatePicker<RHFRequest>
         name="nte"
         labelText="Not to exceed date"
-        rules={{
-          required: "A date is required",
-        }}
         fieldProps={{ formatDate: onFormatDate }}
       />
     </div>

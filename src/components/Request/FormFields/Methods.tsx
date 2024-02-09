@@ -17,9 +17,6 @@ const Methods = () => {
       <BACCheckbox<RHFRequest>
         name="methods"
         labelText="Announcement Method(s)"
-        rules={{
-          required: "At least one Announcement Method is required",
-        }}
         options={options}
       />
     </div>

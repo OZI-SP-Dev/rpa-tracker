@@ -9,9 +9,6 @@ const Incentives = () => {
       <BACRadioGroup<RHFRequest>
         name="incentives"
         labelText="Recruitment, Retention, and Relocation incentives are available"
-        rules={{
-          required: "A selection is required",
-        }}
         fieldProps={{ layout: "horizontal" }}
       >
         <Radio key="Yes" value="Yes" label="Yes" />

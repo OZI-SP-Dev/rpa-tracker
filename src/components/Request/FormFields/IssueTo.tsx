@@ -11,16 +11,13 @@ const IssueTo = () => {
 
   return (
     <div className="requestFieldContainer">
-      <Label id={name + "Id"} weight="semibold" className="fieldLabel" required>
+      <Label id={name + "Id"} weight="semibold" className="fieldLabel">
         <ContactIcon className="fieldIcon" />
         Issue Certificate To
       </Label>
       <Controller
         name="issueTo"
         control={form.control}
-        rules={{
-          required: "Issue Certificate To is required",
-        }}
         render={({ field }) => (
           <PeoplePicker
             ariaLabel="Issue Certificate To"

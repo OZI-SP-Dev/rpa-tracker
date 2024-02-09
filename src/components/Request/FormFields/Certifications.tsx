@@ -11,9 +11,6 @@ const Certifications = () => {
         name="dcwf"
         labelText="Certifications/Licensure"
         labelInfo="Select one to three options"
-        rules={{
-          required: "Certifications/Licensure is required",
-        }}
         fieldProps={{
           multiselect: true,
         }}

@@ -211,37 +211,48 @@ export const useAddRequest = () => {
   return useMutation(
     ["requests"],
     async (newRequest: RPARequest) => {
-      // We must have the ID of RPADocSet in order to create our DocSet folder
-      let contentTypeId = "";
-      if (contentTypes.data) {
-        contentTypeId =
-          contentTypes.data.find((ct) => ct.Name === "RPADocSet")?.StringId ||
-          "";
+      let id = newRequest.Id ? parseInt(newRequest.Id) : 0;
+      if (id) {
+        await spWebContext.web.lists
+          .getByTitle("requests")
+          .items.getById(id)
+          .update({
+            ...(await transformRequestToSP(newRequest)),
+          });
       } else {
-        throw new Error("RPADocSet Content Type not available to be created");
+        // We must have the ID of RPADocSet in order to create our DocSet folder
+        let contentTypeId = "";
+        if (contentTypes.data) {
+          contentTypeId =
+            contentTypes.data.find((ct) => ct.Name === "RPADocSet")?.StringId ||
+            "";
+        } else {
+          throw new Error("RPADocSet Content Type not available to be created");
+        }
+
+        const now = new Date();
+        const folderName = now.toISOString().replace(/:/g, "-");
+        const newFolder = await spWebContext.web.lists
+          .getByTitle("requests")
+          .rootFolder.folders.addUsingPath(folderName);
+
+        const newFolderFields = await newFolder.folder.listItemAllFields();
+        id = newFolderFields.Id;
+
+        await spWebContext.web.lists
+          .getByTitle("requests")
+          .items.getById(id)
+          .update({
+            FileLeafRef: id.toString(), // rename folder
+            Title: id.toString(),
+            ContentTypeId: contentTypeId, // update to RPADocSet content type
+            ...(await transformRequestToSP(newRequest)),
+          });
       }
-
-      const now = new Date();
-      const folderName = now.toISOString().replace(/:/g, "-");
-      const newFolder = await spWebContext.web.lists
-        .getByTitle("requests")
-        .rootFolder.folders.addUsingPath(folderName);
-
-      const newFolderFields = await newFolder.folder.listItemAllFields();
-
-      await spWebContext.web.lists
-        .getByTitle("requests")
-        .items.getById(newFolderFields.Id)
-        .update({
-          FileLeafRef: newFolderFields.Id.toString(), // rename folder
-          Title: newFolderFields.Id.toString(),
-          ContentTypeId: contentTypeId, // update to RPADocSet content type
-          ...(await transformRequestToSP(newRequest)),
-        });
 
       // Pass back the request that came to us, but add in the Id returned from SharePoint
       const data = structuredClone(newRequest);
-      data.Id = newFolderFields.Id;
+      data.Id = id.toString();
       return data;
     },
     {
@@ -359,7 +370,7 @@ type InternalRequestItem = Omit<
   methods: string;
   dcwf: string;
   linkedinQualifications: string;
-  supervisorId: string;
+  supervisorId?: string;
   organizationalPOCId?: string;
   issueToId?: string;
 };
@@ -395,12 +406,14 @@ const transformRequestToSP = async (
   }
 
   let supervisorId;
-  if (supervisor.Id === "-1") {
-    supervisorId = (
-      await spWebContext.web.ensureUser(supervisor.EMail)
-    ).data.Id.toString();
-  } else {
-    supervisorId = supervisor.Id;
+  if (supervisor) {
+    if (supervisor.Id === "-1") {
+      supervisorId = (
+        await spWebContext.web.ensureUser(supervisor.EMail)
+      ).data.Id.toString();
+    } else {
+      supervisorId = supervisor.Id;
+    }
   }
 
   let organizationalPOCId;
@@ -426,8 +439,9 @@ const transformRequestToSP = async (
   }
 
   return {
-    // if optional Person fields have been selected, include them
+    // if Person fields have been selected, include them
     ...(orgApproverId && { orgApproverId: orgApproverId }),
+    ...(supervisorId && { supervisorId: supervisorId }),
     ...(organizationalPOC && { organizationalPOCId: organizationalPOCId }),
     ...(issueTo && { issueToId: issueToId }),
 
@@ -435,9 +449,6 @@ const transformRequestToSP = async (
     methods: JSON.stringify(methods),
     dcwf: JSON.stringify(dcwf),
     linkedinQualifications: JSON.stringify(linkedinQualifications),
-
-    // Required Person field
-    supervisorId: supervisorId,
 
     // include the rest of the properties from the RPARequest
     ...rest,

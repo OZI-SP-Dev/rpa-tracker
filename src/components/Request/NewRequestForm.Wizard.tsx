@@ -6,9 +6,9 @@ import JOA from "./NewFormSection/NewForm.JOA";
 import JobBoard from "./NewFormSection/NewForm.JobBoard";
 import LinkedInPost from "./NewFormSection/NewForm.LinkedInPost";
 import LinkedInSearch from "./NewFormSection/NewForm.LinkedInSearch";
-import PositionInfo from "./NewFormSection/NewForm.PositionInfo";
 import RoutingInfo from "./NewFormSection/NewForm.Routing";
 import USAJobs from "./NewFormSection/NewForm.USAJobs";
+import Done from "./NewFormSection/NewForm.Done";
 
 interface INPUTSTEPFUNCTIONS {
   next: (_methods: string[]) => string;
@@ -18,13 +18,6 @@ interface INPUTSTEPFUNCTIONS {
 const INPUTSTEPS = new Map<string, INPUTSTEPFUNCTIONS>([
   [
     "RoutingInfo",
-    {
-      next: (_methods: string[]) => "PositionInfo",
-      prev: (_methods: string[]) => "RoutingInfo",
-    },
-  ],
-  [
-    "PositionInfo",
     {
       next: (_methods: string[]) => "HiringInfo",
       prev: (_methods: string[]) => "RoutingInfo",
@@ -39,7 +32,7 @@ INPUTSTEPS.set("HiringInfo", {
       ? "JobBoard"
       : INPUTSTEPS.get("JobBoard")?.next(methods) ?? "JobBoard";
   },
-  prev: (_methods: string[]) => "PositionInfo",
+  prev: (_methods: string[]) => "RoutingInfo",
 });
 
 INPUTSTEPS.set("JobBoard", {
@@ -103,13 +96,22 @@ INPUTSTEPS.set("USAJobs", {
   },
 });
 
+INPUTSTEPS.set("DONE", {
+  next: (_methods: string[]) => "DONE",
+  prev: (methods: string[]) => {
+    const linkedinSearch = methods.includes("usaJobsFlyer");
+    return linkedinSearch
+      ? "USAJobs"
+      : INPUTSTEPS.get("USAJobs")?.prev(methods) ?? "USAJobs";
+  },
+});
+
 interface ActionType {
   type: string;
   payload?: string[];
 }
 
 function reducer(state: { page: string }, action: ActionType) {
-  console.log("Action", action);
   switch (action.type) {
     case "next_page":
       const nextPage = INPUTSTEPS.get(state.page)?.next(action.payload ?? []);
@@ -123,6 +125,10 @@ function reducer(state: { page: string }, action: ActionType) {
     case "reset":
       return { page: "RoutingInfo" };
 
+    case "goto":
+      const step = action.payload?.[0];
+      return step ? { ...state, page: step } : state;
+
     default:
       return state;
   }
@@ -132,16 +138,21 @@ const Wizard = ({ isLoading = false, isError = false }) => {
   const [state, dispatch] = useReducer(reducer, { page: "RoutingInfo" });
   const form = useFormContext();
   const methods = form.watch("methods");
+  const gotoStep = (step: string) => {
+    const steps: string[] = [];
+    steps.push(step);
+    dispatch({ type: "goto", payload: steps });
+  };
   return (
     <>
       {state.page === "RoutingInfo" && <RoutingInfo />}
-      {state.page === "PositionInfo" && <PositionInfo />}
       {state.page === "HiringInfo" && <HiringInfo />}
       {state.page === "JobBoard" && <JobBoard />}
       {state.page === "JOA" && <JOA />}
       {state.page === "LinkedInPost" && <LinkedInPost />}
       {state.page === "LinkedInSearch" && <LinkedInSearch />}
       {state.page === "USAJobs" && <USAJobs />}
+      {state.page === "DONE" && <Done gotoStep={gotoStep} />}
 
       {!isLoading && (
         <div className="requestWizardButtons">
@@ -153,8 +164,13 @@ const Wizard = ({ isLoading = false, isError = false }) => {
           </Button>
           <Button
             style={{ marginLeft: "auto" }}
-            disabled={state.page === "Done" || isLoading}
-            onClick={() => dispatch({ type: "next_page", payload: methods })}
+            disabled={state.page === "DONE" || isLoading}
+            onClick={() => {
+              form.trigger();
+              if (form.formState.isValid) {
+                dispatch({ type: "next_page", payload: methods });
+              }
+            }}
           >
             Next
           </Button>

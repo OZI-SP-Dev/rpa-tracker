@@ -1,13 +1,14 @@
 import { Title1, Tooltip, Badge } from "@fluentui/react-components";
 import { FormProvider, useForm } from "react-hook-form";
-import { AlertSolidIcon, CompletedIcon } from "@fluentui/react-icons-mdl2";
+import { AlertSolidIcon } from "@fluentui/react-icons-mdl2";
 import { Person, RPARequest, useAddRequest } from "api/requestsApi";
 import "components/Request/Request.css";
 import { addDays } from "@fluentui/react";
-import { Navigate } from "react-router-dom";
+// import { Navigate } from "react-router-dom";
 import Wizard from "./NewRequestForm.Wizard";
 
 export type RHFRequest = {
+  Id?: string;
   requestType: string;
   mcrRequired: string;
   paySystem: string; // "NH" | "GS" | "GG";
@@ -151,7 +152,7 @@ const NewRequestForm = () => {
     } as RPARequest;
 
     const newRequest = await addRequest.mutateAsync(data2);
-    console.log(newRequest);
+    myForm.setValue("Id", newRequest.Id);
   };
 
   return (
@@ -172,9 +173,9 @@ const NewRequestForm = () => {
           className="requestFormContainer"
           onSubmit={myForm.handleSubmit(createNewRequest)}
         >
-          {addRequest.isSuccess && (
+          {/* {addRequest.isSuccess && (
             <Navigate to={"/Request/" + addRequest.data.Id} />
-          )}
+          )} */}
           <Wizard
             isLoading={addRequest.isLoading}
             isError={addRequest.isError}
@@ -194,16 +195,6 @@ const NewRequestForm = () => {
                 appearance="ghost"
                 color="danger"
                 icon={<AlertSolidIcon />}
-              />
-            </Tooltip>
-          )}
-          {addRequest.isSuccess && (
-            <Tooltip content="Success!" relationship="label">
-              <Badge
-                size="extra-large"
-                appearance="ghost"
-                color="success"
-                icon={<CompletedIcon />}
               />
             </Tooltip>
           )}
