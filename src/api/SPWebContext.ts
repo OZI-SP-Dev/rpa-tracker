@@ -10,6 +10,7 @@ import "@pnp/sp/folders";
 import "@pnp/sp/files";
 import "@pnp/sp/files/folder";
 import "@pnp/sp/files/web";
+import "@pnp/sp/comments/item";
 
 declare const _spPageContextInfo: { webAbsoluteUrl: string };
 
