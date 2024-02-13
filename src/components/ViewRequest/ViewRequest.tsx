@@ -2,6 +2,7 @@ import ActionBar from "components/ViewRequest/ActionBar";
 import StatusBar from "components/ViewRequest/StatusBar";
 import ViewRequestDetails from "components/ViewRequest/Details";
 import ViewRequestDocuments from "components/ViewRequest/Documents";
+import ViewRequestNotes from "./Notes";
 import "./ViewRequest.css";
 
 const ViewRequest = () => {
@@ -16,8 +17,8 @@ const ViewRequest = () => {
       <section id="viewRequestDetailsContainer">
         <ViewRequestDetails />
       </section>
-      <section id="viewRequestNotes" className="gray-gradiant">
-        Notes!
+      <section id="viewRequestNotes">
+        <ViewRequestNotes />
       </section>
       <aside id="viewRequestDocuments">
         <ViewRequestDocuments />
