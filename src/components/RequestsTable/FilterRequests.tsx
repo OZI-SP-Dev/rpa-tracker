@@ -11,7 +11,7 @@ import {
   Option,
 } from "@fluentui/react-components";
 import { DatePicker } from "@fluentui/react-datepicker-compat";
-import { Dismiss24Regular } from "@fluentui/react-icons";
+import { DismissRegular } from "@fluentui/react-icons";
 import { REQUESTTYPES } from "consts/RequestTypes";
 import { PAYSYSTEMS } from "consts/PaySystems";
 import { GENERALGRADES, ACQGRADES } from "consts/Grades";
@@ -215,7 +215,7 @@ const FilterRequestsDrawer = ({
               <Button
                 appearance="subtle"
                 aria-label="Close"
-                icon={<Dismiss24Regular />}
+                icon={<DismissRegular />}
                 onClick={() => setIsOpen(false)}
               />
             }

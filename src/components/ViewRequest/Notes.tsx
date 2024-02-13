@@ -3,28 +3,54 @@ import {
   Button,
   Card,
   CardHeader,
+  DrawerBody,
+  DrawerHeader,
+  DrawerHeaderTitle,
+  OverlayDrawer,
   Persona,
   Text,
   Title2,
 } from "@fluentui/react-components";
-import { BoxAdditionSolidIcon } from "@fluentui/react-icons-mdl2";
+import { CommentAddIcon } from "@fluentui/react-icons-mdl2";
+import { DismissRegular } from "@fluentui/react-icons";
 import { useNotes } from "api/notesApi";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 
 const ViewRequestNotes = () => {
   const params = useParams();
   const requestId = Number(params.requestId);
   const notes = useNotes(requestId);
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <>
+      <OverlayDrawer position="end" modalType="non-modal" open={isOpen}>
+        <DrawerHeader>
+          <DrawerHeaderTitle
+            action={
+              <Button
+                appearance="subtle"
+                aria-label="Close"
+                icon={<DismissRegular />}
+                onClick={() => setIsOpen(false)}
+              />
+            }
+          >
+            New Note
+          </DrawerHeaderTitle>
+        </DrawerHeader>
+        <DrawerBody>
+          <p>Note form component goes here</p>
+        </DrawerBody>
+      </OverlayDrawer>
+
       <div style={{ display: "flex" }}>
         <Title2>Notes</Title2>
         <Button
           style={{ marginLeft: "auto" }}
-          appearance="transparent"
-          icon={<BoxAdditionSolidIcon />}
-          iconPosition="after"
+          icon={<CommentAddIcon />}
+          onClick={() => setIsOpen(true)}
         >
           Add a Note
         </Button>
@@ -35,9 +61,8 @@ const ViewRequestNotes = () => {
             return (
               <Card
                 key={"note" + note.id}
-                orientation="horizontal"
                 appearance="filled-alternative"
-                style={{ margin: "0.25em" }}
+                style={{ margin: "0.25em 0" }}
               >
                 <CardHeader
                   header={
@@ -56,8 +81,8 @@ const ViewRequestNotes = () => {
                       </Text>
                     </>
                   }
-                  description={<Body2>{note.text}</Body2>}
                 />
+                <Body2>{note.text}</Body2>
               </Card>
             );
           })}
