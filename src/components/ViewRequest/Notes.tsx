@@ -9,19 +9,33 @@ import {
   OverlayDrawer,
   Persona,
   Text,
+  Textarea,
   Title2,
 } from "@fluentui/react-components";
 import { CommentAddIcon } from "@fluentui/react-icons-mdl2";
 import { DismissRegular } from "@fluentui/react-icons";
-import { useNotes } from "api/notesApi";
+import { useAddNote, useNotes } from "api/notesApi";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
+
+const parseUTF16 = (text: string) => {
+  return text.replaceAll(/&#(\d{6});/g, (_a, b) => {
+    return String.fromCodePoint(parseInt(b));
+  });
+};
 
 const ViewRequestNotes = () => {
   const params = useParams();
   const requestId = Number(params.requestId);
   const notes = useNotes(requestId);
   const [isOpen, setIsOpen] = useState(false);
+  const [newNoteText, setNewNoteText] = useState("");
+  const addNote = useAddNote(requestId);
+
+  if (addNote.isSuccess) {
+    setIsOpen(false);
+    addNote.reset();
+  }
 
   return (
     <>
@@ -41,7 +55,32 @@ const ViewRequestNotes = () => {
           </DrawerHeaderTitle>
         </DrawerHeader>
         <DrawerBody>
-          <p>Note form component goes here</p>
+          <Textarea
+            placeholder="new note text..."
+            resize="vertical"
+            rows={10}
+            value={newNoteText}
+            onChange={(_ev, data) => setNewNoteText(data.value)}
+            maxLength={2000}
+          />
+          <div>
+            <Button
+              disabled={addNote.isLoading}
+              onClick={() => setIsOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              appearance="primary"
+              style={{ marginLeft: "auto" }}
+              disabled={addNote.isLoading}
+              onClick={() => {
+                addNote.mutate(newNoteText);
+              }}
+            >
+              Save
+            </Button>
+          </div>
         </DrawerBody>
       </OverlayDrawer>
 
@@ -50,7 +89,10 @@ const ViewRequestNotes = () => {
         <Button
           style={{ marginLeft: "auto" }}
           icon={<CommentAddIcon />}
-          onClick={() => setIsOpen(true)}
+          onClick={() => {
+            setNewNoteText("");
+            setIsOpen(true);
+          }}
         >
           Add a Note
         </Button>
@@ -82,7 +124,7 @@ const ViewRequestNotes = () => {
                     </>
                   }
                 />
-                <Body2>{note.text}</Body2>
+                <Body2>{parseUTF16(note.text)}</Body2>
               </Card>
             );
           })}

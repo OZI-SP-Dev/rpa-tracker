@@ -53,7 +53,7 @@ export const useAddNote = (requestId: number) => {
     },
     {
       onSuccess: async () => {
-        queryClient.invalidateQueries(["notes", requestId]);
+        queryClient.invalidateQueries(["notes", noteId]);
       },
     }
   );
