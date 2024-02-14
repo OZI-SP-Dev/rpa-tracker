@@ -19,38 +19,38 @@ const INPUTSTEPS = new Map<string, INPUTSTEPFUNCTIONS>([
   [
     "RoutingInfo",
     {
-      next: (_methods: string[]) => "HiringInfo",
-      prev: (_methods: string[]) => "RoutingInfo",
+      next: () => "HiringInfo",
+      prev: () => "RoutingInfo",
     },
   ],
 ]);
 
 INPUTSTEPS.set("HiringInfo", {
-  next: (methods: string[]) => {
+  next: (methods) => {
     const lcmc = methods.includes("lcmc");
     return lcmc
       ? "JobBoard"
       : INPUTSTEPS.get("JobBoard")?.next(methods) ?? "JobBoard";
   },
-  prev: (_methods: string[]) => "RoutingInfo",
+  prev: () => "RoutingInfo",
 });
 
 INPUTSTEPS.set("JobBoard", {
-  next: (methods: string[]) => {
+  next: (methods) => {
     const joa = methods.includes("joa");
     return joa ? "JOA" : INPUTSTEPS.get("JOA")?.next(methods) ?? "JOA";
   },
-  prev: (_methods: string[]) => "HiringInfo",
+  prev: () => "HiringInfo",
 });
 
 INPUTSTEPS.set("JOA", {
-  next: (methods: string[]) => {
+  next: (methods) => {
     const linkedinPost = methods.includes("linkedinPost");
     return linkedinPost
       ? "LinkedInPost"
       : INPUTSTEPS.get("LinkedInPost")?.next(methods) ?? "LinkedInPost";
   },
-  prev: (methods: string[]) => {
+  prev: (methods) => {
     const lcmc = methods.includes("lcmc");
     return lcmc
       ? "JobBoard"
@@ -59,26 +59,26 @@ INPUTSTEPS.set("JOA", {
 });
 
 INPUTSTEPS.set("LinkedInPost", {
-  next: (methods: string[]) => {
+  next: (methods) => {
     const linkedinSearch = methods.includes("linkedinSearch");
     return linkedinSearch
       ? "LinkedInSearch"
       : INPUTSTEPS.get("LinkedInSearch")?.next(methods) ?? "LinkedInSearch";
   },
-  prev: (methods: string[]) => {
+  prev: (methods) => {
     const joa = methods.includes("joa");
     return joa ? "JOA" : INPUTSTEPS.get("JOA")?.prev(methods) ?? "JOA";
   },
 });
 
 INPUTSTEPS.set("LinkedInSearch", {
-  next: (methods: string[]) => {
+  next: (methods) => {
     const usaJobsFlyer = methods.includes("usaJobsFlyer");
     return usaJobsFlyer
       ? "USAJobs"
       : INPUTSTEPS.get("USAJobs")?.next(methods) ?? "USAJobs";
   },
-  prev: (methods: string[]) => {
+  prev: (methods) => {
     const linkedinPost = methods.includes("linkedinPost");
     return linkedinPost
       ? "LinkedInPost"
@@ -87,8 +87,8 @@ INPUTSTEPS.set("LinkedInSearch", {
 });
 
 INPUTSTEPS.set("USAJobs", {
-  next: (_methods: string[]) => "DONE",
-  prev: (methods: string[]) => {
+  next: () => "DONE",
+  prev: (methods) => {
     const linkedinSearch = methods.includes("linkedinSearch");
     return linkedinSearch
       ? "LinkedInSearch"
@@ -97,8 +97,8 @@ INPUTSTEPS.set("USAJobs", {
 });
 
 INPUTSTEPS.set("DONE", {
-  next: (_methods: string[]) => "DONE",
-  prev: (methods: string[]) => {
+  next: () => "DONE",
+  prev: (methods) => {
     const linkedinSearch = methods.includes("usaJobsFlyer");
     return linkedinSearch
       ? "USAJobs"
@@ -111,7 +111,10 @@ interface ActionType {
   payload?: string[];
 }
 
-function reducer(state: { page: string }, action: ActionType) {
+function reducer(
+  state: { page: string } = { page: "RoutingInfo" },
+  action: ActionType
+) {
   switch (action.type) {
     case "next_page":
       const nextPage = INPUTSTEPS.get(state.page)?.next(action.payload ?? []);
@@ -158,7 +161,13 @@ const Wizard = ({ isLoading = false, isError = false }) => {
         <div className="requestWizardButtons">
           <Button
             disabled={state.page === "RoutingInfo" || isLoading}
-            onClick={() => dispatch({ type: "prev_page", payload: methods })}
+            onClick={() => {
+              if (form.formState.isValid) {
+                dispatch({ type: "prev_page", payload: methods });
+              } else {
+                form.trigger(undefined, { shouldFocus: true });
+              }
+            }}
           >
             Prev
           </Button>
@@ -166,9 +175,10 @@ const Wizard = ({ isLoading = false, isError = false }) => {
             style={{ marginLeft: "auto" }}
             disabled={state.page === "DONE" || isLoading}
             onClick={() => {
-              form.trigger();
               if (form.formState.isValid) {
                 dispatch({ type: "next_page", payload: methods });
+              } else {
+                form.trigger(undefined, { shouldFocus: true });
               }
             }}
           >
