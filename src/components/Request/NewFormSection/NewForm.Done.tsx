@@ -32,11 +32,14 @@ const Done = ({ gotoStep }: { gotoStep: (step: string) => void }) => {
     (!values.temporary ||
       !values.salaryLow ||
       !values.salaryHigh ||
-      !(values.temporary === "Full" ? true : values.nte) ||
+      !(values.temporary === "Full-Time" ? true : values.nte) ||
       !values.incentives ||
       !values.telework ||
       !values.linkedinPositionSummary ||
-      !values.dcwf ||
+      !(
+        values.linkedinQualifications.includes("certification") &&
+        values.dcwf.length > 0
+      ) ||
       !values.linkedinKSAs);
 
   const USAJobs: boolean =

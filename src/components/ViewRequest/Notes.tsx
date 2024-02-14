@@ -88,7 +88,7 @@ const ViewRequestNotes = () => {
           })}
         </section>
       )}
-      {!notes.data && <div>There's nothing here...</div>}
+      {!notes.isLoading && !notes.data && <div>There's nothing here...</div>}
       {notes.isError && (
         <div>An error has occured: {(notes.error as Error).message}</div>
       )}
