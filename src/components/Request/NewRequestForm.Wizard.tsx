@@ -11,8 +11,8 @@ import USAJobs from "./NewFormSection/NewForm.USAJobs";
 import Done from "./NewFormSection/NewForm.Done";
 
 interface INPUTSTEPFUNCTIONS {
-  next: (_methods: string[]) => string;
-  prev: (_methods: string[]) => string;
+  next: (methods: string[]) => string;
+  prev: (methods: string[]) => string;
 }
 
 const INPUTSTEPS = new Map<string, INPUTSTEPFUNCTIONS>([
