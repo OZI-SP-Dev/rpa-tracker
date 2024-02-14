@@ -429,12 +429,12 @@ const transformRequestToSP = async (
 
   let issueToId;
   if (issueTo) {
-    if (issueTo.Id) {
-      issueToId = issueTo.Id;
-    } else {
+    if (issueTo.Id === "-1") {
       issueToId = (
         await spWebContext.web.ensureUser(issueTo.EMail)
       ).data.Id.toString();
+    } else {
+      issueToId = issueTo.Id;
     }
   }
 
@@ -442,8 +442,8 @@ const transformRequestToSP = async (
     // if Person fields have been selected, include them
     ...(orgApproverId && { orgApproverId: orgApproverId }),
     ...(supervisorId && { supervisorId: supervisorId }),
-    ...(organizationalPOC && { organizationalPOCId: organizationalPOCId }),
-    ...(issueTo && { issueToId: issueToId }),
+    ...(organizationalPOCId && { organizationalPOCId: organizationalPOCId }),
+    ...(issueToId && { issueToId: issueToId }),
 
     // stringify arrays for storage in SharePoint
     methods: JSON.stringify(methods),

@@ -1,13 +1,12 @@
 import * as FormFields from "components/Request/FormFields/FormFields";
 import { Divider, InfoLabel, Title2 } from "@fluentui/react-components";
-import { useFormContext } from "react-hook-form";
+import { useWatch } from "react-hook-form";
 
 const LinkedInPost = () => {
-  const form = useFormContext();
-  const linkedinQualifications = form.watch("linkedinQualifications");
+  const linkedinQualifications = useWatch({ name: "linkedinQualifications" });
   const linkedinCertification =
     linkedinQualifications.includes("certification");
-  const temporary = form.watch("temporary");
+  const temporary = useWatch({ name: "temporary" });
 
   return (
     <>

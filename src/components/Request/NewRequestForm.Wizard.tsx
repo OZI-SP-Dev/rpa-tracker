@@ -183,7 +183,7 @@ const Wizard = ({ isLoading = false, isError = false }) => {
       {isLoading && (
         <Spinner
           style={{ justifyContent: "flex-start" }}
-          label="Creating Request..."
+          label="Saving Request..."
         />
       )}
     </>
