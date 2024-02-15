@@ -139,8 +139,12 @@ function reducer(
 
 const Wizard = ({ isLoading = false, isError = false }) => {
   const [state, dispatch] = useReducer(reducer, { page: "RoutingInfo" });
-  const form = useFormContext();
-  const methods = form.watch("methods");
+  const {
+    trigger,
+    formState: { isValid },
+    watch,
+  } = useFormContext();
+  const methods = watch("methods");
   const gotoStep = (step: string) => {
     const steps: string[] = [];
     steps.push(step);
@@ -162,10 +166,10 @@ const Wizard = ({ isLoading = false, isError = false }) => {
           <Button
             disabled={state.page === "RoutingInfo" || isLoading}
             onClick={() => {
-              if (form.formState.isValid) {
+              if (isValid) {
                 dispatch({ type: "prev_page", payload: methods });
               } else {
-                form.trigger(undefined, { shouldFocus: true });
+                trigger(undefined, { shouldFocus: true });
               }
             }}
           >
@@ -175,10 +179,10 @@ const Wizard = ({ isLoading = false, isError = false }) => {
             style={{ marginLeft: "auto" }}
             disabled={state.page === "DONE" || isLoading}
             onClick={() => {
-              if (form.formState.isValid) {
+              if (isValid) {
                 dispatch({ type: "next_page", payload: methods });
               } else {
-                form.trigger(undefined, { shouldFocus: true });
+                trigger(undefined, { shouldFocus: true });
               }
             }}
           >
