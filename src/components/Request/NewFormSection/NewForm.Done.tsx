@@ -38,7 +38,7 @@ const Done = ({ gotoStep }: { gotoStep: (step: string) => void }) => {
       !values.linkedinPositionSummary ||
       !(
         !values.linkedinQualifications.includes("certification") ||
-        values.dcwf.length === 0
+        values.dcwf.length > 0
       ) ||
       !values.linkedinKSAs);
 
