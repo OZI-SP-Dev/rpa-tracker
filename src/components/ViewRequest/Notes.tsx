@@ -39,7 +39,12 @@ const ViewRequestNotes = () => {
 
   return (
     <>
-      <OverlayDrawer position="end" modalType="non-modal" open={isOpen}>
+      <OverlayDrawer
+        position="end"
+        modalType="non-modal"
+        style={{ height: "100vh", minWidth: "fit-content" }}
+        open={isOpen}
+      >
         <DrawerHeader>
           <DrawerHeaderTitle
             action={
@@ -56,6 +61,7 @@ const ViewRequestNotes = () => {
         </DrawerHeader>
         <DrawerBody>
           <Textarea
+            style={{ width: "100%" }}
             placeholder="new note text..."
             resize="vertical"
             rows={10}
@@ -63,7 +69,7 @@ const ViewRequestNotes = () => {
             onChange={(_ev, data) => setNewNoteText(data.value)}
             maxLength={2000}
           />
-          <div>
+          <div style={{ width: "100%", display: "flex" }}>
             <Button
               disabled={addNote.isLoading}
               onClick={() => setIsOpen(false)}
@@ -87,6 +93,7 @@ const ViewRequestNotes = () => {
       <div style={{ display: "flex" }}>
         <Title2>Notes</Title2>
         <Button
+          disabled={!notes.data?.length}
           style={{ marginLeft: "auto" }}
           icon={<CommentAddIcon />}
           onClick={() => {

@@ -37,8 +37,8 @@ const Done = ({ gotoStep }: { gotoStep: (step: string) => void }) => {
       !values.telework ||
       !values.linkedinPositionSummary ||
       !(
-        values.linkedinQualifications.includes("certification") &&
-        values.dcwf.length > 0
+        !values.linkedinQualifications.includes("certification") ||
+        values.dcwf.length === 0
       ) ||
       !values.linkedinKSAs);
 
