@@ -240,6 +240,10 @@ export const useAddRequest = () => {
         id = newFolderFields.Id;
 
         await spWebContext.web.lists
+          .getByTitle("notes")
+          .items.add({ Title: id.toString() });
+
+        await spWebContext.web.lists
           .getByTitle("requests")
           .items.getById(id)
           .update({
