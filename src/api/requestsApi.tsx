@@ -204,7 +204,7 @@ const getRequest = async (Id: number) => {
     .expand(expandedFields)();
 };
 
-export const useAddRequest = () => {
+export const useMutateRequest = () => {
   const queryClient = useQueryClient();
   const contentTypes = useContentTypes();
 

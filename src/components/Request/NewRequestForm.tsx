@@ -1,7 +1,7 @@
 import { Title1, Tooltip, Badge } from "@fluentui/react-components";
 import { FormProvider, useForm } from "react-hook-form";
 import { AlertSolidIcon } from "@fluentui/react-icons-mdl2";
-import { Person, RPARequest, useAddRequest } from "api/requestsApi";
+import { Person, RPARequest, useMutateRequest } from "api/requestsApi";
 import "components/Request/Request.css";
 import { addDays } from "@fluentui/react";
 // import { Navigate } from "react-router-dom";
@@ -71,7 +71,7 @@ export type RHFRequest = {
 };
 
 const NewRequestForm = () => {
-  const addRequest = useAddRequest();
+  const addRequest = useMutateRequest();
 
   const today = new Date(Date.now());
 
