@@ -11,10 +11,12 @@ const BACInput = <T extends FieldValues>({
   rules,
   fieldProps,
   disableError,
+  onBlur,
 }: BaseFormField<T> & {
   fieldProps?: Partial<InputProps>;
   /** Don't show the error message within the component -- If using this, you should be displaying the error message elsewhere.  It still sets the aria-invalid flag and sets RHF as error */
   disableError?: boolean;
+  onBlur?: () => void;
 }) => {
   const form = useFormContext<T>();
   let finalRules = { ...rules };
@@ -58,6 +60,7 @@ const BACInput = <T extends FieldValues>({
         aria-describedby={name + "Err"}
         aria-invalid={fieldState.error ? "true" : "false"}
         id={name + "Id"}
+        onBlur={onBlur ? onBlur : field.onBlur}
       />
       {!disableError && fieldState.error && (
         <Text role="alert" id={name + "Err"} className="fieldErrorText">
