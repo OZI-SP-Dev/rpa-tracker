@@ -9,6 +9,7 @@ import {
   ControllerRenderProps,
   FieldValues,
   Path,
+  PathValue,
   useController,
   useFormContext,
 } from "react-hook-form";
@@ -21,6 +22,10 @@ export type onOptionSelectCallback<T extends FieldValues> = (
   field: ControllerRenderProps<T, Path<T>>
 ) => void;
 
+export type valueCallback<T extends FieldValues> = (
+  value: PathValue<T, Path<T>>
+) => string | (readonly string[] & string) | undefined;
+
 const BACDropdown = <T extends FieldValues>({
   name,
   labelText,
@@ -29,9 +34,11 @@ const BACDropdown = <T extends FieldValues>({
   children,
   fieldProps,
   customOnOptionSelect,
+  customValue,
 }: BaseFormField<T> & {
   fieldProps?: Partial<DropdownProps>;
   customOnOptionSelect?: onOptionSelectCallback<T>;
+  customValue?: valueCallback<T>;
 }) => {
   const form = useFormContext<T>();
 
@@ -57,6 +64,7 @@ const BACDropdown = <T extends FieldValues>({
         {labelText}
       </InfoLabel>
       <Dropdown
+        {...field}
         id={name + "Id"}
         aria-describedby={name + "Err"}
         aria-invalid={fieldState.error ? "true" : "false"}
@@ -68,6 +76,7 @@ const BACDropdown = <T extends FieldValues>({
                 field.onChange(data.selectedOptions);
               }
         }
+        value={customValue ? customValue(field.value) : field.value}
         {...fieldProps}
       >
         {children ?? <></>}

@@ -19,6 +19,20 @@ const Certifications = () => {
             field.onChange(data.selectedOptions);
           }
         }}
+        customValue={(value) => {
+          let retVal = "";
+          let arrayVal = [];
+          if (Array.isArray(value)) {
+            arrayVal = value.map(
+              (value) =>
+                value +
+                  " " +
+                  DCWFCodes.find(({ Code }) => Code === value)?.Role ?? ""
+            );
+            retVal = arrayVal.join(", ");
+          }
+          return retVal;
+        }}
       >
         {DCWFCodes.map((item) => (
           <Option
