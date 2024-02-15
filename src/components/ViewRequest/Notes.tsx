@@ -93,7 +93,7 @@ const ViewRequestNotes = () => {
       <div style={{ display: "flex" }}>
         <Title2>Notes</Title2>
         <Button
-          disabled={!notes.data?.length}
+          disabled={notes.isLoading || notes.isError}
           style={{ marginLeft: "auto" }}
           icon={<CommentAddIcon />}
           onClick={() => {
