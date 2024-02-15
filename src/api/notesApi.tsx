@@ -18,13 +18,24 @@ const getNoteItem = async (requestId: number) => {
 };
 
 const selectNoteId = (noteItems: any) => {
-  const noteId = noteItems[0].Id;
-  return { Id: noteId };
+  const noteId = noteItems[0]?.Id;
+  if (noteId) {
+    return { Id: noteId };
+  }
+  throw new Error("No note item found. Contact support.");
 };
 
 export const useNotes = (requestId: number) => {
   const noteItem = useNoteItem(requestId);
   const noteId = noteItem.data?.Id;
+
+  if (noteItem.error instanceof Error) {
+    return useQuery({
+      queryKey: ["notes", noteId],
+      queryFn: () => Promise.reject(noteItem.error),
+    });
+  }
+
   return useQuery({
     queryKey: ["notes", noteId],
     queryFn: () => getNotes(noteId),
