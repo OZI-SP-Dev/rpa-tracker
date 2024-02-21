@@ -9,9 +9,6 @@ const JOAQualifications = () => {
       <BACTextarea<RHFRequest>
         name="joaQualifications"
         labelText="Qualifications/Requirements"
-        rules={{
-          required: "Qualifications/Requirements is required",
-        }}
         fieldProps={{ resize: "vertical", rows: 10 }}
       />
       <Text>

@@ -19,9 +19,6 @@ const CloseDateJOA = () => {
       <BACDatePicker<RHFRequest>
         name="closeDateJOA"
         labelText="Close date for Job Opportunity Announcement (JOA)"
-        rules={{
-          required: "A date is required",
-        }}
         fieldProps={{
           formatDate: onFormatDate,
           minDate: minDate,

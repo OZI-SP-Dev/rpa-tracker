@@ -10,9 +10,6 @@ const LinkedinKSAs = () => {
         labelText="Top related KSA's"
         labelInfo="In layman's terms, provide the top 3-4 related Knowledge, Skills, and
         Abilitiles (KSA's)"
-        rules={{
-          required: "KSA's are required",
-        }}
         fieldProps={{ resize: "vertical", rows: 8 }}
       />
     </div>

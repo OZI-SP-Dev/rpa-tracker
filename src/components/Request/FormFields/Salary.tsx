@@ -12,12 +12,7 @@ const Salary = () => {
   return (
     <div className="requestFieldContainer">
       <p>
-        <Label
-          htmlFor={name + "Id"}
-          weight="semibold"
-          className="fieldLabel"
-          required
-        >
+        <Label htmlFor={name + "Id"} weight="semibold" className="fieldLabel">
           <NumberFieldIcon className="fieldIcon" />
           Salary Range
         </Label>
@@ -25,7 +20,6 @@ const Salary = () => {
           name="salaryLow"
           control={form.control}
           rules={{
-            required: "Salary range is required",
             max: {
               value: 999999,
               message: "Salary cannot exceed 6 digits",
@@ -63,7 +57,6 @@ const Salary = () => {
           name="salaryHigh"
           control={form.control}
           rules={{
-            required: "Salary range is required",
             max: {
               value: 999999,
               message: "Salary cannot exceed 6 digits",

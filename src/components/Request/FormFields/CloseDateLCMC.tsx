@@ -19,9 +19,6 @@ const CloseDateLCMC = () => {
       <BACDatePicker<RHFRequest>
         name="closeDateLCMC"
         labelText="Close date for AFLCMC Posting"
-        rules={{
-          required: "A date is required",
-        }}
         fieldProps={{
           formatDate: onFormatDate,
           minDate: minDate,

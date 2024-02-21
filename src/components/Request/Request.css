@@ -21,6 +21,13 @@
   margin-bottom: 0.5em;
 }
 
+.requestWizardButtons {
+  display: flex;
+  justify-content: flex-start;
+  gap: 1em 0.5em;
+  margin-bottom: 0.5em;
+}
+
 .fui-Title1 {
   white-space: nowrap;
   margin-left: 1em;

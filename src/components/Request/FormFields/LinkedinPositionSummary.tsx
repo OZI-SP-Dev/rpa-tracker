@@ -9,9 +9,6 @@ const LinkedinPositionSummary = () => {
         name="linkedinPositionSummary"
         labelText="Position Summary"
         labelInfo="A brief summary of the job description (3-4 sentences)"
-        rules={{
-          required: "Position Summary is required",
-        }}
         fieldProps={{ resize: "vertical", rows: 10 }}
       />
     </div>

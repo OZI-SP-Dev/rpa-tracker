@@ -9,9 +9,6 @@ const FullPartTime = () => {
       <BACRadioGroup<RHFRequest>
         name="fullPartTime"
         labelText="Full Time/Part Time Position"
-        rules={{
-          required: "Full Time/Part Time Position is required",
-        }}
         fieldProps={{ layout: "horizontal" }}
       >
         <Radio value="Full" label="Full Time" />

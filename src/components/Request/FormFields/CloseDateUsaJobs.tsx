@@ -16,9 +16,6 @@ const CloseDateUsaJobs = () => {
       <BACDatePicker<RHFRequest>
         name="closeDateUsaJobsFlyer"
         labelText="Close date for USA Jobs Flyer"
-        rules={{
-          required: "A date is required",
-        }}
         fieldProps={{ formatDate: onFormatDate, minDate: today }}
       />
     </div>
