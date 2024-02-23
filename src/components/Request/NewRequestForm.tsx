@@ -1,11 +1,17 @@
 import { Title1, Tooltip, Badge } from "@fluentui/react-components";
 import { FormProvider, useForm } from "react-hook-form";
 import { AlertSolidIcon } from "@fluentui/react-icons-mdl2";
-import { Person, RPARequest, useMutateRequest } from "api/requestsApi";
+import {
+  Person,
+  RPARequest,
+  useMutateRequest,
+  useRequest,
+} from "api/requestsApi";
 import "components/Request/Request.css";
 import { addDays } from "@fluentui/react";
-// import { Navigate } from "react-router-dom";
 import Wizard from "./NewRequestForm.Wizard";
+import { useParams } from "react-router-dom";
+import { useEffect } from "react";
 
 export type RHFRequest = {
   Id?: string;
@@ -71,12 +77,17 @@ export type RHFRequest = {
 };
 
 const NewRequestForm = () => {
+  const params = useParams();
+  const request = useRequest(Number(params.requestId));
   const addRequest = useMutateRequest();
 
   const today = new Date(Date.now());
+  // Remove optional Author and Created properties from data object
+  const { Author, Created, ...data } = request.data ?? {};
 
   const myForm = useForm<RHFRequest>({
     defaultValues: {
+      ...data,
       requestType: "",
       mcrRequired: "",
       paySystem: "NH",
@@ -145,6 +156,12 @@ const NewRequestForm = () => {
     mode: "onChange" /* Provide input directly as they input, so if entering bad data (eg letter in MPCN) it will let them know */,
   });
 
+  useEffect(() => {
+    if (params.requestId) {
+      myForm.reset(data);
+    }
+  }, [data, params.requestId]);
+
   const createNewRequest = async (data: RHFRequest) => {
     const data2 = {
       stage: "Draft",
@@ -167,39 +184,39 @@ const NewRequestForm = () => {
       <Title1 align="center">
         <b>Initiate New RPA Request</b>
       </Title1>
-      <FormProvider {...myForm}>
-        <form
-          id="inReqForm"
-          className="requestFormContainer"
-          onSubmit={myForm.handleSubmit(createNewRequest)}
-        >
-          {/* {addRequest.isSuccess && (
-            <Navigate to={"/Request/" + addRequest.data.Id} />
-          )} */}
-          <Wizard
-            isLoading={addRequest.isLoading}
-            isError={addRequest.isError}
-          />
+      {!!params.requestId && request.isLoading && "Loading..."}
+      {(!params.requestId || request.isFetched) && (
+        <FormProvider {...myForm}>
+          <form
+            id="inReqForm"
+            className="requestFormContainer"
+            onSubmit={myForm.handleSubmit(createNewRequest)}
+          >
+            <Wizard
+              isLoading={addRequest.isLoading}
+              isError={addRequest.isError}
+            />
 
-          {addRequest.isError && (
-            <Tooltip
-              content={
-                addRequest.error instanceof Error
-                  ? addRequest.error.message
-                  : "An error occurred."
-              }
-              relationship="label"
-            >
-              <Badge
-                size="extra-large"
-                appearance="ghost"
-                color="danger"
-                icon={<AlertSolidIcon />}
-              />
-            </Tooltip>
-          )}
-        </form>
-      </FormProvider>
+            {addRequest.isError && (
+              <Tooltip
+                content={
+                  addRequest.error instanceof Error
+                    ? addRequest.error.message
+                    : "An error occurred."
+                }
+                relationship="label"
+              >
+                <Badge
+                  size="extra-large"
+                  appearance="ghost"
+                  color="danger"
+                  icon={<AlertSolidIcon />}
+                />
+              </Tooltip>
+            )}
+          </form>
+        </FormProvider>
+      )}
     </div>
   );
 };

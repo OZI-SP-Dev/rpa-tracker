@@ -186,6 +186,9 @@ const getPagedRequests = async (
 };
 
 const getRequest = async (Id: number) => {
+  if (!Id) {
+    return Promise.reject();
+  }
   const requestedFields =
     "*," +
     "Author/Id,Author/EMail,Author/Title," +

@@ -30,7 +30,7 @@ const router = createHashRouter(
   createRoutesFromElements(
     <Route element={<MainLayout />}>
       <Route path="/" element={<Home />} />
-      <Route path="/New" element={<NewRequestForm />} />
+      <Route path="/New/:requestId?" element={<NewRequestForm />} />
       <Route path="/Request/:requestId" element={<ViewRequestPage />} />
     </Route>
   )
