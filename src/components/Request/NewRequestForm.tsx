@@ -82,8 +82,6 @@ const NewRequestForm = () => {
   const addRequest = useMutateRequest();
 
   const today = new Date(Date.now());
-  // Remove optional Author and Created properties from data object
-  const { Author, Created, ...data } = request.data ?? {};
 
   const myForm = useForm<RHFRequest>({
     defaultValues: {
@@ -156,8 +154,11 @@ const NewRequestForm = () => {
   });
 
   useEffect(() => {
+    console.log("Inside useEffect");
+    // Remove optional Author and Created properties from data object
+    const { Author, Created, ...data } = request.data ?? {};
     myForm.reset(data);
-  }, [data]);
+  }, [request.data]);
 
   const createNewRequest = async (data: RHFRequest) => {
     const data2 = {
