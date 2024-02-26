@@ -82,83 +82,87 @@ const NewRequestForm = () => {
   const addRequest = useMutateRequest();
 
   const today = new Date(Date.now());
+  const defaultValues = {
+    requestType: "",
+    mcrRequired: "",
+    paySystem: "NH",
+    advertisementLength: "",
+    lastIncumbent: "",
+    series: "",
+    grade: "",
+    positionTitle: "",
+    mpcn: "",
+    cpcn: "",
+    fms: "",
+    officeSymbol: "",
+    positionSensitivity: "",
+    dutyLocation: "",
+    osf: "",
+    methods: [],
+    fullPartTime: "",
+    salaryLow: 20999,
+    salaryHigh: 31683,
+    telework: "",
+    remote: "",
+    pcs: "",
+    joaQualifications: "",
+    joaIdealCandidate: "",
+    temporary: "",
+    incentives: "",
+    closeDateLCMC: addDays(today, 7),
+    closeDateJOA: addDays(today, 30),
+    closeDateUsaJobsFlyer: addDays(today, 14),
+    linkedinPositionSummary: "",
+    linkedinQualifications: [
+      "citizenship",
+      "clearance",
+      "drugtest",
+      "certification",
+      "financial",
+      "physical",
+      "travel",
+    ],
+    dcwf: [],
+    linkedinKSAs: "",
+    linkedinSearchTitle1: "",
+    linkedinSearchTitle2: "",
+    linkedinSearchTitle3: "",
+    linkedinSearchTitle4: "",
+    linkedinSearchSkill1: "",
+    linkedinSearchSkill2: "",
+    linkedinSearchSkill3: "",
+    linkedinSearchSkill4: "",
+    linkedinSearchEmployer1: "",
+    linkedinSearchEmployer2: "",
+    linkedinSearchEmployer3: "",
+    linkedinSearchEmployer4: "",
+    linkedinSearchStudy1: "",
+    linkedinSearchStudy2: "",
+    linkedinSearchStudy3: "",
+    linkedinSearchStudy4: "",
+    linkedinSearchKeyword1: "",
+    linkedinSearchKeyword2: "",
+    linkedinSearchKeyword3: "",
+    linkedinSearchKeyword4: "",
+    linkedinSearchComments: "",
+  };
 
   const myForm = useForm<RHFRequest>({
-    defaultValues: {
-      requestType: "",
-      mcrRequired: "",
-      paySystem: "NH",
-      advertisementLength: "",
-      lastIncumbent: "",
-      series: "",
-      grade: "",
-      positionTitle: "",
-      mpcn: "",
-      cpcn: "",
-      fms: "",
-      officeSymbol: "",
-      positionSensitivity: "",
-      dutyLocation: "",
-      osf: "",
-      methods: [],
-      fullPartTime: "",
-      salaryLow: 20999,
-      salaryHigh: 31683,
-      telework: "",
-      remote: "",
-      pcs: "",
-      joaQualifications: "",
-      joaIdealCandidate: "",
-      temporary: "",
-      incentives: "",
-      closeDateLCMC: addDays(today, 7),
-      closeDateJOA: addDays(today, 30),
-      closeDateUsaJobsFlyer: addDays(today, 14),
-      linkedinPositionSummary: "",
-      linkedinQualifications: [
-        "citizenship",
-        "clearance",
-        "drugtest",
-        "certification",
-        "financial",
-        "physical",
-        "travel",
-      ],
-      dcwf: [],
-      linkedinKSAs: "",
-      linkedinSearchTitle1: "",
-      linkedinSearchTitle2: "",
-      linkedinSearchTitle3: "",
-      linkedinSearchTitle4: "",
-      linkedinSearchSkill1: "",
-      linkedinSearchSkill2: "",
-      linkedinSearchSkill3: "",
-      linkedinSearchSkill4: "",
-      linkedinSearchEmployer1: "",
-      linkedinSearchEmployer2: "",
-      linkedinSearchEmployer3: "",
-      linkedinSearchEmployer4: "",
-      linkedinSearchStudy1: "",
-      linkedinSearchStudy2: "",
-      linkedinSearchStudy3: "",
-      linkedinSearchStudy4: "",
-      linkedinSearchKeyword1: "",
-      linkedinSearchKeyword2: "",
-      linkedinSearchKeyword3: "",
-      linkedinSearchKeyword4: "",
-      linkedinSearchComments: "",
-    },
+    defaultValues: defaultValues,
     criteriaMode:
       "all" /* Pass back multiple errors, so we can prioritize which one(s) to show */,
     mode: "onChange" /* Provide input directly as they input, so if entering bad data (eg letter in MPCN) it will let them know */,
   });
 
   useEffect(() => {
-    console.log("Inside useEffect");
-    // Remove optional Author and Created properties from data object
-    const { Author, Created, ...data } = request.data ?? {};
-    myForm.reset(data);
-  }, [request.data]);
+    if (params.requestId) {
+      // Remove optional Author and Created properties from data object
+      const { Author, Created, ...data } = request.data ?? {};
+      myForm.reset(data);
+    } else {
+      myForm.reset(defaultValues);
+    }
+  }, [request.data, params.requestId]);
 
   const createNewRequest = async (data: RHFRequest) => {
     const data2 = {
