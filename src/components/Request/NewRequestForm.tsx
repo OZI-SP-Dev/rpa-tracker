@@ -87,7 +87,6 @@ const NewRequestForm = () => {
 
   const myForm = useForm<RHFRequest>({
     defaultValues: {
-      ...data,
       requestType: "",
       mcrRequired: "",
       paySystem: "NH",
@@ -157,10 +156,8 @@ const NewRequestForm = () => {
   });
 
   useEffect(() => {
-    if (params.requestId) {
-      myForm.reset(data);
-    }
-  }, [data, params.requestId]);
+    myForm.reset(data);
+  }, [data]);
 
   const createNewRequest = async (data: RHFRequest) => {
     const data2 = {
