@@ -1,4 +1,4 @@
-import { useReducer } from "react";
+import { useEffect, useReducer } from "react";
 import { useFormContext } from "react-hook-form";
 import { Button, Spinner } from "@fluentui/react-components";
 import HiringInfo from "./NewFormSection/NewForm.HiringInfo";
@@ -9,6 +9,7 @@ import LinkedInSearch from "./NewFormSection/NewForm.LinkedInSearch";
 import RoutingInfo from "./NewFormSection/NewForm.Routing";
 import USAJobs from "./NewFormSection/NewForm.USAJobs";
 import Done from "./NewFormSection/NewForm.Done";
+import { useParams } from "react-router-dom";
 
 interface INPUTSTEPFUNCTIONS {
   next: (methods: string[]) => string;
@@ -139,17 +140,25 @@ function reducer(
 
 const Wizard = ({ isLoading = false, isError = false }) => {
   const [state, dispatch] = useReducer(reducer, { page: "RoutingInfo" });
+
   const {
     trigger,
     formState: { isValid },
     watch,
   } = useFormContext();
   const methods = watch("methods");
+
   const gotoStep = (step: string) => {
     const steps: string[] = [];
     steps.push(step);
     dispatch({ type: "goto", payload: steps });
   };
+
+  const params = useParams();
+  useEffect(() => {
+    dispatch({ type: "reset" });
+  }, [params.requestId]);
+
   return (
     <>
       {state.page === "RoutingInfo" && <RoutingInfo />}
