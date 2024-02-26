@@ -210,6 +210,7 @@ const getRequest = async (Id: number) => {
 export const useMutateRequest = () => {
   const queryClient = useQueryClient();
   const contentTypes = useContentTypes();
+  const { dispatchToast } = useToastController("toaster");
 
   return useMutation(
     ["requests"],
@@ -266,6 +267,31 @@ export const useMutateRequest = () => {
       onSuccess: async () => {
         // Mark requests as needing refreshed
         queryClient.invalidateQueries(["requests"]);
+        dispatchToast(
+          <Toast>
+            <ToastTitle>Request saved!</ToastTitle>
+          </Toast>,
+          { intent: "success", timeout: -1 }
+        );
+      },
+      onError: async (error) => {
+        console.log(error);
+        if (error instanceof Error) {
+          dispatchToast(
+            <Toast>
+              <ToastTitle
+                action={
+                  <ToastTrigger>
+                    <Link>Dismiss</Link>
+                  </ToastTrigger>
+                }
+              >
+                Error saving request
+              </ToastTitle>
+            </Toast>,
+            { intent: "error", timeout: -1 }
+          );
+        }
       },
     }
   );
