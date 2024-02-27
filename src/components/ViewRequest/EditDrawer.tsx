@@ -5,6 +5,9 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerHeaderTitle,
+  MessageBar,
+  MessageBarBody,
+  MessageBarTitle,
   Spinner,
 } from "@fluentui/react-components";
 import { DismissRegular } from "@fluentui/react-icons";
@@ -34,13 +37,25 @@ const EditDrawer = ({
     mode: "onChange" /* Provide input directly as they input, so if entering bad data (eg letter in MPCN) it will let them know */,
   });
 
+  // Reset the form if request.data changes and when form is opened/closed
   useEffect(() => {
     if (request.data) {
       // Remove Author and Created properties from data object
       const { Author, Created, ...data } = request.data ?? {};
       myForm.reset(data);
     }
-  }, [request.data]);
+  }, [request.data, isOpen]);
+
+  useEffect(() => {
+    if (updateRequest.isSuccess) {
+      const timeOut = setTimeout(() => {
+        setIsOpen(false);
+        updateRequest.reset();
+      }, 2000);
+
+      return () => clearTimeout(timeOut);
+    }
+  }, [updateRequest.isSuccess]);
 
   const onSubmit: SubmitHandler<RPARequest> = (data) => {
     console.log(data);
@@ -54,7 +69,6 @@ const EditDrawer = ({
       size="medium"
       style={{ height: "100vh", minWidth: "fit-content" }}
       open={isOpen}
-      onOpenChange={(_e, { open }) => setIsOpen(open)}
     >
       <FormProvider {...myForm}>
         <form
@@ -67,6 +81,7 @@ const EditDrawer = ({
                 <Button
                   appearance="subtle"
                   aria-label="Close"
+                  disabled={updateRequest.isLoading}
                   icon={<DismissRegular />}
                   onClick={() => setIsOpen(false)}
                 />
@@ -105,16 +120,32 @@ const EditDrawer = ({
             )}
           </DrawerBody>
           <DrawerFooter>
-            <Button
-              style={{ marginLeft: "auto" }}
-              appearance="primary"
-              type="submit"
-              value="submit"
-              disabled={updateRequest.isLoading}
-              icon={updateRequest.isLoading ? <Spinner /> : <SaveIcon />}
-            >
-              Save
-            </Button>
+            {!updateRequest.isSuccess && (
+              <Button
+                style={{ marginLeft: "auto" }}
+                appearance="primary"
+                type="submit"
+                value="submit"
+                disabled={updateRequest.isLoading || updateRequest.isSuccess}
+                icon={updateRequest.isLoading ? <Spinner /> : <SaveIcon />}
+              >
+                Save
+              </Button>
+            )}
+            {(updateRequest.isSuccess || updateRequest.isError) && (
+              <MessageBar
+                intent={updateRequest.isSuccess ? "success" : "error"}
+              >
+                <MessageBarBody>
+                  <MessageBarTitle>
+                    {updateRequest.isSuccess ? "Success!" : "Error!"}
+                  </MessageBarTitle>
+                  {updateRequest.isError &&
+                    updateRequest.error instanceof Error &&
+                    updateRequest.error.message}
+                </MessageBarBody>
+              </MessageBar>
+            )}
           </DrawerFooter>
         </form>
       </FormProvider>
