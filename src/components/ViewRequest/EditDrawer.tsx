@@ -63,39 +63,25 @@ const EditDrawer = ({
   };
 
   return (
-    <Drawer
-      type="overlay"
-      position="end"
-      size="medium"
-      style={{ height: "100vh", minWidth: "fit-content" }}
-      open={isOpen}
-    >
-      <FormProvider {...myForm}>
-        <form
-          onSubmit={myForm.handleSubmit(onSubmit)}
-          style={{ width: "100%" }}
+    <Drawer type="overlay" position="end" size="medium" open={isOpen}>
+      <DrawerHeader>
+        <DrawerHeaderTitle
+          action={
+            <Button
+              appearance="subtle"
+              aria-label="Close"
+              disabled={updateRequest.isLoading}
+              icon={<DismissRegular />}
+              onClick={() => setIsOpen(false)}
+            />
+          }
         >
-          <DrawerHeader>
-            <DrawerHeaderTitle
-              action={
-                <Button
-                  appearance="subtle"
-                  aria-label="Close"
-                  disabled={updateRequest.isLoading}
-                  icon={<DismissRegular />}
-                  onClick={() => setIsOpen(false)}
-                />
-              }
-            >
-              Edit Request
-            </DrawerHeaderTitle>
-          </DrawerHeader>
-          <DrawerBody
-            style={{
-              /* Header/footer padding = 72px */
-              maxHeight: "calc(100vh - 72px - 3em)",
-            }}
-          >
+          Edit Request
+        </DrawerHeaderTitle>
+      </DrawerHeader>
+      <DrawerBody>
+        <FormProvider {...myForm}>
+          <form id="editForm" onSubmit={myForm.handleSubmit(onSubmit)}>
             {subform === "RoutingInfo" && request.data && (
               <>
                 <FormFields.RequestType />
@@ -118,37 +104,36 @@ const EditDrawer = ({
                 <FormFields.Methods />
               </>
             )}
-          </DrawerBody>
-          <DrawerFooter>
-            {!updateRequest.isSuccess && (
-              <Button
-                style={{ marginLeft: "auto" }}
-                appearance="primary"
-                type="submit"
-                value="submit"
-                disabled={updateRequest.isLoading || updateRequest.isSuccess}
-                icon={updateRequest.isLoading ? <Spinner /> : <SaveIcon />}
-              >
-                Save
-              </Button>
-            )}
-            {(updateRequest.isSuccess || updateRequest.isError) && (
-              <MessageBar
-                intent={updateRequest.isSuccess ? "success" : "error"}
-              >
-                <MessageBarBody>
-                  <MessageBarTitle>
-                    {updateRequest.isSuccess ? "Success!" : "Error!"}
-                  </MessageBarTitle>
-                  {updateRequest.isError &&
-                    updateRequest.error instanceof Error &&
-                    updateRequest.error.message}
-                </MessageBarBody>
-              </MessageBar>
-            )}
-          </DrawerFooter>
-        </form>
-      </FormProvider>
+          </form>
+        </FormProvider>
+      </DrawerBody>
+      <DrawerFooter>
+        {!updateRequest.isSuccess && (
+          <Button
+            style={{ marginLeft: "auto" }}
+            appearance="primary"
+            form="editForm"
+            type="submit"
+            value="submit"
+            disabled={updateRequest.isLoading || updateRequest.isSuccess}
+            icon={updateRequest.isLoading ? <Spinner /> : <SaveIcon />}
+          >
+            Save
+          </Button>
+        )}
+        {(updateRequest.isSuccess || updateRequest.isError) && (
+          <MessageBar intent={updateRequest.isSuccess ? "success" : "error"}>
+            <MessageBarBody>
+              <MessageBarTitle>
+                {updateRequest.isSuccess ? "Success!" : "Error!"}
+              </MessageBarTitle>
+              {updateRequest.isError &&
+                updateRequest.error instanceof Error &&
+                updateRequest.error.message}
+            </MessageBarBody>
+          </MessageBar>
+        )}
+      </DrawerFooter>
     </Drawer>
   );
 };
