@@ -271,7 +271,7 @@ export const useMutateRequest = () => {
           <Toast>
             <ToastTitle>Request saved!</ToastTitle>
           </Toast>,
-          { intent: "success", timeout: -1 }
+          { intent: "success" }
         );
       },
       onError: async (error) => {
