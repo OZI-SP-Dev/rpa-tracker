@@ -49,7 +49,12 @@ function MainLayout() {
             >
               <Outlet />
             </Suspense>
-            <Toaster toasterId={"toaster"} />
+            <Toaster
+              toasterId={"toaster"}
+              position="top-end"
+              pauseOnHover
+              pauseOnWindowBlur
+            />
           </ThemeProvider>
         </FluentProvider>
       </UserProvider>

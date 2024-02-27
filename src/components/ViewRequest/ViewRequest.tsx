@@ -9,18 +9,26 @@ import EditDrawer from "./EditDrawer";
 
 const ViewRequest = () => {
   const [isEditOpen, setIsEditOpen] = useState(false);
-  const [editSection, _setEditSection] = useState("RoutingInfo");
+  const [editSection, setEditSection] = useState("RoutingInfo");
 
   return (
     <section id="viewRequestContainer">
       <aside id="viewRequestActionBar" className="gray-gradiant">
-        <ActionBar openEditForm={() => setIsEditOpen(true)} />
+        <ActionBar
+          openEditForm={() => {
+            setEditSection("RoutingInfo");
+            setIsEditOpen(true);
+          }}
+        />
       </aside>
       <section id="viewRequestHeader" className="gray-gradiant">
         <StatusBar />
       </section>
       <section id="viewRequestDetailsContainer">
-        <ViewRequestDetails />
+        <ViewRequestDetails
+          setEditSection={setEditSection}
+          setIsEditOpen={setIsEditOpen}
+        />
       </section>
       <section id="viewRequestNotes">
         <ViewRequestNotes />

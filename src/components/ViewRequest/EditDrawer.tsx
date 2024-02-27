@@ -31,11 +31,18 @@ const EditDrawer = ({
   const request = useRequest(Number(params.requestId));
   const updateRequest = useMutateRequest();
 
+  const { Author, Created, ...data } = request.data ?? {};
   const myForm = useForm<RPARequest>({
+    defaultValues: data,
     criteriaMode:
       "all" /* Pass back multiple errors, so we can prioritize which one(s) to show */,
     mode: "onChange" /* Provide input directly as they input, so if entering bad data (eg letter in MPCN) it will let them know */,
   });
+
+  const linkedinQualifications = myForm.watch("linkedinQualifications") ?? [];
+  const linkedinCertification =
+    linkedinQualifications.includes("certification");
+  const temporary = myForm.watch("temporary");
 
   // Reset the form if request.data changes and when form is opened/closed
   useEffect(() => {
@@ -103,6 +110,51 @@ const EditDrawer = ({
                 <FormFields.AdvertisementLength />
                 <FormFields.Methods />
               </>
+            )}
+            {subform === "JobBoard" && request.data && (
+              <FormFields.CloseDateLCMC />
+            )}
+            {subform === "JOA" && request.data && (
+              <>
+                <FormFields.CloseDateJOA />
+                <FormFields.OrganizationalPOC />
+                <FormFields.IssueTo />
+                <FormFields.FullPartTime />
+                <FormFields.Salary />
+                <FormFields.Telework />
+                <FormFields.Remote />
+                <FormFields.PCS />
+                <FormFields.JOAQualifications />
+                <FormFields.JOAIdealCandidate />
+              </>
+            )}
+            {subform === "LinkedInPost" && request.data && (
+              <>
+                <FormFields.Temporary />
+                {(temporary === "Term" || temporary === "Temp") && (
+                  <FormFields.NTE />
+                )}
+                <FormFields.Salary />
+                <FormFields.Incentives />
+                <FormFields.Telework />
+                <FormFields.LinkedinPositionSummary />
+                <FormFields.LinkedinQualifications />
+                {linkedinCertification && <FormFields.Certifications />}
+                <FormFields.LinkedinKSAs />
+              </>
+            )}
+            {subform === "LinkedInSearch" && request.data && (
+              <>
+                <FormFields.LinkedinSearchTitles />
+                <FormFields.LinkedinSearchSkills />
+                <FormFields.LinkedinSearchEmployers />
+                <FormFields.LinkedinSearchStudies />
+                <FormFields.LinkedinSearchKeywords />
+                <FormFields.LinkedinSearchComments />
+              </>
+            )}
+            {subform === "USAJobs" && request.data && (
+              <FormFields.CloseDateUsaJobs />
             )}
           </form>
         </FormProvider>
