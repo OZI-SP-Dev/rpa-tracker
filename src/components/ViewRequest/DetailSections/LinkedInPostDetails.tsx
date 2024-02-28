@@ -3,7 +3,6 @@ import {
   AccordionHeader,
   AccordionItem,
   AccordionPanel,
-  AccordionToggleEventHandler,
   Button,
   Card,
   CardHeader,
@@ -12,7 +11,7 @@ import {
 import { useRequest } from "api/requestsApi";
 import { useParams } from "react-router-dom";
 import { EditIcon } from "@fluentui/react-icons-mdl2";
-import { useState } from "react";
+import { LinkedInLogoIcon } from "@fluentui/react-icons-mdl2-branded";
 import ViewRequestLIJobPostDetails from "../Methods/LinkedInJobPost";
 
 const LinkedInPostDetails = ({
@@ -24,16 +23,26 @@ const LinkedInPostDetails = ({
 }) => {
   const params = useParams();
   const request = useRequest(Number(params.requestId));
-  const [openItems, setOpenItems] = useState<string[]>([]);
-
-  const handleToggle: AccordionToggleEventHandler<string> = (_e, data) => {
-    setOpenItems(data.openItems);
-  };
 
   return (
     <Card style={{ margin: "0.25em 0px" }}>
       <CardHeader
-        header={<Subtitle1>LinkedIn Job Posting</Subtitle1>}
+        header={
+          <Accordion collapsible>
+            <AccordionItem value="linkedinPost">
+              <AccordionHeader
+                icon={<LinkedInLogoIcon style={{ color: "#0077B5" }} />}
+              >
+                <Subtitle1>LinkedIn Job Posting</Subtitle1>
+              </AccordionHeader>
+              <AccordionPanel>
+                {request.data && (
+                  <ViewRequestLIJobPostDetails data={request.data} />
+                )}
+              </AccordionPanel>
+            </AccordionItem>
+          </Accordion>
+        }
         action={
           <Button
             appearance="transparent"
@@ -48,19 +57,6 @@ const LinkedInPostDetails = ({
           </Button>
         }
       />
-      <Accordion openItems={openItems} onToggle={handleToggle} collapsible>
-        <AccordionItem value="linkedinPost">
-          <AccordionHeader>
-            {openItems.length === 0 && "Show details..."}
-            {openItems.length > 0 && "Hide details..."}
-          </AccordionHeader>
-          <AccordionPanel>
-            {request.data && (
-              <ViewRequestLIJobPostDetails data={request.data} />
-            )}
-          </AccordionPanel>
-        </AccordionItem>
-      </Accordion>
     </Card>
   );
 };

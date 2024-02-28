@@ -46,7 +46,7 @@ const EditDrawer = ({
 
   // Reset the form if request.data changes and when form is opened/closed
   useEffect(() => {
-    if (request.data) {
+    if (request.data && isOpen) {
       // Remove Author and Created properties from data object
       const { Author, Created, ...data } = request.data ?? {};
       myForm.reset(data);

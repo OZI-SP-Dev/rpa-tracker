@@ -1,4 +1,8 @@
 import {
+  Accordion,
+  AccordionHeader,
+  AccordionItem,
+  AccordionPanel,
   Button,
   Card,
   CardHeader,
@@ -7,7 +11,7 @@ import {
 import ViewRequestLCMCDetails from "../Methods/LCMC";
 import { useRequest } from "api/requestsApi";
 import { useParams } from "react-router-dom";
-import { EditIcon } from "@fluentui/react-icons-mdl2";
+import { BoardsIcon, EditIcon } from "@fluentui/react-icons-mdl2";
 
 const JobBoardDetails = ({
   setEditSection,
@@ -22,7 +26,18 @@ const JobBoardDetails = ({
   return (
     <Card style={{ margin: "0.25em 0px" }}>
       <CardHeader
-        header={<Subtitle1>LCMC Job Board</Subtitle1>}
+        header={
+          <Accordion collapsible defaultOpenItems="lcmc">
+            <AccordionItem value="lcmc">
+              <AccordionHeader icon={<BoardsIcon />}>
+                <Subtitle1>LCMC Job Board</Subtitle1>
+              </AccordionHeader>
+              <AccordionPanel>
+                {request.data && <ViewRequestLCMCDetails data={request.data} />}
+              </AccordionPanel>
+            </AccordionItem>
+          </Accordion>
+        }
         action={
           <Button
             appearance="transparent"
@@ -37,9 +52,6 @@ const JobBoardDetails = ({
           </Button>
         }
       />
-      <div style={{ margin: "0px var(--spacingHorizontalM)" }}>
-        {request.data && <ViewRequestLCMCDetails data={request.data} />}
-      </div>
     </Card>
   );
 };
