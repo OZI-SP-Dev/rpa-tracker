@@ -25,33 +25,33 @@ const JobBoardDetails = ({
 
   return (
     <Card style={{ margin: "0.25em 0px" }}>
-      <CardHeader
-        header={
-          <Accordion collapsible defaultOpenItems="lcmc">
-            <AccordionItem value="lcmc">
+      <Accordion collapsible defaultOpenItems="lcmc">
+        <AccordionItem value="lcmc">
+          <CardHeader
+            header={
               <AccordionHeader icon={<BoardsIcon />}>
                 <Subtitle1>LCMC Job Board</Subtitle1>
               </AccordionHeader>
-              <AccordionPanel>
-                {request.data && <ViewRequestLCMCDetails data={request.data} />}
-              </AccordionPanel>
-            </AccordionItem>
-          </Accordion>
-        }
-        action={
-          <Button
-            appearance="transparent"
-            icon={<EditIcon />}
-            aria-label="Edit"
-            onClick={() => {
-              setEditSection("JobBoard");
-              setIsEditOpen(true);
-            }}
-          >
-            Edit
-          </Button>
-        }
-      />
+            }
+            action={
+              <Button
+                appearance="transparent"
+                icon={<EditIcon />}
+                aria-label="Edit"
+                onClick={() => {
+                  setEditSection("JobBoard");
+                  setIsEditOpen(true);
+                }}
+              >
+                Edit
+              </Button>
+            }
+          />
+          <AccordionPanel>
+            {request.data && <ViewRequestLCMCDetails data={request.data} />}
+          </AccordionPanel>
+        </AccordionItem>
+      </Accordion>
     </Card>
   );
 };

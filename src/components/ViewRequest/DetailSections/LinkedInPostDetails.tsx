@@ -26,37 +26,37 @@ const LinkedInPostDetails = ({
 
   return (
     <Card style={{ margin: "0.25em 0px" }}>
-      <CardHeader
-        header={
-          <Accordion collapsible>
-            <AccordionItem value="linkedinPost">
+      <Accordion collapsible>
+        <AccordionItem value="linkedinPost">
+          <CardHeader
+            header={
               <AccordionHeader
                 icon={<LinkedInLogoIcon style={{ color: "#0077B5" }} />}
               >
                 <Subtitle1>LinkedIn Job Posting</Subtitle1>
               </AccordionHeader>
-              <AccordionPanel>
-                {request.data && (
-                  <ViewRequestLIJobPostDetails data={request.data} />
-                )}
-              </AccordionPanel>
-            </AccordionItem>
-          </Accordion>
-        }
-        action={
-          <Button
-            appearance="transparent"
-            icon={<EditIcon />}
-            aria-label="Edit"
-            onClick={() => {
-              setEditSection("LinkedInPost");
-              setIsEditOpen(true);
-            }}
-          >
-            Edit
-          </Button>
-        }
-      />
+            }
+            action={
+              <Button
+                appearance="transparent"
+                icon={<EditIcon />}
+                aria-label="Edit"
+                onClick={() => {
+                  setEditSection("LinkedInPost");
+                  setIsEditOpen(true);
+                }}
+              >
+                Edit
+              </Button>
+            }
+          />
+          <AccordionPanel>
+            {request.data && (
+              <ViewRequestLIJobPostDetails data={request.data} />
+            )}
+          </AccordionPanel>
+        </AccordionItem>
+      </Accordion>
     </Card>
   );
 };

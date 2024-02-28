@@ -25,37 +25,37 @@ const USAJobsDetails = ({
 
   return (
     <Card style={{ margin: "0.25em 0px" }}>
-      <CardHeader
-        header={
-          <Accordion collapsible defaultOpenItems="usaJobsFlyer">
-            <AccordionItem value="usaJobsFlyer">
+      <Accordion collapsible defaultOpenItems="usaJobsFlyer">
+        <AccordionItem value="usaJobsFlyer">
+          <CardHeader
+            header={
               <AccordionHeader
                 icon={<AirplaneIcon style={{ color: "#120A8F" }} />}
               >
                 <Subtitle1>USA Jobs</Subtitle1>
               </AccordionHeader>
-              <AccordionPanel>
-                {request.data && (
-                  <ViewRequestJobsFlyerDetails data={request.data} />
-                )}
-              </AccordionPanel>
-            </AccordionItem>
-          </Accordion>
-        }
-        action={
-          <Button
-            appearance="transparent"
-            icon={<EditIcon />}
-            aria-label="Edit"
-            onClick={() => {
-              setEditSection("LinkedInPost");
-              setIsEditOpen(true);
-            }}
-          >
-            Edit
-          </Button>
-        }
-      />
+            }
+            action={
+              <Button
+                appearance="transparent"
+                icon={<EditIcon />}
+                aria-label="Edit"
+                onClick={() => {
+                  setEditSection("LinkedInPost");
+                  setIsEditOpen(true);
+                }}
+              >
+                Edit
+              </Button>
+            }
+          />
+          <AccordionPanel>
+            {request.data && (
+              <ViewRequestJobsFlyerDetails data={request.data} />
+            )}
+          </AccordionPanel>
+        </AccordionItem>
+      </Accordion>
     </Card>
   );
 };
