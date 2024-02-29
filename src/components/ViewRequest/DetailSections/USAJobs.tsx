@@ -41,7 +41,7 @@ const USAJobsDetails = ({
                 icon={<EditIcon />}
                 aria-label="Edit"
                 onClick={() => {
-                  setEditSection("LinkedInPost");
+                  setEditSection("usaJobsFlyer");
                   setIsEditOpen(true);
                 }}
               >

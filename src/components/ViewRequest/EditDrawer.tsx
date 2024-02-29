@@ -46,7 +46,7 @@ const EditDrawer = ({
 
   // Reset the form if request.data changes and when form is opened/closed
   useEffect(() => {
-    if (request.data && isOpen) {
+    if (request.data) {
       // Remove Author and Created properties from data object
       const { Author, Created, ...data } = request.data ?? {};
       myForm.reset(data);
@@ -153,7 +153,7 @@ const EditDrawer = ({
                 <FormFields.LinkedinSearchComments />
               </>
             )}
-            {subform === "USAJobs" && request.data && (
+            {subform === "usaJobsFlyer" && request.data && (
               <FormFields.CloseDateUsaJobs />
             )}
           </form>
