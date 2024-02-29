@@ -5,7 +5,6 @@ const Done = ({ gotoStep }: { gotoStep: (step: string) => void }) => {
   const form = useFormContext();
 
   const values = form.getValues();
-  console.log("Values:", values);
 
   const HiringInfo =
     values.advertisementLength === "" || values.methods.length === 0;
