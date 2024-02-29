@@ -117,24 +117,26 @@ function reducer(
   action: ActionType
 ) {
   switch (action.type) {
-    case "next_page":
+    case "next_page": {
       const nextPage = INPUTSTEPS.get(state.page)?.next(action.payload ?? []);
-
       return nextPage ? { ...state, page: nextPage } : state;
-
-    case "prev_page":
+    }
+    case "prev_page": {
       const prevPage = INPUTSTEPS.get(state.page)?.prev(action.payload ?? []);
       return prevPage ? { ...state, page: prevPage } : state;
-
-    case "reset":
+    }
+    case "reset": {
       return { page: "RoutingInfo" };
+    }
 
-    case "goto":
+    case "goto": {
       const step = action.payload?.[0];
       return step ? { ...state, page: step } : state;
+    }
 
-    default:
+    default: {
       return state;
+    }
   }
 }
 

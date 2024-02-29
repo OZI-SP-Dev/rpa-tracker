@@ -17,6 +17,7 @@ const getNoteItem = async (requestId: number) => {
     .items.filter(`Title eq ${requestId}`)();
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const selectNoteId = (noteItems: any) => {
   const noteId = noteItems[0]?.Id;
   if (noteId) {

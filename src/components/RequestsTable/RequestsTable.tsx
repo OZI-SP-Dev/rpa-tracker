@@ -35,7 +35,7 @@ import UserAvatar from "./UserAvatar";
 
 const PositionTitle = createTableColumn<RPARequest>({
   columnId: "positionTitle",
-  compare: (_a, _b) => 0, // Change nothing, but utilize table's sorting icons
+  compare: () => 0, // Change nothing, but utilize table's sorting icons
   renderHeaderCell: (filtered = false) => {
     return <>Position Title {filtered && <FilterIcon />}</>;
   },
@@ -50,7 +50,7 @@ const PositionTitle = createTableColumn<RPARequest>({
 
 const RequestType = createTableColumn<RPARequest>({
   columnId: "requestType",
-  compare: (_a, _b) => 0, // Change nothing, but utilize table's sorting icons
+  compare: () => 0, // Change nothing, but utilize table's sorting icons
   renderHeaderCell: (filtered = false) => {
     return <>Request Type {filtered && <FilterIcon />}</>;
   },
@@ -61,7 +61,7 @@ const RequestType = createTableColumn<RPARequest>({
 
 const PaySystem = createTableColumn<RPARequest>({
   columnId: "paySystem",
-  compare: (_a, _b) => 0, // Change nothing, but utilize table's sorting icons
+  compare: () => 0, // Change nothing, but utilize table's sorting icons
   renderHeaderCell: (filtered = false) => {
     return <>System {filtered && <FilterIcon />}</>;
   },
@@ -72,7 +72,7 @@ const PaySystem = createTableColumn<RPARequest>({
 
 const Series = createTableColumn<RPARequest>({
   columnId: "series",
-  compare: (_a, _b) => 0, // Change nothing, but utilize table's sorting icons
+  compare: () => 0, // Change nothing, but utilize table's sorting icons
   renderHeaderCell: (filtered = false) => {
     return <>Series {filtered && <FilterIcon />}</>;
   },
@@ -83,7 +83,7 @@ const Series = createTableColumn<RPARequest>({
 
 const Grade = createTableColumn<RPARequest>({
   columnId: "grade",
-  compare: (_a, _b) => 0, // Change nothing, but utilize table's sorting icons
+  compare: () => 0, // Change nothing, but utilize table's sorting icons
   renderHeaderCell: (filtered = false) => {
     return <>Grade {filtered && <FilterIcon />}</>;
   },
@@ -94,7 +94,7 @@ const Grade = createTableColumn<RPARequest>({
 
 const OfficeSymbol = createTableColumn<RPARequest>({
   columnId: "officeSymbol",
-  compare: (_a, _b) => 0, // Change nothing, but utilize table's sorting icons
+  compare: () => 0, // Change nothing, but utilize table's sorting icons
   renderHeaderCell: (filtered = false) => {
     return <>Office Symbol {filtered && <FilterIcon />}</>;
   },
@@ -105,7 +105,7 @@ const OfficeSymbol = createTableColumn<RPARequest>({
 
 const Requestor = createTableColumn<RPARequest>({
   columnId: "Author",
-  compare: (_a, _b) => 0, // Change nothing, but utilize table's sorting icons
+  compare: () => 0, // Change nothing, but utilize table's sorting icons
   renderHeaderCell: (filtered = false) => {
     return <>Requestor {filtered && <FilterIcon />}</>;
   },
@@ -126,7 +126,7 @@ const Requestor = createTableColumn<RPARequest>({
 
 const CurrentStage = createTableColumn<RPARequest>({
   columnId: "stage",
-  compare: (_a, _b) => 0, // Change nothing, but utilize table's sorting icons
+  compare: () => 0, // Change nothing, but utilize table's sorting icons
   renderHeaderCell: (filtered = false) => {
     return <>Current Stage {filtered && <FilterIcon />}</>;
   },
@@ -141,7 +141,7 @@ const CurrentStage = createTableColumn<RPARequest>({
 
 const CreatedDate = createTableColumn<RPARequest>({
   columnId: "Created",
-  compare: (_a, _b) => 0, // Change nothing, but utilize table's sorting icons
+  compare: () => 0, // Change nothing, but utilize table's sorting icons
   renderHeaderCell: (filtered = false) => {
     return <>Created {filtered && <FilterIcon />}</>;
   },
@@ -182,7 +182,7 @@ const RequestsTable = () => {
 
   const onColumnResize = useCallback(
     (
-      _e: any,
+      _e: unknown,
       { columnId, width }: { columnId: TableColumnId; width: number }
     ) => {
       setColumnSizingOptions((state) => ({

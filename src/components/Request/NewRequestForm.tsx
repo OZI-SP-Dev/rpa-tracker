@@ -162,7 +162,7 @@ const NewRequestForm = () => {
     } else {
       myForm.reset(defaultValues);
     }
-  }, [request.data, params.requestId]);
+  }, [request.data, params.requestId, myForm]);
 
   const createNewRequest = async (data: RHFRequest) => {
     const data2 = {

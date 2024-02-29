@@ -150,8 +150,8 @@ export const useRequest = (requestId: number) => {
   });
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const getPagedRequests = async (
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data: any,
   sortParams: SortParams,
   filterParams: RequestFilter[]

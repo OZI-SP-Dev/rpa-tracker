@@ -51,7 +51,7 @@ const EditDrawer = ({
       const { Author, Created, ...data } = request.data ?? {};
       myForm.reset(data);
     }
-  }, [request.data, isOpen]);
+  }, [request.data, isOpen, myForm]);
 
   useEffect(() => {
     if (updateRequest.isSuccess) {
@@ -62,7 +62,7 @@ const EditDrawer = ({
 
       return () => clearTimeout(timeOut);
     }
-  }, [updateRequest.isSuccess]);
+  }, [updateRequest.isSuccess, setIsOpen, updateRequest]);
 
   const onSubmit: SubmitHandler<RPARequest> = (data) => {
     console.log(data);
