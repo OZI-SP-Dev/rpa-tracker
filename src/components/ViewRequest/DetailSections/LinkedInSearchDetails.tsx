@@ -27,7 +27,7 @@ const LinkedInSearchDetails = ({
   return (
     <Card style={{ margin: "0.25em 0px" }}>
       <Accordion collapsible>
-        <AccordionItem value="linkedinPost">
+        <AccordionItem value="LinkedInSearch">
           <CardHeader
             header={
               <AccordionHeader
