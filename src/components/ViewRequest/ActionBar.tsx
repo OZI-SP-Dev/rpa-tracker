@@ -3,12 +3,12 @@ import ReworkRequest from "./Actions/ReworkRequest";
 import EditRequest from "./Actions/EditRequest";
 import DeleteRequest from "./Actions/DeleteRequest";
 
-const ActionBar = () => {
+const ActionBar = ({ openEditForm }: { openEditForm: () => void }) => {
   return (
     <div style={{ display: "flex", flexDirection: "column" }}>
       <SendRequest />
       <ReworkRequest />
-      <EditRequest />
+      <EditRequest openEditForm={openEditForm} />
       <DeleteRequest />
     </div>
   );

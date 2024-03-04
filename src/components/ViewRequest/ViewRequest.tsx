@@ -4,18 +4,31 @@ import ViewRequestDetails from "components/ViewRequest/Details";
 import ViewRequestDocuments from "components/ViewRequest/Documents";
 import ViewRequestNotes from "./Notes";
 import "./ViewRequest.css";
+import { useState } from "react";
+import EditDrawer from "./EditDrawer";
 
 const ViewRequest = () => {
+  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [editSection, setEditSection] = useState("RoutingInfo");
+
   return (
     <section id="viewRequestContainer">
       <aside id="viewRequestActionBar" className="gray-gradiant">
-        <ActionBar />
+        <ActionBar
+          openEditForm={() => {
+            setEditSection("RoutingInfo");
+            setIsEditOpen(true);
+          }}
+        />
       </aside>
       <section id="viewRequestHeader" className="gray-gradiant">
         <StatusBar />
       </section>
       <section id="viewRequestDetailsContainer">
-        <ViewRequestDetails />
+        <ViewRequestDetails
+          setEditSection={setEditSection}
+          setIsEditOpen={setIsEditOpen}
+        />
       </section>
       <section id="viewRequestNotes">
         <ViewRequestNotes />
@@ -23,6 +36,11 @@ const ViewRequest = () => {
       <aside id="viewRequestDocuments">
         <ViewRequestDocuments />
       </aside>
+      <EditDrawer
+        isOpen={isEditOpen}
+        setIsOpen={setIsEditOpen}
+        subform={editSection}
+      />
     </section>
   );
 };

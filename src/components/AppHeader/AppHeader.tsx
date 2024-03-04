@@ -67,7 +67,7 @@ export const AppHeader = () => {
         <Link className={classes.navLink} to="/">
           <Text className={classes.navHeaderSiteName}>{title}</Text>
         </Link>
-        <Link to="/new" className={classes.navLink}>
+        <Link to="/New" className={classes.navLink}>
           New Request
         </Link>
         <Popover trapFocus={true} closeOnScroll={true} withArrow={true}>

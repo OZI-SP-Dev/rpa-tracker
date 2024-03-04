@@ -1,4 +1,4 @@
-import { DatePicker, IDatePickerProps } from "@fluentui/react";
+import { DatePicker, DatePickerProps } from "@fluentui/react-datepicker-compat";
 import { InfoLabel, Text } from "@fluentui/react-components";
 import { FieldValues, useController, useFormContext } from "react-hook-form";
 import { BaseFormField } from "components/BaseFormFields/BaseTypeDef";
@@ -11,7 +11,7 @@ const BACDatePicker = <T extends FieldValues>({
   rules,
   fieldProps,
 }: BaseFormField<T> & {
-  fieldProps?: Partial<IDatePickerProps>;
+  fieldProps?: Partial<DatePickerProps>;
 }) => {
   const form = useFormContext<T>();
 
@@ -40,7 +40,7 @@ const BACDatePicker = <T extends FieldValues>({
         aria-describedby={name + "Err"}
         aria-invalid={fieldState.error ? "true" : "false"}
         placeholder="Select a date..."
-        ariaLabel={
+        aria-label={
           field.value
             ? labelText +
               " has selected date of " +

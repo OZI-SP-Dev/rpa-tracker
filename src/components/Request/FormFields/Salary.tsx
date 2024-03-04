@@ -4,9 +4,10 @@ import "components/Request/Request.css";
 import { NumberFieldIcon } from "@fluentui/react-icons-mdl2";
 import { RHFRequest } from "components/Request/NewRequestForm";
 import "components/Request/Request.css";
+import { RPARequest } from "api/requestsApi";
 
 const Salary = () => {
-  const form = useFormContext<RHFRequest>();
+  const form = useFormContext<RHFRequest | RPARequest>();
   const name = "salary";
 
   return (
@@ -29,7 +30,8 @@ const Salary = () => {
               message: "Salary must be at least 5 digits",
             },
             validate: (value) => {
-              return value >= Number(form.getValues("salaryHigh"))
+              return value !== undefined &&
+                value >= Number(form.getValues("salaryHigh"))
                 ? "Salary range must be low to high"
                 : undefined;
             },
@@ -38,7 +40,7 @@ const Salary = () => {
             <Input
               {...field}
               contentBefore={<Text>$</Text>}
-              value={field.value.toString()}
+              value={field.value?.toString()}
               type="number"
               aria-label="Min Salary"
               aria-describedby={name + "Err"}
@@ -66,7 +68,8 @@ const Salary = () => {
               message: "Salary must be at least 5 digits",
             },
             validate: (value) => {
-              return value <= Number(form.getValues("salaryLow"))
+              return value !== undefined &&
+                value <= Number(form.getValues("salaryLow"))
                 ? "Salary range must be low to high"
                 : undefined;
             },
@@ -75,7 +78,7 @@ const Salary = () => {
             <Input
               {...field}
               contentBefore={<Text>$</Text>}
-              value={field.value.toString()}
+              value={field.value?.toString()}
               type="number"
               aria-label="Max Salary"
               aria-describedby={name + "Err"}

@@ -93,6 +93,7 @@ const ViewRequestNotes = () => {
       <div style={{ display: "flex" }}>
         <Title2>Notes</Title2>
         <Button
+          appearance="primary"
           disabled={notes.isLoading || notes.isError}
           style={{ marginLeft: "auto" }}
           icon={<CommentAddIcon />}
@@ -111,7 +112,7 @@ const ViewRequestNotes = () => {
               <Card
                 key={"note" + note.id}
                 appearance="filled-alternative"
-                style={{ margin: "0.25em 0" }}
+                style={{ margin: "0.25em 0", backgroundColor: "#ffc" }}
               >
                 <CardHeader
                   header={

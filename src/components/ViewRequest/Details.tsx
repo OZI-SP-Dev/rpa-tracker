@@ -1,30 +1,22 @@
-import {
-  Accordion,
-  AccordionHeader,
-  AccordionItem,
-  AccordionPanel,
-  AccordionToggleEventHandler,
-  Label,
-  Text,
-  Title2,
-  Title3,
-} from "@fluentui/react-components";
+import { Label, Text, Title2, Title3 } from "@fluentui/react-components";
 import { useRequest } from "api/requestsApi";
 import { useParams } from "react-router-dom";
-import ViewRequestLCMCDetails from "./Methods/LCMC";
-import ViewRequestJOADetails from "./Methods/JOA";
-import ViewRequestLIJobPostDetails from "./Methods/LinkedInJobPost";
-import ViewRequestLISearchDetails from "./Methods/LinkedInSearch";
-import ViewRequestJobsFlyerDetails from "./Methods/JobsFlyer";
-import { useState } from "react";
+import JobBoardDetails from "./DetailSections/JobBoardDetails";
+import JOADetails from "./DetailSections/JOADetails";
+import LinkedInPostDetails from "./DetailSections/LinkedInPostDetails";
+import LinkedInSearchDetails from "./DetailSections/LinkedInSearchDetails";
+import USAJobsDetails from "./DetailSections/USAJobs";
+import ResumeSearchDetails from "./DetailSections/ResumeSearchDetails";
 
-const ViewRequestDetails = () => {
+const ViewRequestDetails = ({
+  setEditSection,
+  setIsEditOpen,
+}: {
+  setEditSection: (section: string) => void;
+  setIsEditOpen: (open: boolean) => void;
+}) => {
   const params = useParams();
   const request = useRequest(Number(params.requestId));
-  const [openItems, setOpenItems] = useState<string[]>([]);
-  const handleToggle: AccordionToggleEventHandler<string> = (_e, data) => {
-    setOpenItems(data.openItems);
-  };
 
   return (
     <>
@@ -117,65 +109,39 @@ const ViewRequestDetails = () => {
           </article>
           <br />
           <Title3>Announcement Method(s) and details</Title3>
-          <Accordion
-            openItems={openItems}
-            onToggle={handleToggle}
-            multiple
-            collapsible
-          >
-            {request.data.methods.includes("lcmc") && (
-              <AccordionItem value="lcmc">
-                <AccordionHeader>LCMC Job Board</AccordionHeader>
-                <AccordionPanel>
-                  <ViewRequestLCMCDetails data={request.data} />
-                </AccordionPanel>
-              </AccordionItem>
-            )}
-            {request.data.methods.includes("joa") && (
-              <AccordionItem value="joa">
-                <AccordionHeader>JOA</AccordionHeader>
-                <AccordionPanel>
-                  <ViewRequestJOADetails data={request.data} />
-                </AccordionPanel>
-              </AccordionItem>
-            )}
-
-            {request.data.methods.includes("linkedinPost") && (
-              <AccordionItem value="linkedinPost">
-                <AccordionHeader>LinkedIn Job Posting</AccordionHeader>
-                <AccordionPanel>
-                  <ViewRequestLIJobPostDetails data={request.data} />
-                </AccordionPanel>
-              </AccordionItem>
-            )}
-
-            {request.data.methods.includes("linkedinSearch") && (
-              <AccordionItem value="linkedinSearch">
-                <AccordionHeader>LinkedIn Profile Search</AccordionHeader>
-                <AccordionPanel>
-                  <ViewRequestLISearchDetails data={request.data} />
-                </AccordionPanel>
-              </AccordionItem>
-            )}
-
-            {request.data.methods.includes("resumeSearch") && (
-              <AccordionItem value="resumeSearch">
-                <AccordionHeader>Resume Search</AccordionHeader>
-                <AccordionPanel>
-                  <Text>Resume Search Selected</Text>
-                </AccordionPanel>
-              </AccordionItem>
-            )}
-
-            {request.data.methods.includes("usaJobsFlyer") && (
-              <AccordionItem value="usaJobsFlyer">
-                <AccordionHeader>USA Jobs Flyer</AccordionHeader>
-                <AccordionPanel>
-                  <ViewRequestJobsFlyerDetails data={request.data} />
-                </AccordionPanel>
-              </AccordionItem>
-            )}
-          </Accordion>
+          {request.data.methods.includes("lcmc") && (
+            <JobBoardDetails
+              setEditSection={setEditSection}
+              setIsEditOpen={setIsEditOpen}
+            />
+          )}
+          {request.data.methods.includes("joa") && (
+            <JOADetails
+              setEditSection={setEditSection}
+              setIsEditOpen={setIsEditOpen}
+            />
+          )}
+          {request.data.methods.includes("linkedinPost") && (
+            <LinkedInPostDetails
+              setEditSection={setEditSection}
+              setIsEditOpen={setIsEditOpen}
+            />
+          )}
+          {request.data.methods.includes("linkedinSearch") && (
+            <LinkedInSearchDetails
+              setEditSection={setEditSection}
+              setIsEditOpen={setIsEditOpen}
+            />
+          )}
+          {request.data.methods.includes("resumeSearch") && (
+            <ResumeSearchDetails />
+          )}
+          {request.data.methods.includes("usaJobsFlyer") && (
+            <USAJobsDetails
+              setEditSection={setEditSection}
+              setIsEditOpen={setIsEditOpen}
+            />
+          )}
         </>
       )}
       {request.isError && (
