@@ -65,7 +65,6 @@ const EditDrawer = ({
   }, [updateRequest.isSuccess, setIsOpen, updateRequest]);
 
   const onSubmit: SubmitHandler<RPARequest> = (data) => {
-    console.log(data);
     updateRequest.mutateAsync(data);
   };
 
