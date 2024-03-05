@@ -14,6 +14,7 @@ import {
   ToastTrigger,
   useToastController,
 } from "@fluentui/react-components";
+import { useAddEvent } from "./eventsApi";
 
 const PAGESIZE = 5;
 
@@ -341,6 +342,7 @@ export const useDeleteRequest = () => {
 
 export const useUpdateStage = () => {
   const queryClient = useQueryClient();
+  const addEvent = useAddEvent();
   const { dispatchToast } = useToastController("toaster");
 
   return useMutation(
@@ -348,6 +350,7 @@ export const useUpdateStage = () => {
     async (request: {
       requestId: number;
       newStage: (typeof STAGES)[number]["key"];
+      eventTitle?: string;
     }) => {
       await spWebContext.web.lists
         .getByTitle("requests")
@@ -363,6 +366,12 @@ export const useUpdateStage = () => {
           </Toast>,
           { intent: "success" }
         );
+        if (request.eventTitle) {
+          addEvent.mutate({
+            Title: request.eventTitle,
+            requestId: request.requestId,
+          });
+        }
       },
       onError: async (error) => {
         console.log(error);

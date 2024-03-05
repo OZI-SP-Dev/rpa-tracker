@@ -24,7 +24,13 @@ const ReworkRequest = () => {
   const updateHandler = () => {
     if (request.data && currentStage && currentStage.previous !== "") {
       const newStage = currentStage.previous;
-      updateStage.mutate({ requestId, newStage });
+      updateStage.mutate({
+        requestId,
+        newStage,
+        ...(currentStage.previousEventTitle && {
+          eventTitle: currentStage.previousEventTitle,
+        }),
+      });
     }
   };
 

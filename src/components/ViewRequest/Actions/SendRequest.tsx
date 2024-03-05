@@ -25,7 +25,13 @@ const SendRequest = () => {
   const updateHandler = () => {
     if (request.data && currentStage && currentStage.next !== "") {
       const newStage = currentStage.next;
-      updateStage.mutate({ requestId, newStage });
+      updateStage.mutate({
+        requestId,
+        newStage,
+        ...(currentStage.nextEventTitle && {
+          eventTitle: currentStage.nextEventTitle,
+        }),
+      });
     }
   };
 
