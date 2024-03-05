@@ -1,5 +1,5 @@
 import { Card, CardHeader, Subtitle1 } from "@fluentui/react-components";
-import { DocumentSearchRegular } from "@fluentui/react-icons/lib/fonts";
+import { DocumentSearchRegular } from "@fluentui/react-icons";
 
 const ResumeSearchDetails = () => {
   return (
