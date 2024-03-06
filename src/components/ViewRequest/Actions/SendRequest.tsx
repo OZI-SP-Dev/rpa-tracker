@@ -23,14 +23,13 @@ const SendRequest = () => {
   const currentStage = STAGES.find(({ key }) => key === request.data?.stage);
 
   const updateHandler = () => {
-    if (request.data && currentStage && currentStage.next !== "") {
+    if (request.data && currentStage && currentStage.next) {
       const newStage = currentStage.next;
+      const eventTitle = currentStage.nextEventTitle;
       updateStage.mutate({
         requestId,
         newStage,
-        ...(currentStage.nextEventTitle && {
-          eventTitle: currentStage.nextEventTitle,
-        }),
+        eventTitle,
       });
     }
   };
@@ -47,7 +46,7 @@ const SendRequest = () => {
             }}
             icon={<NavigateForwardIcon className="orange" />}
             size="large"
-            disabled={(currentStage?.next ?? "") === ""}
+            disabled={!currentStage?.next}
           />
         </Tooltip>
       </DialogTrigger>

@@ -1,11 +1,31 @@
-interface STAGE {
+interface STARTSTAGE {
   key: string;
   text: string;
   next: string;
-  nextEventTitle?: string;
-  previous: string;
-  previousEventTitle?: string;
+  nextEventTitle: string;
+  previous: undefined;
+  previousEventTitle: undefined;
 }
+
+interface MIDSTAGE {
+  key: string;
+  text: string;
+  next: string;
+  nextEventTitle: string;
+  previous: string;
+  previousEventTitle: string;
+}
+
+interface ENDSTAGE {
+  key: string;
+  text: string;
+  next: undefined;
+  nextEventTitle: undefined;
+  previous: undefined;
+  previousEventTitle: undefined;
+}
+
+type STAGE = STARTSTAGE | MIDSTAGE | ENDSTAGE;
 
 export const STAGES: ReadonlyArray<STAGE> = [
   {
@@ -13,7 +33,8 @@ export const STAGES: ReadonlyArray<STAGE> = [
     text: "In Draft",
     next: "PackageReview",
     nextEventTitle: "Forward Stage Change: In Draft to Package Review",
-    previous: "",
+    previous: undefined,
+    previousEventTitle: undefined,
   },
   {
     key: "PackageReview",
@@ -67,7 +88,9 @@ export const STAGES: ReadonlyArray<STAGE> = [
   {
     key: "Complete",
     text: "Complete",
-    next: "",
-    previous: "",
+    next: undefined,
+    nextEventTitle: undefined,
+    previous: undefined,
+    previousEventTitle: undefined,
   },
 ] as const;

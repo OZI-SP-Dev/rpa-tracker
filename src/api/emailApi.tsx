@@ -11,10 +11,15 @@ import {
   useToastController,
 } from "@fluentui/react-components";
 
+export type EmailProperties = Omit<
+  IEmailProperties,
+  "AdditionalHeaders" | "From"
+>;
+
 const useLogEmail = () => {
   return useMutation(
     ["logEmail"],
-    async (requestEmail: { email: IEmailProperties; requestId: number }) => {
+    async (requestEmail: { email: EmailProperties; requestId: number }) => {
       return spWebContext.web.lists
         .getByTitle("emails")
         .items.add({ Title: requestEmail.requestId, ...requestEmail.email });
@@ -27,8 +32,8 @@ export const useSendEmail = () => {
   const { dispatchToast } = useToastController("toaster");
   return useMutation(
     ["sendEmail"],
-    async (requestEmail: { email: IEmailProperties; requestId: number }) => {
-      let email = structuredClone(requestEmail.email);
+    async (requestEmail: { email: EmailProperties; requestId: number }) => {
+      let email: IEmailProperties = structuredClone(requestEmail.email);
       email.AdditionalHeaders = { "content-type": "text/html" };
       email.Body = email.Body.replace(/\n/g, "<BR>");
       return spWebContext.utility.sendEmail(email);

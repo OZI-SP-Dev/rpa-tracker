@@ -350,7 +350,7 @@ export const useUpdateStage = () => {
     async (request: {
       requestId: number;
       newStage: (typeof STAGES)[number]["key"];
-      eventTitle?: string;
+      eventTitle: string;
     }) => {
       await spWebContext.web.lists
         .getByTitle("requests")
@@ -366,12 +366,10 @@ export const useUpdateStage = () => {
           </Toast>,
           { intent: "success" }
         );
-        if (request.eventTitle) {
-          addEvent.mutate({
-            Title: request.eventTitle,
-            requestId: request.requestId,
-          });
-        }
+        addEvent.mutate({
+          Title: request.eventTitle,
+          requestId: request.requestId,
+        });
       },
       onError: async (error) => {
         console.log(error);
