@@ -23,7 +23,7 @@ const ReworkRequest = () => {
   const currentStage = STAGES.find(({ key }) => key === request.data?.stage);
 
   const updateHandler = () => {
-    if (request.data && currentStage && currentStage.previous) {
+    if (request.data && currentStage?.previous) {
       const newStage = currentStage.previous;
       const eventTitle = currentStage.previousEventTitle;
       updateStage.mutate({

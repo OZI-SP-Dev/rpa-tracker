@@ -23,7 +23,7 @@ const SendRequest = () => {
   const currentStage = STAGES.find(({ key }) => key === request.data?.stage);
 
   const updateHandler = () => {
-    if (request.data && currentStage && currentStage.next) {
+    if (request.data && currentStage?.next) {
       const newStage = currentStage.next;
       const eventTitle = currentStage.nextEventTitle;
       updateStage.mutate({
