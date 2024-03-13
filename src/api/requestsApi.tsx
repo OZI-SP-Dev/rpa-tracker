@@ -15,6 +15,7 @@ import {
   useToastController,
 } from "@fluentui/react-components";
 import { useAddEvent } from "./eventsApi";
+import { FieldValues } from "react-hook-form";
 
 const PAGESIZE = 5;
 
@@ -619,3 +620,60 @@ export interface RequestFilter {
   modifier?: string;
   queryString: string;
 }
+
+/** This function is used to validate if all fields are populated for a Draft Request
+ * @param values - An object containing the request form values
+ * @returns Object contianing whether any section had errors
+ */
+
+export const validateRequest = (values: FieldValues) => {
+  const HiringInfo =
+    values.advertisementLength === "" || values.methods.length === 0;
+
+  const JobBoard: boolean =
+    values.methods.includes("lcmc") && values.closeDateLCMC === undefined;
+
+  const JOA: boolean =
+    values.methods.includes("joa") &&
+    (!values.closeDateJOA ||
+      !values.organizationalPOC ||
+      !values.issueTo ||
+      !values.fullPartTime ||
+      !values.salaryLow ||
+      !values.salaryHigh ||
+      !values.telework ||
+      !values.remote ||
+      !values.pcs ||
+      !values.joaQualifications ||
+      !values.joaIdealCandidate);
+
+  const LinkedInPost: boolean =
+    values.methods.includes("linkedinPost") &&
+    (!values.temporary ||
+      !values.salaryLow ||
+      !values.salaryHigh ||
+      !(values.temporary === "Full-Time" ? true : values.nte) ||
+      !values.incentives ||
+      !values.telework ||
+      !values.linkedinPositionSummary ||
+      !(
+        !values.linkedinQualifications.includes("certification") ||
+        values.dcwf.length > 0
+      ) ||
+      !values.linkedinKSAs);
+
+  const USAJobs: boolean =
+    values.methods.includes("usaJobsFlyer") &&
+    values.closeDateUsaJobsFlyer === undefined;
+
+  const hasErrors = HiringInfo || JobBoard || JOA || LinkedInPost || USAJobs;
+
+  return {
+    hasErrors,
+    HiringInfo,
+    JobBoard,
+    JOA,
+    LinkedInPost,
+    USAJobs,
+  };
+};
