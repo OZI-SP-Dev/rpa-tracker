@@ -4,7 +4,6 @@ import { REQUESTTYPES } from "consts/RequestTypes";
 import { PAYSYSTEMS } from "consts/PaySystems";
 import { POSITIONSENSITIVIES } from "consts/PositionSensitivities";
 import { GENERALGRADES, ACQGRADES } from "consts/Grades";
-import { OSFS } from "consts/OSFs";
 import { STAGES } from "consts/Stages";
 import {
   Link,
@@ -44,7 +43,7 @@ export interface RPARequest {
   officeSymbol: string;
   positionSensitivity: (typeof POSITIONSENSITIVIES)[number]["key"];
   dutyLocation: string;
-  osf: (typeof OSFS)[number];
+  osf: string;
   orgApprover?: Person;
   methods: string[];
   supervisor: Person;
