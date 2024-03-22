@@ -15,6 +15,9 @@ import {
 } from "@fluentui/react-components";
 import { useAddEvent } from "./eventsApi";
 import { FieldValues } from "react-hook-form";
+import emailTemplates from "./emailTemplates";
+import { useOSFs } from "./osfApi";
+import { useSendEmail } from "./emailApi";
 
 const PAGESIZE = 5;
 
@@ -343,6 +346,8 @@ export const useDeleteRequest = () => {
 export const useUpdateStage = () => {
   const queryClient = useQueryClient();
   const addEvent = useAddEvent();
+  const OSFs = useOSFs();
+  const sendEmail = useSendEmail();
   const { dispatchToast } = useToastController("toaster");
 
   return useMutation(
@@ -359,17 +364,41 @@ export const useUpdateStage = () => {
     },
     {
       onSuccess: async (_data, request) => {
-        queryClient.invalidateQueries(["requests", request.requestId]);
+        //Inform User
         dispatchToast(
           <Toast>
             <ToastTitle>Updated stage</ToastTitle>
           </Toast>,
           { intent: "success" }
         );
+
+        //Log event
         addEvent.mutate({
           Title: request.eventTitle,
           requestId: request.requestId,
         });
+
+        //Send messages
+        const requestData: undefined | RPARequest = queryClient.getQueryData([
+          "requests",
+          request.requestId,
+        ]);
+        if (requestData && OSFs.data) {
+          const email = emailTemplates.createStageUpdateEmail(
+            request,
+            requestData,
+            OSFs.data
+          );
+          if (email) {
+            await sendEmail.mutateAsync({
+              email,
+              requestId: request.requestId,
+            });
+          }
+        }
+
+        //refetch data
+        queryClient.invalidateQueries(["requests", request.requestId]);
       },
       onError: async (error) => {
         console.log(error);
@@ -622,7 +651,7 @@ export interface RequestFilter {
 
 /** This function is used to validate if all fields are populated for a Draft Request
  * @param values - An object containing the request form values
- * @returns Object contianing whether any section had errors
+ * @returns Object containing whether any section had errors
  */
 
 export const validateRequest = (values: FieldValues) => {

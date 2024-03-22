@@ -1,7 +1,7 @@
 import { spWebContext } from "api/SPWebContext";
 import { useQuery } from "@tanstack/react-query";
 
-interface OSF {
+export interface OSF {
   Title: string;
   email: string;
 }

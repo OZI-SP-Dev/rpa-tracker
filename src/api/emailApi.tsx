@@ -20,9 +20,17 @@ const useLogEmail = () => {
   return useMutation(
     ["logEmail"],
     async (requestEmail: { email: EmailProperties; requestId: number }) => {
+      let logEmail = {
+        To: JSON.stringify(requestEmail.email.To),
+        CC: JSON.stringify(requestEmail.email.CC),
+        BCC: JSON.stringify(requestEmail.email.BCC),
+        Subject: requestEmail.email.Subject,
+        Body: requestEmail.email.Body,
+      };
+
       return spWebContext.web.lists
         .getByTitle("emails")
-        .items.add({ Title: requestEmail.requestId, ...requestEmail.email });
+        .items.add({ Title: requestEmail.requestId.toString(), ...logEmail });
     }
   );
 };
