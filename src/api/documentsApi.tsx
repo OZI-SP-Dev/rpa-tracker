@@ -31,7 +31,8 @@ const getDocuments = async (requestId: number) => {
       "ModifiedBy/Id",
       "ModifiedBy/EMail",
       "ModifiedBy/Title",
-      "UniqueId"
+      "UniqueId",
+      "ListId"
     )
     .expand("ModifiedBy")
     .orderBy("Name")<SPDocument[]>();
@@ -102,4 +103,5 @@ export interface SPDocument {
   TimeLastModified: string;
   ServerRelativeUrl: string;
   UniqueId: string;
+  ListId: string;
 }

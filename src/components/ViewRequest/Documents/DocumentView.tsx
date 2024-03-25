@@ -20,6 +20,8 @@ import { getFileTypeIconProps } from "@fluentui/react-file-type-icons";
 import { DeleteIcon } from "@fluentui/react-icons-mdl2";
 import { SPDocument, useDeleteDocument } from "api/documentsApi";
 
+declare var _spPageContextInfo: any;
+
 export const DocumentView = (props: {
   document: SPDocument;
   readonly?: boolean;
@@ -34,9 +36,10 @@ export const DocumentView = (props: {
     props.document.TimeLastModified
   ).toLocaleString();
 
-  const isOfficeFile: boolean = wordExtensions
+  const isOfficeOrPdfFile: boolean = wordExtensions
     .concat(excelExtensions)
     .concat(ppExtensions)
+    .concat(["pdf"])
     .includes(extension);
 
   const viewEdit = props.readonly ? "v" : "e";
@@ -49,6 +52,15 @@ export const DocumentView = (props: {
     downloadUrl = `ms-excel:of${viewEdit}|u|${window.location.origin}${props.document.ServerRelativeUrl}`;
   } else if (ppExtensions.includes(extension)) {
     downloadUrl = `ms-powerpoint:of${viewEdit}|u|${window.location.origin}${props.document.ServerRelativeUrl}`;
+  } else if (extension === "pdf") {
+    downloadUrl = "odopen://openFile/";
+    downloadUrl += "?fileId=" + props.document.UniqueId;
+    downloadUrl += "&siteId=" + _spPageContextInfo.siteId;
+    downloadUrl += "&listId=" + props.document.ListId;
+    downloadUrl += "&userEmail=" + _spPageContextInfo.userEmail;
+    downloadUrl += "&userId=" + _spPageContextInfo.aadUserId;
+    downloadUrl += "&webUrl=" + _spPageContextInfo.webAbsoluteUrl;
+    downloadUrl += "&fileName=" + props.document.Name;
   }
 
   return (
@@ -64,7 +76,7 @@ export const DocumentView = (props: {
           />
         }
         header={
-          <Link download={!isOfficeFile} href={encodeURI(downloadUrl)}>
+          <Link download={!isOfficeOrPdfFile} href={encodeURI(downloadUrl)}>
             <Title3 className="document-name">{props.document.Name}</Title3>
           </Link>
         }
