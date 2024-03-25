@@ -19,12 +19,18 @@ const ReworkRequest = () => {
   const requestId = Number(params.requestId);
   const request = useRequest(requestId);
   const updateStage = useUpdateStage();
+
   const currentStage = STAGES.find(({ key }) => key === request.data?.stage);
 
   const updateHandler = () => {
-    if (request.data && currentStage && currentStage.previous !== "") {
+    if (request.data && currentStage?.previous) {
       const newStage = currentStage.previous;
-      updateStage.mutate({ requestId, newStage });
+      const eventTitle = currentStage.previousEventTitle;
+      updateStage.mutate({
+        requestId,
+        newStage,
+        eventTitle,
+      });
     }
   };
 
@@ -40,7 +46,7 @@ const ReworkRequest = () => {
             }}
             icon={<NavigateBackIcon className="orange" />}
             size="large"
-            disabled={(currentStage?.previous ?? "") === ""}
+            disabled={!currentStage?.previous}
           />
         </Tooltip>
       </DialogTrigger>

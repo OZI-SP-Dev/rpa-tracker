@@ -40,14 +40,14 @@ const Home: FunctionComponent = () => {
         <section className={styles.section}>
           <Title3 align="center">RPA Tool Overview</Title3>
           <Body1>
-            <p>A blurb about this tool.</p>
             <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ac
-              nibh quis magna viverra mollis. Donec lacinia porttitor pretium.
-              Ut efficitur lectus a efficitur aliquet. Aenean quis orci vel
-              justo dapibus rhoncus nec vel lacus. Nulla congue luctus
-              elementum. Sed maximus augue a sapien fermentum, ac maximus tortor
-              dapibus.
+              This is the Cyber Operations Support (COS) Request for Personnel
+              Action (RPA) Tool. It is your single source for initiating a COS
+              request for an RPA. Within this tool, you will find links for
+              applicable AFMC, AFLCMC, and COS policies and guidance to assist
+              you in completing the RPA request. All activities for initiating a
+              recruit/fill to include job announcement options, candidate
+              selection, and approvals are managed within this tool.
             </p>
           </Body1>
         </section>

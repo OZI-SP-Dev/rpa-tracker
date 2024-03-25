@@ -4,7 +4,6 @@ import { REQUESTTYPES } from "consts/RequestTypes";
 import { PAYSYSTEMS } from "consts/PaySystems";
 import { POSITIONSENSITIVIES } from "consts/PositionSensitivities";
 import { GENERALGRADES, ACQGRADES } from "consts/Grades";
-import { OSFS } from "consts/OSFs";
 import { STAGES } from "consts/Stages";
 import {
   Link,
@@ -14,6 +13,11 @@ import {
   ToastTrigger,
   useToastController,
 } from "@fluentui/react-components";
+import { useAddEvent } from "./eventsApi";
+import { FieldValues } from "react-hook-form";
+import emailTemplates from "./emailTemplates";
+import { useOSFs } from "./osfApi";
+import { useSendEmail } from "./emailApi";
 
 const PAGESIZE = 5;
 
@@ -42,7 +46,7 @@ export interface RPARequest {
   officeSymbol: string;
   positionSensitivity: (typeof POSITIONSENSITIVIES)[number]["key"];
   dutyLocation: string;
-  osf: (typeof OSFS)[number];
+  osf: string;
   orgApprover?: Person;
   methods: string[];
   supervisor: Person;
@@ -341,6 +345,9 @@ export const useDeleteRequest = () => {
 
 export const useUpdateStage = () => {
   const queryClient = useQueryClient();
+  const addEvent = useAddEvent();
+  const OSFs = useOSFs();
+  const sendEmail = useSendEmail();
   const { dispatchToast } = useToastController("toaster");
 
   return useMutation(
@@ -348,6 +355,7 @@ export const useUpdateStage = () => {
     async (request: {
       requestId: number;
       newStage: (typeof STAGES)[number]["key"];
+      eventTitle: string;
     }) => {
       await spWebContext.web.lists
         .getByTitle("requests")
@@ -356,13 +364,41 @@ export const useUpdateStage = () => {
     },
     {
       onSuccess: async (_data, request) => {
-        queryClient.invalidateQueries(["requests", request.requestId]);
+        //Inform User
         dispatchToast(
           <Toast>
             <ToastTitle>Updated stage</ToastTitle>
           </Toast>,
           { intent: "success" }
         );
+
+        //Log event
+        addEvent.mutate({
+          Title: request.eventTitle,
+          requestId: request.requestId,
+        });
+
+        //Send messages
+        const requestData: undefined | RPARequest = queryClient.getQueryData([
+          "requests",
+          request.requestId,
+        ]);
+        if (requestData && OSFs.data) {
+          const email = emailTemplates.createStageUpdateEmail(
+            request,
+            requestData,
+            OSFs.data
+          );
+          if (email) {
+            await sendEmail.mutateAsync({
+              email,
+              requestId: request.requestId,
+            });
+          }
+        }
+
+        //refetch data
+        queryClient.invalidateQueries(["requests", request.requestId]);
       },
       onError: async (error) => {
         console.log(error);
@@ -612,3 +648,60 @@ export interface RequestFilter {
   modifier?: string;
   queryString: string;
 }
+
+/** This function is used to validate if all fields are populated for a Draft Request
+ * @param values - An object containing the request form values
+ * @returns Object containing whether any section had errors
+ */
+
+export const validateRequest = (values: FieldValues) => {
+  const HiringInfo =
+    values.advertisementLength === "" || values.methods.length === 0;
+
+  const JobBoard: boolean =
+    values.methods.includes("lcmc") && values.closeDateLCMC === undefined;
+
+  const JOA: boolean =
+    values.methods.includes("joa") &&
+    (!values.closeDateJOA ||
+      !values.organizationalPOC ||
+      !values.issueTo ||
+      !values.fullPartTime ||
+      !values.salaryLow ||
+      !values.salaryHigh ||
+      !values.telework ||
+      !values.remote ||
+      !values.pcs ||
+      !values.joaQualifications ||
+      !values.joaIdealCandidate);
+
+  const LinkedInPost: boolean =
+    values.methods.includes("linkedinPost") &&
+    (!values.temporary ||
+      !values.salaryLow ||
+      !values.salaryHigh ||
+      !(values.temporary === "Full-Time" ? true : values.nte) ||
+      !values.incentives ||
+      !values.telework ||
+      !values.linkedinPositionSummary ||
+      !(
+        !values.linkedinQualifications.includes("certification") ||
+        values.dcwf.length > 0
+      ) ||
+      !values.linkedinKSAs);
+
+  const USAJobs: boolean =
+    values.methods.includes("usaJobsFlyer") &&
+    values.closeDateUsaJobsFlyer === undefined;
+
+  const hasErrors = HiringInfo || JobBoard || JOA || LinkedInPost || USAJobs;
+
+  return {
+    hasErrors,
+    HiringInfo,
+    JobBoard,
+    JOA,
+    LinkedInPost,
+    USAJobs,
+  };
+};
