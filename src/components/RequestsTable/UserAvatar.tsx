@@ -1,7 +1,6 @@
 import { Avatar } from "@fluentui/react-components";
-import { Person } from "api/requestsApi";
 
-const UserAvatar = ({ user }: { user?: Person }) => {
+const UserAvatar = ({ user }: { user?: { EMail: string; Title: string } }) => {
   if (!user) return <></>;
 
   const initials =
