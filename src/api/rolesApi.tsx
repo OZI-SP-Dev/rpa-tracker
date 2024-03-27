@@ -1,23 +1,21 @@
 import { spWebContext } from "api/SPWebContext";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Person } from "./UserApi";
+import { Person } from "./requestsApi";
 
-interface SPRole {
+export interface SPRole {
   Id: number;
   Title: string;
   user: Person;
 }
 
-interface NewRole {
+export interface NewRole {
   Title: string;
   user: Person;
 }
 
-export type Role = SPRole | NewRole;
-
 interface SPSubmitRole {
   Id?: number;
-  UserId: number;
+  userId: number;
   Title: string;
 }
 
@@ -40,9 +38,9 @@ export const useAddRole = () => {
     ["addRole"],
     async (item: NewRole) => {
       const newItem: SPSubmitRole = {
-        UserId:
-          item.user.Id > 0
-            ? item.user.Id
+        userId:
+          Number(item.user.Id) > 0
+            ? Number(item.user.Id)
             : (await spWebContext.web.ensureUser(item.user.EMail)).data.Id,
         Title: item.Title,
       };

@@ -14,12 +14,13 @@ import {
   createTableColumn,
 } from "@fluentui/react-components";
 import { AddIcon, DeleteIcon } from "@fluentui/react-icons-mdl2";
-import { Role, useDeleteRole, useRoles } from "api/rolesApi";
+import { SPRole, useDeleteRole, useRoles } from "api/rolesApi";
 import UserAvatar from "components/RequestsTable/UserAvatar";
 import { useState } from "react";
+import AddRoleDrawer from "./AddRoleDrawer";
 
-const roleColumns: TableColumnDefinition<Role>[] = [
-  createTableColumn<Role>({
+const roleColumns: TableColumnDefinition<SPRole>[] = [
+  createTableColumn<SPRole>({
     columnId: "role",
     compare: (a, b) => {
       return a.Title.localeCompare(b.Title);
@@ -31,7 +32,7 @@ const roleColumns: TableColumnDefinition<Role>[] = [
       return <TableCellLayout>{item.Title}</TableCellLayout>;
     },
   }),
-  createTableColumn<Role>({
+  createTableColumn<SPRole>({
     columnId: "user",
     compare: (a, b) => {
       return a.user.Title.localeCompare(b.user.Title);
@@ -52,7 +53,7 @@ const roleColumns: TableColumnDefinition<Role>[] = [
 const RolesPage = () => {
   const roles = useRoles();
   const [selectedRows, setSelectedRows] = useState(new Set<TableRowId>([]));
-  const [_panelOpen, setPanelOpen] = useState(false);
+  const [panelOpen, setPanelOpen] = useState(false);
   const deleteRole = useDeleteRole();
 
   const onSelectionChange: DataGridProps["onSelectionChange"] = (_e, data) => {
@@ -99,9 +100,9 @@ const RolesPage = () => {
             )}
           </DataGridRow>
         </DataGridHeader>
-        <DataGridBody<Role>>
+        <DataGridBody<SPRole>>
           {({ item, rowId }) => (
-            <DataGridRow<Role>
+            <DataGridRow<SPRole>
               key={rowId}
               selectionCell={{ radioIndicator: { "aria-label": "Select row" } }}
             >
@@ -115,6 +116,7 @@ const RolesPage = () => {
       {roles.isError && (
         <div>An error has occured: {(roles.error as Error).message}</div>
       )}
+      <AddRoleDrawer isOpen={panelOpen} setIsOpen={setPanelOpen} />
     </>
   );
 };
