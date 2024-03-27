@@ -7,11 +7,11 @@ import {
   PopoverTrigger,
   PopoverSurface,
 } from "@fluentui/react-components";
-import { useContext, useMemo } from "react";
+import { useContext } from "react";
 import { Link } from "react-router-dom";
 import { UserContext } from "providers/UserProvider";
 import { tokens } from "@fluentui/react-theme";
-import { useRoles } from "api/rolesApi";
+import { useMyRoles } from "api/rolesApi";
 
 /* FluentUI Styling */
 const useStyles = makeStyles({
@@ -54,17 +54,7 @@ const useStyles = makeStyles({
 export const AppHeader = () => {
   const classes = useStyles();
   const userContext = useContext(UserContext);
-  const roles = useRoles();
-
-  const myRoles = useMemo(
-    () =>
-      roles.data
-        ?.filter((item) => Number(item.user.Id) === userContext.user.Id)
-        ?.map((item) => item.Title),
-    [roles]
-  );
-
-  const isAdmin = myRoles?.includes("Admin");
+  const myRoles = useMyRoles();
 
   const title =
     "RPA Tracker" +
@@ -81,7 +71,7 @@ export const AppHeader = () => {
         <Link to="/New" className={classes.navLink}>
           New Request
         </Link>
-        {isAdmin && (
+        {myRoles.isAdmin && (
           <Link to="/Roles" className={classes.navLink}>
             Roles
           </Link>
@@ -109,9 +99,9 @@ export const AppHeader = () => {
           <PopoverSurface aria-label="Your roles">
             {
               /** If the user has role(s), list them */
-              myRoles && myRoles.length > 0 && (
+              myRoles.roles.length > 0 && (
                 <ul>
-                  {myRoles?.map((role) => (
+                  {myRoles.roles.map((role) => (
                     <li key={role}>{role}</li>
                   ))}
                 </ul>
@@ -119,7 +109,7 @@ export const AppHeader = () => {
             }
             {
               /** If the user has no privleged role(s), just state standard account */
-              myRoles && myRoles.length === 0 && (
+              myRoles.roles.length === 0 && (
                 <ul>
                   <li>Standard user account</li>
                 </ul>
