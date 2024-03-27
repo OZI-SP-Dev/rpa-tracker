@@ -111,13 +111,7 @@ const Requestor = createTableColumn<RPARequest>({
   },
   renderCell: (item) => {
     return (
-      <TableCellLayout
-        truncate
-        media={
-          <UserAvatar user={item.Author} />
-          // <Avatar aria-label={item.Author?.Title} name={item.Author?.Title} />
-        }
-      >
+      <TableCellLayout truncate media={<UserAvatar user={item.Author} />}>
         {item.Author?.Title}
       </TableCellLayout>
     );

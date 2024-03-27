@@ -26,12 +26,16 @@ const NewRequestForm = lazy(() => newRequestFormPromise);
 const viewRequestPromise = import("components/ViewRequest/ViewRequest");
 const ViewRequestPage = lazy(() => viewRequestPromise);
 
+const rolesPagePromise = import("components/Roles/RolesPage");
+const RolesPage = lazy(() => rolesPagePromise);
+
 const router = createHashRouter(
   createRoutesFromElements(
     <Route element={<MainLayout />}>
       <Route path="/" element={<Home />} />
       <Route path="/New/:requestId?" element={<NewRequestForm />} />
       <Route path="/Request/:requestId" element={<ViewRequestPage />} />
+      <Route path="/Roles" element={<RolesPage />} />
     </Route>
   )
 );
