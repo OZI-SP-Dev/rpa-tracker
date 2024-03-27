@@ -3,7 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Person } from "./UserApi";
 
 interface SPRole {
-  Id?: number;
+  Id: number;
   Title: string;
   user: Person;
 }
@@ -39,7 +39,7 @@ export const useAddRole = () => {
   return useMutation(
     ["addRole"],
     async (item: NewRole) => {
-      let newItem: SPSubmitRole = {
+      const newItem: SPSubmitRole = {
         UserId:
           item.user.Id > 0
             ? item.user.Id

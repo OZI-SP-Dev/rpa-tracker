@@ -41,10 +41,7 @@ const roleColumns: TableColumnDefinition<Role>[] = [
     },
     renderCell: (item) => {
       return (
-        <TableCellLayout
-          style={{ whiteSpace: "nowrap", minWidth: "fit-content" }}
-          media={<UserAvatar user={item.user} />}
-        >
+        <TableCellLayout media={<UserAvatar user={item.user} />}>
           {item.user.Title}
         </TableCellLayout>
       );
@@ -63,7 +60,7 @@ const RolesPage = () => {
   };
 
   return (
-    <div style={{ width: "fit-content" }}>
+    <>
       {roles.isLoading && <Spinner label="Loading..." />}
       <Button
         appearance="subtle"
@@ -89,6 +86,7 @@ const RolesPage = () => {
         items={roles.data || []}
         columns={roleColumns}
         sortable
+        resizableColumns
         selectionMode="single"
         selectedItems={selectedRows}
         onSelectionChange={onSelectionChange}
@@ -117,7 +115,7 @@ const RolesPage = () => {
       {roles.isError && (
         <div>An error has occured: {(roles.error as Error).message}</div>
       )}
-    </div>
+    </>
   );
 };
 
