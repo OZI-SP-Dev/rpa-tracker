@@ -150,7 +150,7 @@ const AddRoleDrawer = ({
             form="addRoleForm"
             type="submit"
             value="submit"
-            disabled={addRole.isLoading || addRole.isSuccess}
+            disabled={addRole.isLoading}
             icon={addRole.isLoading ? <Spinner /> : <SaveIcon />}
           >
             Save
