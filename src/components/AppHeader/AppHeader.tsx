@@ -11,6 +11,7 @@ import { useContext } from "react";
 import { Link } from "react-router-dom";
 import { UserContext } from "providers/UserProvider";
 import { tokens } from "@fluentui/react-theme";
+import { useRoles } from "api/rolesApi";
 
 /* FluentUI Styling */
 const useStyles = makeStyles({
@@ -52,8 +53,15 @@ const useStyles = makeStyles({
 
 export const AppHeader = () => {
   const classes = useStyles();
-  // const navigate = useNavigate();
   const userContext = useContext(UserContext);
+  const roles = useRoles();
+
+  const myRoles = roles.data?.filter(
+    (item) => Number(item.user.Id) === userContext.user.Id
+  );
+
+  const isAdmin =
+    myRoles?.filter((item) => item.Title === "Admin").length === 1;
 
   const title =
     "RPA Tracker" +
@@ -70,6 +78,12 @@ export const AppHeader = () => {
         <Link to="/New" className={classes.navLink}>
           New Request
         </Link>
+        {isAdmin && (
+          <Link to="/Roles" className={classes.navLink}>
+            Roles
+          </Link>
+        )}
+
         <Popover trapFocus={true} closeOnScroll={true} withArrow={true}>
           <PopoverTrigger>
             <Tooltip
@@ -92,27 +106,21 @@ export const AppHeader = () => {
           <PopoverSurface aria-label="Your roles">
             {
               /** If the user has role(s), list them */
-              // userContext.roles && userContext.roles.length > 0 && (
-              //   <ul>
-              //     {userContext.roles?.map((role) => (
-              //       <li key={role}>{role}</li>
-              //     ))}
-              //   </ul>
-              // )
+              myRoles && myRoles.length > 0 && (
+                <ul>
+                  {myRoles?.map((role) => (
+                    <li key={role.Title}>{role.Title}</li>
+                  ))}
+                </ul>
+              )
             }
             {
               /** If the user has no privleged role(s), just state standard account */
-              // userContext.roles && userContext.roles.length === 0 && (
-              <ul>
-                <li>Standard user account</li>
-              </ul>
-              // )
-            }
-            {
-              //Only load the Impersonation Form if we are in NodeJS or a TEST environment
-              // (import.meta.env.DEV || import.meta.env.MODE === "testing") && (
-              //   <ImpersonationForm></ImpersonationForm>
-              // )
+              myRoles && myRoles.length === 0 && (
+                <ul>
+                  <li>Standard user account</li>
+                </ul>
+              )
             }
           </PopoverSurface>
         </Popover>
