@@ -7,7 +7,7 @@ import {
   PopoverTrigger,
   PopoverSurface,
 } from "@fluentui/react-components";
-import { useContext } from "react";
+import { useContext, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { UserContext } from "providers/UserProvider";
 import { tokens } from "@fluentui/react-theme";
@@ -56,12 +56,15 @@ export const AppHeader = () => {
   const userContext = useContext(UserContext);
   const roles = useRoles();
 
-  const myRoles = roles.data?.filter(
-    (item) => Number(item.user.Id) === userContext.user.Id
+  const myRoles = useMemo(
+    () =>
+      roles.data
+        ?.filter((item) => Number(item.user.Id) === userContext.user.Id)
+        ?.map((item) => item.Title),
+    [roles]
   );
 
-  const isAdmin =
-    myRoles?.filter((item) => item.Title === "Admin").length === 1;
+  const isAdmin = myRoles?.includes("Admin");
 
   const title =
     "RPA Tracker" +
@@ -109,7 +112,7 @@ export const AppHeader = () => {
               myRoles && myRoles.length > 0 && (
                 <ul>
                   {myRoles?.map((role) => (
-                    <li key={role.Title}>{role.Title}</li>
+                    <li key={role}>{role}</li>
                   ))}
                 </ul>
               )

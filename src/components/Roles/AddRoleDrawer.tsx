@@ -45,7 +45,7 @@ const AddRoleDrawer = ({
   // Reset the form when form is opened/closed
   useEffect(() => {
     myForm.reset();
-  }, [isOpen, myForm]);
+  }, [isOpen, myForm.reset]);
 
   useEffect(() => {
     if (addRole.isSuccess) {
