@@ -165,7 +165,7 @@ const getPagedRequests = async (
   }
 
   const requestedFields =
-    "Id,positionTitle,requestType,paySystem,series,grade,officeSymbol,stage,Created," +
+    "Id,positionTitle,requestType,paySystem,series,grade,officeSymbol,stage,subStage,Created," +
     "Author/Id,Author/EMail,Author/Title";
 
   const expandedFields = "Author";
@@ -512,6 +512,7 @@ const transformRequestFromSP = (request: any): RPARequest => {
     Id: request.Id,
     Created: new Date(request.Created),
     stage: request.stage,
+    subStage: request.subStage,
     Author: request.Author,
     requestType: request.requestType,
     mcrRequired: request.mcrRequired,
@@ -598,6 +599,7 @@ const transformPagedRequestsFromSP = (requests: any) => {
       positionTitle: request.positionTitle,
       officeSymbol: request.officeSymbol,
       stage: request.stage,
+      subStage: request.subStage,
       Created: new Date(request.Created),
     });
   });
@@ -615,6 +617,7 @@ interface PagedRequest {
   positionTitle: string;
   officeSymbol: string;
   stage: (typeof STAGES)[number]["key"];
+  subStage: string;
   Created: Date;
 }
 

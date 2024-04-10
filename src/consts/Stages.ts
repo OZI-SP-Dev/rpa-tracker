@@ -5,6 +5,7 @@ interface STARTSTAGE {
   nextEventTitle: string;
   previous: undefined;
   previousEventTitle: undefined;
+  subStages?: STAGE[];
 }
 
 interface MIDSTAGE {
@@ -14,6 +15,7 @@ interface MIDSTAGE {
   nextEventTitle: string;
   previous: string;
   previousEventTitle: string;
+  subStages?: ReadonlyArray<STAGE>;
 }
 
 interface ENDSTAGE {
@@ -23,6 +25,7 @@ interface ENDSTAGE {
   nextEventTitle: undefined;
   previous: undefined;
   previousEventTitle: undefined;
+  subStages?: STAGE[];
 }
 
 type STAGE = STARTSTAGE | MIDSTAGE | ENDSTAGE;
@@ -43,6 +46,16 @@ export const STAGES: ReadonlyArray<STAGE> = [
     nextEventTitle: "Forward Stage Change: Package Review to Posting",
     previous: "Draft",
     previousEventTitle: "Backward Stage Change: Package Review to In Draft",
+    subStages: [
+      {
+        key: "Initial",
+        text: "Initial...",
+        next: undefined,
+        nextEventTitle: undefined,
+        previous: undefined,
+        previousEventTitle: undefined,
+      },
+    ],
   },
   {
     key: "Post",
