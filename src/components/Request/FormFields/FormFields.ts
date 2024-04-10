@@ -41,3 +41,4 @@ export { default as LinkedinSearchEmployers } from "./LinkedinSearchEmployers";
 export { default as LinkedinSearchStudies } from "./LinkedinSearchStudies";
 export { default as LinkedinSearchKeywords } from "./LinkedinSearchKeywords";
 export { default as LinkedinSearchComments } from "./LinkedinSearchComments";
+export { default as Supervisory } from "./Supervisory";

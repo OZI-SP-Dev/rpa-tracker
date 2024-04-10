@@ -30,6 +30,7 @@ const RoutingInfo = () => {
         <Title2 align="center">Position Information</Title2>
       </Divider>
       <FormFields.PositionTitle />
+      <FormFields.Supervisory />
       <FormFields.PaySystem />
       <FormFields.Series />
       <FormFields.Grade />

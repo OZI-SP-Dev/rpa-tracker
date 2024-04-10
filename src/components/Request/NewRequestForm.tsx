@@ -73,6 +73,7 @@ export type RHFRequest = {
   linkedinSearchKeyword3: string;
   linkedinSearchKeyword4: string;
   linkedinSearchComments: string;
+  supervisory: string;
 };
 
 const NewRequestForm = () => {
@@ -144,6 +145,7 @@ const NewRequestForm = () => {
     linkedinSearchKeyword3: "",
     linkedinSearchKeyword4: "",
     linkedinSearchComments: "",
+    supervisory: "No",
   };
 
   const myForm = useForm<RHFRequest>({

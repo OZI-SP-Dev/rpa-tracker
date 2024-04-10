@@ -91,6 +91,7 @@ export interface RPARequest {
   linkedinSearchKeyword3?: string;
   linkedinSearchKeyword4?: string;
   linkedinSearchComments?: string;
+  supervisory: "Yes" | "No";
 }
 
 /**
@@ -576,6 +577,7 @@ const transformRequestFromSP = (request: any): RPARequest => {
     linkedinSearchKeyword3: request.linkedinSearchKeyword3,
     linkedinSearchKeyword4: request.linkedinSearchKeyword4,
     linkedinSearchComments: request.linkedinSearchComments,
+    supervisory: request.supervisory,
   };
 };
 

@@ -94,6 +94,7 @@ const EditDrawer = ({
                 <FormFields.OSF />
                 <FormFields.MCRRequired />
                 <FormFields.PositionTitle />
+                <FormFields.Supervisory />
                 <FormFields.PaySystem />
                 <FormFields.Series />
                 <FormFields.Grade />
