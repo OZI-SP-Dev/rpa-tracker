@@ -24,7 +24,6 @@ const RoutingInfo = () => {
       </div>
       <FormFields.RequestType />
       <FormFields.OSF />
-      <FormFields.OrgApprover />
       <FormFields.MCRRequired />
 
       <Divider inset>

@@ -32,6 +32,7 @@ export interface RPARequest {
   Id?: string;
   Created?: Date;
   stage: (typeof STAGES)[number]["key"];
+  subStage: string;
   requestType: (typeof REQUESTTYPES)[number];
   mcrRequired: "Yes" | "No";
   paySystem: (typeof PAYSYSTEMS)[number]["key"];
@@ -47,7 +48,6 @@ export interface RPARequest {
   positionSensitivity: (typeof POSITIONSENSITIVIES)[number]["key"];
   dutyLocation: string;
   osf: string;
-  orgApprover?: Person;
   methods: string[];
   supervisor: Person;
   organizationalPOC?: Person;
@@ -196,13 +196,11 @@ const getRequest = async (Id: number) => {
   const requestedFields =
     "*," +
     "Author/Id,Author/EMail,Author/Title," +
-    "orgApprover/Id,orgApprover/EMail,orgApprover/Title," +
     "supervisor/Id,supervisor/EMail,supervisor/Title," +
     "organizationalPOC/Id,organizationalPOC/EMail,organizationalPOC/Title," +
     "issueTo/Id,issueTo/EMail,issueTo/Title";
 
-  const expandedFields =
-    "Author,orgApprover,supervisor,organizationalPOC,issueTo";
+  const expandedFields = "Author,supervisor,organizationalPOC,issueTo";
 
   return spWebContext.web.lists
     .getByTitle("requests")
@@ -426,7 +424,6 @@ export const useUpdateStage = () => {
 
 type InternalRequestItem = Omit<
   RPARequest,
-  | "orgApprover"
   | "methods"
   | "dcwf"
   | "linkedinQualifications"
@@ -435,7 +432,6 @@ type InternalRequestItem = Omit<
   | "issueTo"
   | "Created"
 > & {
-  orgApproverId?: string;
   methods: string;
   dcwf: string;
   linkedinQualifications: string;
@@ -452,7 +448,6 @@ const transformRequestToSP = async (
   // The "rest" object will include any remaining properties that can be
   // passed back to SharePoint without modification
   const {
-    orgApprover,
     methods,
     dcwf,
     linkedinQualifications,
@@ -461,18 +456,6 @@ const transformRequestToSP = async (
     issueTo,
     ...rest
   } = request;
-
-  let orgApproverId;
-  if (orgApprover) {
-    // resolve orgApprover if no current Id set
-    if (orgApprover.Id === "-1") {
-      orgApproverId = (
-        await spWebContext.web.ensureUser(orgApprover.EMail)
-      ).data.Id.toString();
-    } else {
-      orgApproverId = orgApprover.Id;
-    }
-  }
 
   let supervisorId;
   if (supervisor) {
@@ -509,7 +492,6 @@ const transformRequestToSP = async (
 
   return {
     // if Person fields have been selected, include them
-    ...(orgApproverId && { orgApproverId: orgApproverId }),
     ...(supervisorId && { supervisorId: supervisorId }),
     ...(organizationalPOCId && { organizationalPOCId: organizationalPOCId }),
     ...(issueToId && { issueToId: issueToId }),
@@ -546,7 +528,6 @@ const transformRequestFromSP = (request: any): RPARequest => {
     positionSensitivity: request.positionSensitivity,
     dutyLocation: request.dutyLocation,
     osf: request.osf,
-    orgApprover: request.orgApprover,
     methods: JSON.parse(request.methods),
     supervisor: request.supervisor,
     organizationalPOC: request.organizationalPOC,

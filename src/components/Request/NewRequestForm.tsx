@@ -30,7 +30,6 @@ export type RHFRequest = {
   positionSensitivity: string;
   dutyLocation: string;
   osf: string;
-  orgApprover?: Person;
   methods: string[];
   supervisor: Person;
   organizationalPOC: Person;

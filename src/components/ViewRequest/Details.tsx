@@ -42,11 +42,6 @@ const ViewRequestDetails = ({
             </Label>
             <Text id="osf">{request.data.osf}</Text>
 
-            <Label weight="semibold" htmlFor="orgApprover">
-              Org Approver
-            </Label>
-            <Text id="orgApprover">{request.data.orgApprover?.Title}</Text>
-
             <Label weight="semibold" htmlFor="mcrRequired">
               MCR Required
             </Label>
