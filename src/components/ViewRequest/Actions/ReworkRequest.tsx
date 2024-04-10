@@ -29,6 +29,7 @@ const ReworkRequest = () => {
       updateStage.mutate({
         requestId,
         newStage,
+        newSubStage: "Initial",
         eventTitle,
       });
     }

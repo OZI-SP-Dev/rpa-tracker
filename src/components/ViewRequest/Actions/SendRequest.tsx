@@ -36,6 +36,7 @@ const SendRequest = () => {
       updateStage.mutate({
         requestId,
         newStage,
+        newSubStage: "Initial",
         eventTitle,
       });
     }

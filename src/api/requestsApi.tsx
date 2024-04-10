@@ -353,7 +353,7 @@ export const useUpdateStage = () => {
     async (request: {
       requestId: number;
       newStage: (typeof STAGES)[number]["key"];
-      newSubStage?: string;
+      newSubStage: string;
       eventTitle: string;
     }) => {
       await spWebContext.web.lists
@@ -361,7 +361,7 @@ export const useUpdateStage = () => {
         .items.getById(request.requestId)
         .update({
           stage: request.newStage,
-          subStage: request.newSubStage || "Initial",
+          subStage: request.newSubStage,
         });
     },
     {
