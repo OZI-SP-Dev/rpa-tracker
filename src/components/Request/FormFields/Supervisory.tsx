@@ -11,7 +11,7 @@ const Supervisory = () => {
         labelText="Supervisory/Lead Position"
         labelInfo='A "Yes" here indicates that a panel reporting form and panel interview will be required'
         rules={{
-          required: "Supervisory Position selection is required",
+          required: "Supervisory/Lead Position selection is required",
         }}
         fieldProps={{ layout: "horizontal" }}
       >
