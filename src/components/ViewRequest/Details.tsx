@@ -53,7 +53,7 @@ const ViewRequestDetails = ({
             <Text id="positionTitle">{request.data.positionTitle}</Text>
 
             <Label weight="semibold" htmlFor="supervisory">
-              Supervisory Position
+              Supervisory/Lead Position
             </Label>
             <Text id="supervisory">{request.data.supervisory}</Text>
 
