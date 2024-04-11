@@ -8,7 +8,7 @@ const Supervisory = () => {
     <div className="requestFieldContainer">
       <BACRadioGroup<RHFRequest>
         name="supervisory"
-        labelText="Supervisory Position"
+        labelText="Supervisory/Lead Position"
         labelInfo='A "Yes" here indicates that a panel reporting form and panel interview will be required'
         rules={{
           required: "Supervisory Position selection is required",

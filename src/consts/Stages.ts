@@ -5,7 +5,7 @@ interface STARTSTAGE {
   nextEventTitle: string;
   previous: undefined;
   previousEventTitle: undefined;
-  subStages?: STAGE[];
+  subStages?: ReadonlyArray<STAGE>;
 }
 
 interface MIDSTAGE {
@@ -25,7 +25,7 @@ interface ENDSTAGE {
   nextEventTitle: undefined;
   previous: undefined;
   previousEventTitle: undefined;
-  subStages?: STAGE[];
+  subStages?: ReadonlyArray<STAGE>;
 }
 
 type STAGE = STARTSTAGE | MIDSTAGE | ENDSTAGE;

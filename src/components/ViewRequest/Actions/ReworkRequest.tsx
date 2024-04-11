@@ -24,7 +24,7 @@ const ReworkRequest = () => {
 
   const updateHandler = () => {
     if (request.data && currentStage?.previous) {
-      let newData = {
+      const newData = {
         requestId,
         newStage: "",
         newSubStage: "",

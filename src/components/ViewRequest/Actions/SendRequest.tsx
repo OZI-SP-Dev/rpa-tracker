@@ -30,7 +30,7 @@ const SendRequest = () => {
 
   const updateHandler = () => {
     if (request.data && currentStage?.next) {
-      let newData = {
+      const newData = {
         requestId,
         newStage: "",
         newSubStage: "",

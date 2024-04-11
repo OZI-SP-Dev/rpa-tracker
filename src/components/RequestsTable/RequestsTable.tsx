@@ -128,16 +128,9 @@ const CurrentStage = createTableColumn<RPARequest>({
     const stageIndex = STAGES.findIndex(({ key }) => key === item.stage);
     const currentStage = STAGES[stageIndex]?.text;
 
-    const subStageIndex = STAGES[stageIndex].subStages?.findIndex(
+    const subStage = STAGES[stageIndex].subStages?.find(
       ({ key }) => key === item.subStage
-    );
-    let subStage = undefined;
-    if (subStageIndex !== undefined) {
-      let subStages = STAGES[stageIndex].subStages;
-      if (subStages) {
-        subStage = subStages[subStageIndex]?.text;
-      }
-    }
+    )?.text;
 
     let displayStage = subStage || currentStage;
     return <TableCellLayout truncate>{displayStage}</TableCellLayout>;
