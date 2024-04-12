@@ -15,6 +15,9 @@ const StatusBar = () => {
 
   const stageIndex = STAGES.findIndex(({ key }) => key === request.data?.stage);
   const currentStage = STAGES[stageIndex]?.text || "Loading...";
+  const subStageIndex = STAGES[stageIndex]?.subStages?.findIndex(
+    ({ key }) => key === request.data?.subStage
+  );
 
   return (
     <>
@@ -48,6 +51,26 @@ const StatusBar = () => {
           </Popover>
         ))}
       </ul>
+      {subStageIndex !== undefined &&
+        STAGES[stageIndex]?.subStages !== undefined && (
+          <>
+            <hr />
+            <ul className="request-status">
+              {STAGES[stageIndex].subStages?.map((stage, index) => (
+                <li
+                  key={stage.key}
+                  className={
+                    (index < subStageIndex ? "completed-stage" : "") ||
+                    (index === subStageIndex ? "active-stage" : "") ||
+                    (index > subStageIndex ? "inactive-stage" : "")
+                  }
+                >
+                  <div>{stage.text}</div>
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
     </>
   );
 };

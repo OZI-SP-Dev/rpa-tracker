@@ -24,20 +24,34 @@ const SendRequest = () => {
   const currentStage = STAGES.find(({ key }) => key === request.data?.stage);
 
   let draftErrors;
-
   if (currentStage?.key === "Draft" && request.data) {
     draftErrors = validateRequest(request.data);
   }
 
   const updateHandler = () => {
     if (request.data && currentStage?.next) {
-      const newStage = currentStage.next;
-      const eventTitle = currentStage.nextEventTitle;
-      updateStage.mutate({
+      const newData = {
         requestId,
-        newStage,
-        eventTitle,
-      });
+        newStage: "",
+        newSubStage: "",
+        eventTitle: "",
+      };
+
+      const subStage = currentStage.subStages?.find(
+        ({ key }) => key === request.data.subStage
+      );
+
+      if (subStage && subStage.next) {
+        newData.newStage = currentStage.key;
+        newData.newSubStage = subStage.next;
+        newData.eventTitle = subStage.nextEventTitle;
+      } else {
+        const nextStage = STAGES.find(({ key }) => key === currentStage.next);
+        newData.newStage = currentStage.next;
+        newData.newSubStage = nextStage?.subStages?.[0].key || ""; // first substage of next stage or empty string
+        newData.eventTitle = currentStage.nextEventTitle;
+      }
+      updateStage.mutate(newData);
     }
   };
 

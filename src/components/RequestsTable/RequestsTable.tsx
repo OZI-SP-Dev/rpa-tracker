@@ -125,11 +125,15 @@ const CurrentStage = createTableColumn<RPARequest>({
     return <>Current Stage {filtered && <FilterIcon />}</>;
   },
   renderCell: (item) => {
-    return (
-      <TableCellLayout truncate>
-        {STAGES.filter((stage) => stage.key === item.stage)[0].text}
-      </TableCellLayout>
-    );
+    const stageIndex = STAGES.findIndex(({ key }) => key === item.stage);
+    const currentStage = STAGES[stageIndex]?.text;
+
+    const subStage = STAGES[stageIndex].subStages?.find(
+      ({ key }) => key === item.subStage
+    )?.text;
+
+    let displayStage = subStage || currentStage;
+    return <TableCellLayout truncate>{displayStage}</TableCellLayout>;
   },
 });
 

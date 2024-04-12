@@ -24,13 +24,30 @@ const ReworkRequest = () => {
 
   const updateHandler = () => {
     if (request.data && currentStage?.previous) {
-      const newStage = currentStage.previous;
-      const eventTitle = currentStage.previousEventTitle;
-      updateStage.mutate({
+      const newData = {
         requestId,
-        newStage,
-        eventTitle,
-      });
+        newStage: "",
+        newSubStage: "",
+        eventTitle: "",
+      };
+
+      const subStage = currentStage.subStages?.find(
+        ({ key }) => key === request.data.subStage
+      );
+
+      if (subStage && subStage.previous) {
+        newData.newStage = currentStage.key;
+        newData.newSubStage = subStage.previous;
+        newData.eventTitle = subStage.previousEventTitle;
+      } else {
+        const previousStage = STAGES.find(
+          ({ key }) => key === currentStage.previous
+        );
+        newData.newStage = currentStage.previous;
+        newData.newSubStage = previousStage?.subStages?.[0].key || ""; // first substage or empty string
+        newData.eventTitle = currentStage.previousEventTitle;
+      }
+      updateStage.mutate(newData);
     }
   };
 

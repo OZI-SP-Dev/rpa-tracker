@@ -42,11 +42,6 @@ const ViewRequestDetails = ({
             </Label>
             <Text id="osf">{request.data.osf}</Text>
 
-            <Label weight="semibold" htmlFor="orgApprover">
-              Org Approver
-            </Label>
-            <Text id="orgApprover">{request.data.orgApprover?.Title}</Text>
-
             <Label weight="semibold" htmlFor="mcrRequired">
               MCR Required
             </Label>
@@ -56,6 +51,11 @@ const ViewRequestDetails = ({
               Position Title
             </Label>
             <Text id="positionTitle">{request.data.positionTitle}</Text>
+
+            <Label weight="semibold" htmlFor="supervisory">
+              Supervisory/Lead Position
+            </Label>
+            <Text id="supervisory">{request.data.supervisory}</Text>
 
             <Label weight="semibold" htmlFor="PSG">
               Pay System - Series - Grade

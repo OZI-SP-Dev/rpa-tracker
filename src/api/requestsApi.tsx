@@ -32,6 +32,7 @@ export interface RPARequest {
   Id?: string;
   Created?: Date;
   stage: (typeof STAGES)[number]["key"];
+  subStage: string;
   requestType: (typeof REQUESTTYPES)[number];
   mcrRequired: "Yes" | "No";
   paySystem: (typeof PAYSYSTEMS)[number]["key"];
@@ -47,7 +48,6 @@ export interface RPARequest {
   positionSensitivity: (typeof POSITIONSENSITIVIES)[number]["key"];
   dutyLocation: string;
   osf: string;
-  orgApprover?: Person;
   methods: string[];
   supervisor: Person;
   organizationalPOC?: Person;
@@ -91,6 +91,7 @@ export interface RPARequest {
   linkedinSearchKeyword3?: string;
   linkedinSearchKeyword4?: string;
   linkedinSearchComments?: string;
+  supervisory: "Yes" | "No";
 }
 
 /**
@@ -165,7 +166,7 @@ const getPagedRequests = async (
   }
 
   const requestedFields =
-    "Id,positionTitle,requestType,paySystem,series,grade,officeSymbol,stage,Created," +
+    "Id,positionTitle,requestType,paySystem,series,grade,officeSymbol,stage,subStage,Created," +
     "Author/Id,Author/EMail,Author/Title";
 
   const expandedFields = "Author";
@@ -196,13 +197,11 @@ const getRequest = async (Id: number) => {
   const requestedFields =
     "*," +
     "Author/Id,Author/EMail,Author/Title," +
-    "orgApprover/Id,orgApprover/EMail,orgApprover/Title," +
     "supervisor/Id,supervisor/EMail,supervisor/Title," +
     "organizationalPOC/Id,organizationalPOC/EMail,organizationalPOC/Title," +
     "issueTo/Id,issueTo/EMail,issueTo/Title";
 
-  const expandedFields =
-    "Author,orgApprover,supervisor,organizationalPOC,issueTo";
+  const expandedFields = "Author,supervisor,organizationalPOC,issueTo";
 
   return spWebContext.web.lists
     .getByTitle("requests")
@@ -355,12 +354,16 @@ export const useUpdateStage = () => {
     async (request: {
       requestId: number;
       newStage: (typeof STAGES)[number]["key"];
+      newSubStage: string;
       eventTitle: string;
     }) => {
       await spWebContext.web.lists
         .getByTitle("requests")
         .items.getById(request.requestId)
-        .update({ stage: request.newStage });
+        .update({
+          stage: request.newStage,
+          subStage: request.newSubStage,
+        });
     },
     {
       onSuccess: async (_data, request) => {
@@ -426,7 +429,6 @@ export const useUpdateStage = () => {
 
 type InternalRequestItem = Omit<
   RPARequest,
-  | "orgApprover"
   | "methods"
   | "dcwf"
   | "linkedinQualifications"
@@ -435,7 +437,6 @@ type InternalRequestItem = Omit<
   | "issueTo"
   | "Created"
 > & {
-  orgApproverId?: string;
   methods: string;
   dcwf: string;
   linkedinQualifications: string;
@@ -452,7 +453,6 @@ const transformRequestToSP = async (
   // The "rest" object will include any remaining properties that can be
   // passed back to SharePoint without modification
   const {
-    orgApprover,
     methods,
     dcwf,
     linkedinQualifications,
@@ -461,18 +461,6 @@ const transformRequestToSP = async (
     issueTo,
     ...rest
   } = request;
-
-  let orgApproverId;
-  if (orgApprover) {
-    // resolve orgApprover if no current Id set
-    if (orgApprover.Id === "-1") {
-      orgApproverId = (
-        await spWebContext.web.ensureUser(orgApprover.EMail)
-      ).data.Id.toString();
-    } else {
-      orgApproverId = orgApprover.Id;
-    }
-  }
 
   let supervisorId;
   if (supervisor) {
@@ -509,7 +497,6 @@ const transformRequestToSP = async (
 
   return {
     // if Person fields have been selected, include them
-    ...(orgApproverId && { orgApproverId: orgApproverId }),
     ...(supervisorId && { supervisorId: supervisorId }),
     ...(organizationalPOCId && { organizationalPOCId: organizationalPOCId }),
     ...(issueToId && { issueToId: issueToId }),
@@ -530,6 +517,7 @@ const transformRequestFromSP = (request: any): RPARequest => {
     Id: request.Id,
     Created: new Date(request.Created),
     stage: request.stage,
+    subStage: request.subStage,
     Author: request.Author,
     requestType: request.requestType,
     mcrRequired: request.mcrRequired,
@@ -546,7 +534,6 @@ const transformRequestFromSP = (request: any): RPARequest => {
     positionSensitivity: request.positionSensitivity,
     dutyLocation: request.dutyLocation,
     osf: request.osf,
-    orgApprover: request.orgApprover,
     methods: JSON.parse(request.methods),
     supervisor: request.supervisor,
     organizationalPOC: request.organizationalPOC,
@@ -590,6 +577,7 @@ const transformRequestFromSP = (request: any): RPARequest => {
     linkedinSearchKeyword3: request.linkedinSearchKeyword3,
     linkedinSearchKeyword4: request.linkedinSearchKeyword4,
     linkedinSearchComments: request.linkedinSearchComments,
+    supervisory: request.supervisory,
   };
 };
 
@@ -617,6 +605,7 @@ const transformPagedRequestsFromSP = (requests: any) => {
       positionTitle: request.positionTitle,
       officeSymbol: request.officeSymbol,
       stage: request.stage,
+      subStage: request.subStage,
       Created: new Date(request.Created),
     });
   });
@@ -634,6 +623,7 @@ interface PagedRequest {
   positionTitle: string;
   officeSymbol: string;
   stage: (typeof STAGES)[number]["key"];
+  subStage: string;
   Created: Date;
 }
 
