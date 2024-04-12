@@ -132,7 +132,7 @@ const CurrentStage = createTableColumn<RPARequest>({
       ({ key }) => key === item.subStage
     )?.text;
 
-    let displayStage = subStage || currentStage;
+    const displayStage = subStage || currentStage;
     return <TableCellLayout truncate>{displayStage}</TableCellLayout>;
   },
 });
