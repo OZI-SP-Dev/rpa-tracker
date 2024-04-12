@@ -8,7 +8,7 @@ const onFormatDate = (date?: Date): string => {
     : date.getMonth() + 1 + "/" + date.getDate() + "/" + date.getFullYear();
 };
 
-const NTE = () => {
+const NTEField = () => {
   return (
     <div className="requestFieldContainer">
       <BACDatePicker<RHFRequest>
@@ -19,4 +19,4 @@ const NTE = () => {
     </div>
   );
 };
-export default NTE;
+export default NTEField;

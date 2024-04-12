@@ -3,7 +3,7 @@ import "components/Request/Request.css";
 import BACInput from "components/BaseFormFields/BACInput";
 import { NumberFieldIcon } from "@fluentui/react-icons-mdl2";
 
-const MPCN = () => {
+const MPCNField = () => {
   return (
     <div className="requestFieldContainer">
       <BACInput<RHFRequest>
@@ -29,4 +29,4 @@ const MPCN = () => {
     </div>
   );
 };
-export default MPCN;
+export default MPCNField;

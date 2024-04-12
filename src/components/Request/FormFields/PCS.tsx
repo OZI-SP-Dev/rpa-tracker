@@ -3,7 +3,7 @@ import "components/Request/Request.css";
 import { RHFRequest } from "components/Request/NewRequestForm";
 import BACRadioGroup from "components/BaseFormFields/BACRadioGroup";
 
-const PCS = () => {
+const PCSField = () => {
   return (
     <div className="requestFieldContainer">
       <BACRadioGroup<RHFRequest>
@@ -17,4 +17,4 @@ const PCS = () => {
     </div>
   );
 };
-export default PCS;
+export default PCSField;

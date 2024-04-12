@@ -2,7 +2,7 @@ import { RHFRequest } from "components/Request/NewRequestForm";
 import "components/Request/Request.css";
 import BACInput from "components/BaseFormFields/BACInput";
 
-const CPCN = () => {
+const CPCNField = () => {
   return (
     <div className="requestFieldContainer">
       <BACInput<RHFRequest>
@@ -19,4 +19,4 @@ const CPCN = () => {
     </div>
   );
 };
-export default CPCN;
+export default CPCNField;
