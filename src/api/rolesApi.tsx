@@ -11,12 +11,7 @@ import {
   useToastController,
 } from "@fluentui/react-components";
 
-declare const _spPageContextInfo: {
-  userId: number;
-  userDisplayName: string;
-  userEmail: string;
-  userLoginName: string;
-};
+declare const _spPageContextInfo: { userId: number };
 
 export interface SPRole {
   Id: number;

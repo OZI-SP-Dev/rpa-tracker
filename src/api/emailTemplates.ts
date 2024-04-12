@@ -2,7 +2,7 @@ import { IEmailProperties } from "@pnp/sp/sputilities";
 import { RPARequest } from "./requestsApi";
 import { OSF } from "./osfApi";
 
-declare var _spPageContextInfo: any;
+declare const _spPageContextInfo: { webAbsoluteUrl: string };
 
 const emailTemplates = {
   createStageUpdateEmail: (
