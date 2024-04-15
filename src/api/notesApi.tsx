@@ -30,17 +30,15 @@ export const useNotes = (requestId: number) => {
   const noteItem = useNoteItem(requestId);
   const noteId = noteItem.data?.Id;
 
-  if (noteItem.error instanceof Error) {
-    return useQuery({
-      queryKey: ["notes", noteId],
-      queryFn: () => Promise.reject(noteItem.error),
-    });
-  }
+  const hasNoteError = noteItem.error instanceof Error;
+  const returnFunction = hasNoteError
+    ? () => Promise.reject(noteItem.error) // If we erred trying to get noteItem, then return that error
+    : () => getNotes(noteId); // If we successfuly got the noteItem, then return the Notes
 
   return useQuery({
     queryKey: ["notes", noteId],
-    queryFn: () => getNotes(noteId),
-    enabled: !!noteId,
+    queryFn: returnFunction,
+    enabled: !!noteId || hasNoteError,
   });
 };
 

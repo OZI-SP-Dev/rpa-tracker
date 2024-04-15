@@ -4,7 +4,7 @@ import { RHFRequest } from "components/Request/NewRequestForm";
 import BACCombobox from "components/BaseFormFields/BACCombobox";
 import { useOSFs } from "api/osfApi";
 
-const OSF = () => {
+const OSFField = () => {
   const OSFS = useOSFs();
   return (
     <div className="requestFieldContainer">
@@ -25,4 +25,4 @@ const OSF = () => {
   );
 };
 
-export default OSF;
+export default OSFField;

@@ -20,7 +20,7 @@ const useLogEmail = () => {
   return useMutation(
     ["logEmail"],
     async (requestEmail: { email: EmailProperties; requestId: number }) => {
-      let logEmail = {
+      const logEmail = {
         To: JSON.stringify(requestEmail.email.To),
         CC: JSON.stringify(requestEmail.email.CC),
         BCC: JSON.stringify(requestEmail.email.BCC),
@@ -41,7 +41,7 @@ export const useSendEmail = () => {
   return useMutation(
     ["sendEmail"],
     async (requestEmail: { email: EmailProperties; requestId: number }) => {
-      let email: IEmailProperties = structuredClone(requestEmail.email);
+      const email: IEmailProperties = structuredClone(requestEmail.email);
       email.AdditionalHeaders = { "content-type": "text/html" };
       email.Body = email.Body.replace(/\n/g, "<BR>");
       return spWebContext.utility.sendEmail(email);

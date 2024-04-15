@@ -20,7 +20,12 @@ import { getFileTypeIconProps } from "@fluentui/react-file-type-icons";
 import { DeleteIcon } from "@fluentui/react-icons-mdl2";
 import { SPDocument, useDeleteDocument } from "api/documentsApi";
 
-declare var _spPageContextInfo: any;
+declare const _spPageContextInfo: {
+  webAbsoluteUrl: string;
+  aadUserId: string;
+  userEmail: string;
+  siteId: string;
+};
 
 export const DocumentView = (props: {
   document: SPDocument;

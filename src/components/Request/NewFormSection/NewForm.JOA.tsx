@@ -1,7 +1,7 @@
 import * as FormFields from "components/Request/FormFields/FormFields";
 import { Divider, Title2 } from "@fluentui/react-components";
 
-const JOA = () => {
+const JOAField = () => {
   return (
     <>
       <Divider inset>
@@ -22,4 +22,4 @@ const JOA = () => {
   );
 };
 
-export default JOA;
+export default JOAField;
