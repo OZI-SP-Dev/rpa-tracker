@@ -33,7 +33,7 @@ type STAGE = STARTSTAGE | MIDSTAGE | ENDSTAGE;
 export const STAGES: ReadonlyArray<STAGE> = [
   {
     key: "Draft",
-    text: "In Draft",
+    text: "RPA Request",
     next: "PackageReview",
     nextEventTitle: "Forward Stage Change: In Draft to Package Review",
     previous: undefined,
@@ -41,9 +41,9 @@ export const STAGES: ReadonlyArray<STAGE> = [
   },
   {
     key: "PackageReview",
-    text: "Package Review/Approval",
-    next: "Post",
-    nextEventTitle: "Forward Stage Change: Package Review to Posting",
+    text: "Package Review/Concurrence",
+    next: "Recruiting",
+    nextEventTitle: "Forward Stage Change: Package Review to Recruiting",
     previous: "Draft",
     previousEventTitle: "Backward Stage Change: Package Review to In Draft",
     subStages: [
@@ -58,45 +58,31 @@ export const STAGES: ReadonlyArray<STAGE> = [
     ],
   },
   {
-    key: "Post",
-    text: "Post Announcement(s)",
+    key: "Recruiting",
+    text: "Recruiting",
     next: "Selection",
-    nextEventTitle: "Forward Stage Change: Posting to Candidate Selection",
+    nextEventTitle: "Forward Stage Change: Recruiting to Candidate Selection",
     previous: "PackageReview",
-    previousEventTitle: "Backward Stage Change: Posting to Package Review",
+    previousEventTitle: "Backward Stage Change: Recruiting to Package Review",
   },
   {
     key: "Selection",
     text: "Candidate Selection",
-    next: "OfferReview",
-    nextEventTitle: "Forward Stage Change: Candidate Selection to Offer Review",
-    previous: "Post",
-    previousEventTitle: "Backward Stage Change: Candidate Selection to Posting",
+    next: "PackageApproval",
+    nextEventTitle:
+      "Forward Stage Change: Candidate Selection to Package Approval",
+    previous: "Recruiting",
+    previousEventTitle:
+      "Backward Stage Change: Candidate Selection to Recruiting",
   },
   {
-    key: "OfferReview",
-    text: "Offer Package Approval",
-    next: "Offer",
-    nextEventTitle: "Forward Stage Change: Offer Review to Offer",
+    key: "PackageApproval",
+    text: "Package Prep & Approval",
+    next: "Complete",
+    nextEventTitle: "Forward Stage Change: Package Approval to Complete",
     previous: "Selection",
     previousEventTitle:
-      "Backward Stage Change: Offer Review to Candidate Selection",
-  },
-  {
-    key: "Offer",
-    text: "Offer",
-    next: "RPA",
-    nextEventTitle: "Forward Stage Change: Offer to Generate RPA",
-    previous: "OfferReview",
-    previousEventTitle: "Backward Stage Change: Offer to Offer Review",
-  },
-  {
-    key: "RPA",
-    text: "Generate RPA",
-    next: "Complete",
-    nextEventTitle: "Forward Stage Change: Generate RPA to Complete",
-    previous: "Offer",
-    previousEventTitle: "Backward Stage Change: Generate RPA to Offer Review",
+      "Backward Stage Change: Package Approval to Candidate Selection",
   },
   {
     key: "Complete",
