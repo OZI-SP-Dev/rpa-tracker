@@ -23,8 +23,8 @@ interface ENDSTAGE {
   text: string;
   next: undefined;
   nextEventTitle: undefined;
-  previous: undefined;
-  previousEventTitle: undefined;
+  previous: string | undefined;
+  previousEventTitle: string | undefined;
   subStages?: ReadonlyArray<STAGE>;
 }
 
@@ -35,7 +35,7 @@ export const STAGES: ReadonlyArray<STAGE> = [
     key: "Draft",
     text: "RPA Request",
     next: "PackageReview",
-    nextEventTitle: "Forward Stage Change: In Draft to Package Review",
+    nextEventTitle: "Forward Stage Change: RPA Request to Package Review",
     previous: undefined,
     previousEventTitle: undefined,
   },
@@ -45,15 +45,24 @@ export const STAGES: ReadonlyArray<STAGE> = [
     next: "Recruiting",
     nextEventTitle: "Forward Stage Change: Package Review to Recruiting",
     previous: "Draft",
-    previousEventTitle: "Backward Stage Change: Package Review to In Draft",
+    previousEventTitle: "Backward Stage Change: Package Review to RPA Request",
     subStages: [
       {
-        key: "Initial",
-        text: "Initial...",
-        next: undefined,
-        nextEventTitle: undefined,
+        key: "OSFReview",
+        text: "OSF Review",
+        next: "HRLReview",
+        nextEventTitle: "Forward Stage Change: OSF Review to HRL/COSF Review",
         previous: undefined,
         previousEventTitle: undefined,
+      },
+      {
+        key: "HRLReview",
+        text: "HRL/COSF Review",
+        next: undefined,
+        nextEventTitle: undefined,
+        previous: "OSFReview",
+        previousEventTitle:
+          "Backward Stage Change: HRL/COSF Review to OSF Review",
       },
     ],
   },
@@ -83,6 +92,36 @@ export const STAGES: ReadonlyArray<STAGE> = [
     previous: "Selection",
     previousEventTitle:
       "Backward Stage Change: Package Approval to Candidate Selection",
+    subStages: [
+      {
+        key: "HRLPackageReview",
+        text: "HRL Package Review",
+        next: "OSFPackageReview",
+        nextEventTitle:
+          "Forward Stage Change: HRL Package Review to OSF Review",
+        previous: undefined,
+        previousEventTitle: undefined,
+      },
+      {
+        key: "OSFPackageReview",
+        text: "HRL Package Review",
+        next: "CAPackageReview",
+        nextEventTitle:
+          "Forward Stage Change: OSF Review to Title V / CA Review",
+        previous: "HRLPackageReview",
+        previousEventTitle:
+          "Backward Stage Change: OSF Review to HRL Package Review",
+      },
+      {
+        key: "CAPackageReview",
+        text: "Title V / CA",
+        next: undefined,
+        nextEventTitle: undefined,
+        previous: "OSFPackageReview",
+        previousEventTitle:
+          "Backward Stage Change: Title V / CA Review to OSF Review",
+      },
+    ],
   },
   {
     key: "Complete",
