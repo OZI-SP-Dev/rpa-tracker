@@ -1,4 +1,5 @@
-import { spWebContext } from "api/SPWebContext";
+import { spWebContext, webUrl } from "api/SPWebContext";
+import "@pnp/sp/site-groups/web";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Person } from "./requestsApi";
 import { useMemo } from "react";
@@ -91,9 +92,22 @@ export const useAddRole = () => {
         }
       });
 
-      return (
-        error || spWebContext.web.lists.getByTitle("roles").items.add(newItem)
-      );
+      let add = undefined;
+
+      if (!error) {
+        add = await spWebContext.web.lists
+          .getByTitle("roles")
+          .items.add(newItem)
+          .catch((err) => (error = Promise.reject(new Error(err))));
+        if (!error) {
+          await spWebContext.web.siteGroups
+            .getByName(SuperUsersGroupName())
+            .users.add("i:0#.f|membership|" + item.user.EMail)
+            .catch((err) => (error = Promise.reject(new Error(err))));
+        }
+      }
+
+      return error || Promise.resolve(add);
     },
     {
       onSuccess: () => {
@@ -105,14 +119,36 @@ export const useAddRole = () => {
 
 export const useDeleteRole = () => {
   const queryClient = useQueryClient();
+  const roles = useRoles();
   const { dispatchToast } = useToastController("toaster");
   return useMutation(
     ["deleteRole"],
     async (id: number) => {
-      return spWebContext.web.lists
+      let error = undefined;
+      const thisRole = roles.data?.find((role) => (role.Id = id));
+
+      let result = await spWebContext.web.lists
         .getByTitle("roles")
         .items.getById(id)
-        .recycle();
+        .recycle()
+        .catch((err) => (error = Promise.reject(new Error(err))));
+
+      if (!error) {
+        const usersRoles = roles.data?.filter((role) => {
+          role.user.Id === thisRole?.user.Id;
+        });
+        // if this user has only one role (this role), remove them from the SuperUsers group
+        if ((usersRoles?.length ?? 0) === 1) {
+          await spWebContext.web.siteGroups
+            .getByName(SuperUsersGroupName())
+            .users.removeByLoginName(
+              "i:0#.f|membership|" + thisRole?.user.EMail
+            )
+            .catch((err) => (error = Promise.reject(new Error(err))));
+        }
+      }
+
+      return error || Promise.resolve(result);
     },
     {
       onSuccess: () => {
@@ -140,4 +176,9 @@ export const useDeleteRole = () => {
       },
     }
   );
+};
+
+const SuperUsersGroupName = () => {
+  const siteMatches = webUrl.match(/(?<=\/)RPA.*/);
+  return (siteMatches?.[0] ?? "") + " SuperUsers";
 };
