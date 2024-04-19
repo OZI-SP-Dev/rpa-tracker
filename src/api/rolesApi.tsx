@@ -127,7 +127,7 @@ export const useDeleteRole = () => {
       let error = undefined;
       const thisRole = roles.data?.find((role) => (role.Id = id));
 
-      let result = await spWebContext.web.lists
+      const result = await spWebContext.web.lists
         .getByTitle("roles")
         .items.getById(id)
         .recycle()

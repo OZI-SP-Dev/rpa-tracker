@@ -104,7 +104,7 @@ export const STAGES: ReadonlyArray<STAGE> = [
       },
       {
         key: "OSFPackageReview",
-        text: "HRL Package Review",
+        text: "OSF/CSF Package Review",
         next: "CAPackageReview",
         nextEventTitle:
           "Forward Stage Change: OSF Review to Title V / CA Review",

@@ -10,7 +10,6 @@ import {
   Spinner,
   TableCellLayout,
   TableColumnDefinition,
-  TableRowId,
   createTableColumn,
 } from "@fluentui/react-components";
 import { AddIcon, DeleteIcon } from "@fluentui/react-icons-mdl2";
@@ -52,22 +51,25 @@ const roleColumns: TableColumnDefinition<SPRole>[] = [
 
 const RolesPage = () => {
   const roles = useRoles();
-  const [selectedRows, setSelectedRows] = useState(new Set<TableRowId>([]));
+  const [currentItemId, setCurrentItemId] = useState<number>();
   const [panelOpen, setPanelOpen] = useState(false);
   const deleteRole = useDeleteRole();
 
   const onSelectionChange: DataGridProps["onSelectionChange"] = (_e, data) => {
-    setSelectedRows(data.selectedItems);
+    setCurrentItemId(
+      parseInt(data.selectedItems.values().next().value.toString())
+    );
   };
+
+  const currentItem = roles.data?.find((item) => item.Id === currentItemId);
 
   return (
     <>
-      {roles.isLoading && <Spinner label="Loading..." />}
+      {roles.isFetching && <Spinner label="Loading..." />}
       <Button
         appearance="subtle"
         icon={<AddIcon />}
         onClick={() => {
-          setSelectedRows(new Set());
           setPanelOpen(true);
         }}
       >
@@ -76,43 +78,48 @@ const RolesPage = () => {
       <Button
         appearance="subtle"
         icon={<DeleteIcon />}
-        disabled={selectedRows.size !== 1}
+        disabled={!currentItem}
         onClick={() => {
-          selectedRows.forEach((item) => deleteRole.mutate(Number(item)));
+          if (currentItemId) {
+            deleteRole.mutate(currentItemId);
+          }
         }}
       >
         Delete
       </Button>
-      <DataGrid
-        items={roles.data || []}
-        columns={roleColumns}
-        sortable
-        resizableColumns
-        selectionMode="single"
-        selectedItems={selectedRows}
-        onSelectionChange={onSelectionChange}
-        getRowId={(item) => item.Id}
-      >
-        <DataGridHeader>
-          <DataGridRow>
-            {({ renderHeaderCell }) => (
-              <DataGridHeaderCell>{renderHeaderCell()}</DataGridHeaderCell>
-            )}
-          </DataGridRow>
-        </DataGridHeader>
-        <DataGridBody<SPRole>>
-          {({ item, rowId }) => (
-            <DataGridRow<SPRole>
-              key={rowId}
-              selectionCell={{ radioIndicator: { "aria-label": "Select row" } }}
-            >
-              {({ renderCell }) => (
-                <DataGridCell>{renderCell(item)}</DataGridCell>
+      {!roles.isFetching && (
+        <DataGrid
+          items={roles.data || []}
+          columns={roleColumns}
+          sortable
+          resizableColumns
+          selectionMode="single"
+          onSelectionChange={onSelectionChange}
+          getRowId={(item) => item.Id}
+        >
+          <DataGridHeader>
+            <DataGridRow>
+              {({ renderHeaderCell }) => (
+                <DataGridHeaderCell>{renderHeaderCell()}</DataGridHeaderCell>
               )}
             </DataGridRow>
-          )}
-        </DataGridBody>
-      </DataGrid>
+          </DataGridHeader>
+          <DataGridBody<SPRole>>
+            {({ item, rowId }) => (
+              <DataGridRow<SPRole>
+                key={rowId}
+                selectionCell={{
+                  radioIndicator: { "aria-label": "Select row" },
+                }}
+              >
+                {({ renderCell }) => (
+                  <DataGridCell>{renderCell(item)}</DataGridCell>
+                )}
+              </DataGridRow>
+            )}
+          </DataGridBody>
+        </DataGrid>
+      )}
       {roles.isError && (
         <div>An error has occured: {(roles.error as Error).message}</div>
       )}
