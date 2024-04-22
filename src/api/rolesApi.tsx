@@ -135,7 +135,7 @@ export const useDeleteRole = () => {
 
       if (!error) {
         const usersRoles = roles.data?.filter((role) => {
-          role.user.Id === thisRole?.user.Id;
+          return role.user.Id === thisRole?.user.Id;
         });
         // if this user has only one role (this role), remove them from the SuperUsers group
         if ((usersRoles?.length ?? 0) === 1) {
