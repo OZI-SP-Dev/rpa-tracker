@@ -92,6 +92,12 @@ export interface RPARequest {
   linkedinSearchKeyword4?: string;
   linkedinSearchComments?: string;
   supervisory: "Yes" | "No";
+  jobBoardPostDate?: Date;
+  joaPostDate?: Date;
+  linkedInPostDate?: Date;
+  linkedInSearchDate?: Date;
+  resumeSearchDate?: Date;
+  usaJobsPostDate?: Date;
 }
 
 /**
@@ -578,6 +584,24 @@ const transformRequestFromSP = (request: any): RPARequest => {
     linkedinSearchKeyword4: request.linkedinSearchKeyword4,
     linkedinSearchComments: request.linkedinSearchComments,
     supervisory: request.supervisory,
+    jobBoardPostDate: request.jobBoardPostDate
+      ? new Date(request.jobBoardPostDate)
+      : undefined,
+    joaPostDate: request.joaPostDate
+      ? new Date(request.joaPostDate)
+      : undefined,
+    linkedInPostDate: request.linkedInPostDate
+      ? new Date(request.linkedInPostDate)
+      : undefined,
+    linkedInSearchDate: request.linkedInSearchDate
+      ? new Date(request.linkedInSearchDate)
+      : undefined,
+    resumeSearchDate: request.resumeSearchDate
+      ? new Date(request.resumeSearchDate)
+      : undefined,
+    usaJobsPostDate: request.usaJobsPostDate
+      ? new Date(request.usaJobsPostDate)
+      : undefined,
   };
 };
 

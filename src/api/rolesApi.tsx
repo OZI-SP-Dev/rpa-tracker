@@ -125,7 +125,7 @@ export const useDeleteRole = () => {
     ["deleteRole"],
     async (id: number) => {
       let error = undefined;
-      const thisRole = roles.data?.find((role) => (role.Id = id));
+      const thisRole = roles.data?.find((role) => role.Id === id);
 
       const result = await spWebContext.web.lists
         .getByTitle("roles")

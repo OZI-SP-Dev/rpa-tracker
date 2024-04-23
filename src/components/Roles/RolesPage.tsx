@@ -61,6 +61,13 @@ const RolesPage = () => {
     );
   };
 
+  const setIsOpen = (isOpen: boolean) => {
+    if (!isOpen) {
+      setCurrentItemId(undefined);
+      setPanelOpen(false);
+    }
+  };
+
   const currentItem = roles.data?.find((item) => item.Id === currentItemId);
 
   return (
@@ -78,10 +85,11 @@ const RolesPage = () => {
       <Button
         appearance="subtle"
         icon={<DeleteIcon />}
-        disabled={!currentItem}
+        disabled={!currentItem || roles.isFetching}
         onClick={() => {
           if (currentItemId) {
             deleteRole.mutate(currentItemId);
+            setCurrentItemId(undefined);
           }
         }}
       >
@@ -123,7 +131,7 @@ const RolesPage = () => {
       {roles.isError && (
         <div>An error has occured: {(roles.error as Error).message}</div>
       )}
-      <AddRoleDrawer isOpen={panelOpen} setIsOpen={setPanelOpen} />
+      <AddRoleDrawer isOpen={panelOpen} setIsOpen={setIsOpen} />
     </>
   );
 };
