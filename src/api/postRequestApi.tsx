@@ -8,36 +8,13 @@ import {
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { spWebContext } from "./SPWebContext";
 
-type postRequests =
-  | {
-      jobBoardPostDate: Date | "";
-    }
-  | {
-      jobBoardPostDate: Date | "";
-    }
-  | {
-      joaPostDate: Date | "";
-    }
-  | {
-      linkedInPostDate: Date | "";
-    }
-  | {
-      linkedInSearchDate: Date | "";
-    }
-  | {
-      resumeSearchDate: Date | "";
-    }
-  | {
-      usaJobsPostDate: Date | "";
-    };
-
 export const usePostRequest = () => {
   const queryClient = useQueryClient();
   const { dispatchToast } = useToastController("toaster");
 
   return useMutation(
     ["postRequest"],
-    async (request: { requestId: number; postRequest: postRequests }) => {
+    async (request: { requestId: number; postRequest: object }) => {
       await spWebContext.web.lists
         .getByTitle("requests")
         .items.getById(request.requestId)

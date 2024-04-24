@@ -110,9 +110,7 @@ const EditDrawer = ({
                 <FormFields.Methods />
               </>
             )}
-            {subform === "JobBoard" && request.data && (
-              <FormFields.CloseDateLCMC />
-            )}
+            {subform === "lcmc" && request.data && <FormFields.CloseDateLCMC />}
             {subform === "JOA" && request.data && (
               <>
                 <FormFields.CloseDateJOA />
@@ -127,7 +125,7 @@ const EditDrawer = ({
                 <FormFields.JOAIdealCandidate />
               </>
             )}
-            {subform === "LinkedInPost" && request.data && (
+            {subform === "linkedinPost" && request.data && (
               <>
                 <FormFields.Temporary />
                 {(temporary === "Term" || temporary === "Temp") && (
@@ -142,7 +140,7 @@ const EditDrawer = ({
                 <FormFields.LinkedinKSAs />
               </>
             )}
-            {subform === "LinkedInSearch" && request.data && (
+            {subform === "linkedInSearch" && request.data && (
               <>
                 <FormFields.LinkedinSearchTitles />
                 <FormFields.LinkedinSearchSkills />
