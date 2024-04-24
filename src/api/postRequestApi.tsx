@@ -44,8 +44,8 @@ export const usePostRequest = () => {
         .update(request.postRequest);
     },
     {
-      onSuccess: async () => {
-        queryClient.invalidateQueries(["requests"]);
+      onSuccess: async (_data, request) => {
+        queryClient.invalidateQueries(["requests", request.requestId]);
       },
       onError: async (error) => {
         console.log(error);

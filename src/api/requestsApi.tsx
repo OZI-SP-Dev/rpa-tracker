@@ -107,7 +107,7 @@ export interface RPARequest {
  */
 const useContentTypes = () => {
   return useQuery({
-    queryKey: ["requests", "contentTypes"],
+    queryKey: ["contentTypes", "requests"],
     queryFn: () => spWebContext.web.lists.getByTitle("requests").contentTypes(),
     staleTime: Infinity, // Prevent refetch
     cacheTime: Infinity, // Prevent garbage collection
@@ -222,7 +222,7 @@ export const useMutateRequest = () => {
   const { dispatchToast } = useToastController("toaster");
 
   return useMutation(
-    ["requests"],
+    ["updateRequest"],
     async (newRequest: RPARequest) => {
       let id = newRequest.Id ? parseInt(newRequest.Id) : 0;
       if (id) {
@@ -273,9 +273,10 @@ export const useMutateRequest = () => {
       return data;
     },
     {
-      onSuccess: async () => {
+      onSuccess: async (_data, request) => {
         // Mark requests as needing refreshed
-        queryClient.invalidateQueries(["requests"]);
+        queryClient.invalidateQueries(["requests", Number(request.Id)]);
+        queryClient.invalidateQueries(["paged-requests"]);
         dispatchToast(
           <Toast>
             <ToastTitle>Request saved!</ToastTitle>
