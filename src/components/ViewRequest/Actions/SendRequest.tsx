@@ -11,6 +11,7 @@ import {
 } from "@fluentui/react-components";
 import { NavigateForwardIcon } from "@fluentui/react-icons-mdl2";
 import { useRequest, useUpdateStage, validateRequest } from "api/requestsApi";
+import { useMyRoles } from "api/rolesApi";
 import { STAGES } from "consts/Stages";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -20,6 +21,7 @@ const SendRequest = () => {
   const request = useRequest(requestId);
   const updateStage = useUpdateStage();
   const navigate = useNavigate();
+  const myRoles = useMyRoles();
 
   const currentStage = STAGES.find(({ key }) => key === request.data?.stage);
 
@@ -27,6 +29,13 @@ const SendRequest = () => {
   if (currentStage?.key === "Draft" && request.data) {
     draftErrors = validateRequest(request.data);
   }
+
+  const readyForNextStage = currentStage?.readyForNext(request?.data) ?? false;
+
+  const disableSend =
+    !currentStage?.next ||
+    (currentStage?.key !== "Draft" && !myRoles.isHRL && !myRoles.isCOSF) ||
+    !readyForNextStage;
 
   const updateHandler = () => {
     if (request.data && currentStage?.next) {
@@ -67,7 +76,7 @@ const SendRequest = () => {
             }}
             icon={<NavigateForwardIcon className="orange" />}
             size="large"
-            disabled={!currentStage?.next}
+            disabled={disableSend}
           />
         </Tooltip>
       </DialogTrigger>
@@ -93,8 +102,10 @@ const SendRequest = () => {
                   <p>USA Jobs Flyer Additional Information is incomplete.</p>
                 )}
               </>
-            ) : (
+            ) : readyForNextStage ? (
               <p>Are you sure you want to send the request? </p>
+            ) : (
+              <p>Complete all items before sending forward.</p>
             )}
           </DialogContent>
           <DialogActions>
@@ -106,6 +117,7 @@ const SendRequest = () => {
                 <Button
                   appearance="primary"
                   onClick={() => navigate("/New/" + params.requestId)}
+                  disabled={!readyForNextStage}
                 >
                   Make Edits
                 </Button>

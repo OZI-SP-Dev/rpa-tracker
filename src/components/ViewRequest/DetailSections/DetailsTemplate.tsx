@@ -83,7 +83,7 @@ const DetailsTemplate = ({
               </AccordionHeader>
             }
             action={
-              <div style={{ display: "flex" }}>
+              <div style={{ display: "flex", alignItems: "center" }}>
                 {!postDate && (
                   <>
                     {isPostable && detailSelection && (
@@ -116,8 +116,8 @@ const DetailsTemplate = ({
                 )}
                 {postDate && (
                   <>
-                    <div>
-                      <Text weight="semibold">Posted:</Text>
+                    <div style={{ marginRight: "0.5em" }}>
+                      <Text weight="semibold">Posted: </Text>
                       <Text>{postDate.toLocaleDateString()}</Text>
                     </div>
                     {isPostable && detailSelection && (

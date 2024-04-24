@@ -1,8 +1,11 @@
+import { RPARequest } from "api/requestsApi";
+
 interface STARTSTAGE {
   key: string;
   text: string;
   next: string;
   nextEventTitle: string;
+  readyForNext: (request: RPARequest | undefined) => boolean;
   previous: undefined;
   previousEventTitle: undefined;
   subStages?: ReadonlyArray<STAGE>;
@@ -13,6 +16,7 @@ interface MIDSTAGE {
   text: string;
   next: string;
   nextEventTitle: string;
+  readyForNext: (request: RPARequest | undefined) => boolean;
   previous: string;
   previousEventTitle: string;
   subStages?: ReadonlyArray<STAGE>;
@@ -23,6 +27,7 @@ interface ENDSTAGE {
   text: string;
   next: undefined;
   nextEventTitle: undefined;
+  readyForNext: (request: RPARequest | undefined) => true;
   previous: string | undefined;
   previousEventTitle: string | undefined;
   subStages?: ReadonlyArray<STAGE>;
@@ -36,6 +41,7 @@ export const STAGES: ReadonlyArray<STAGE> = [
     text: "RPA Request",
     next: "PackageReview",
     nextEventTitle: "Forward Stage Change: RPA Request to Package Review",
+    readyForNext: () => true,
     previous: undefined,
     previousEventTitle: undefined,
   },
@@ -44,6 +50,52 @@ export const STAGES: ReadonlyArray<STAGE> = [
     text: "Package Review/Concurrence",
     next: "Recruiting",
     nextEventTitle: "Forward Stage Change: Package Review to Recruiting",
+    readyForNext: (request) => {
+      let ready = true;
+      if (request) {
+        request.methods.forEach((method) => {
+          switch (method) {
+            case "joa": {
+              if (!request.joaPostDate) {
+                ready = false;
+              }
+              break;
+            }
+            case "linkedinPost": {
+              if (!request.linkedInPostDate) {
+                ready = false;
+              }
+              break;
+            }
+            case "linkedinSearch": {
+              if (!request.linkedInSearchDate) {
+                ready = false;
+              }
+              break;
+            }
+            case "resumeSearch": {
+              if (!request.resumeSearchDate) {
+                ready = false;
+              }
+              break;
+            }
+            case "usaJobsFlyer": {
+              if (!request.usaJobsPostDate) {
+                ready = false;
+              }
+              break;
+            }
+            case "lcmc": {
+              if (!request.jobBoardPostDate) {
+                ready = false;
+              }
+              break;
+            }
+          }
+        });
+      }
+      return ready;
+    },
     previous: "Draft",
     previousEventTitle: "Backward Stage Change: Package Review to RPA Request",
     subStages: [
@@ -52,6 +104,7 @@ export const STAGES: ReadonlyArray<STAGE> = [
         text: "OSF Review",
         next: "HRLReview",
         nextEventTitle: "Forward Stage Change: OSF Review to HRL/COSF Review",
+        readyForNext: () => true,
         previous: undefined,
         previousEventTitle: undefined,
       },
@@ -60,6 +113,7 @@ export const STAGES: ReadonlyArray<STAGE> = [
         text: "HRL/COSF Review",
         next: undefined,
         nextEventTitle: undefined,
+        readyForNext: () => true,
         previous: "OSFReview",
         previousEventTitle:
           "Backward Stage Change: HRL/COSF Review to OSF Review",
@@ -71,6 +125,7 @@ export const STAGES: ReadonlyArray<STAGE> = [
     text: "Recruiting",
     next: "Selection",
     nextEventTitle: "Forward Stage Change: Recruiting to Candidate Selection",
+    readyForNext: () => true,
     previous: "PackageReview",
     previousEventTitle: "Backward Stage Change: Recruiting to Package Review",
   },
@@ -80,6 +135,7 @@ export const STAGES: ReadonlyArray<STAGE> = [
     next: "PackageApproval",
     nextEventTitle:
       "Forward Stage Change: Candidate Selection to Package Approval",
+    readyForNext: () => true,
     previous: "Recruiting",
     previousEventTitle:
       "Backward Stage Change: Candidate Selection to Recruiting",
@@ -89,6 +145,7 @@ export const STAGES: ReadonlyArray<STAGE> = [
     text: "Package Prep & Approval",
     next: "Complete",
     nextEventTitle: "Forward Stage Change: Package Approval to Complete",
+    readyForNext: () => true,
     previous: "Selection",
     previousEventTitle:
       "Backward Stage Change: Package Approval to Candidate Selection",
@@ -99,6 +156,7 @@ export const STAGES: ReadonlyArray<STAGE> = [
         next: "OSFPackageReview",
         nextEventTitle:
           "Forward Stage Change: HRL Package Review to OSF Review",
+        readyForNext: () => true,
         previous: undefined,
         previousEventTitle: undefined,
       },
@@ -108,6 +166,7 @@ export const STAGES: ReadonlyArray<STAGE> = [
         next: "CAPackageReview",
         nextEventTitle:
           "Forward Stage Change: OSF Review to Title V / CA Review",
+        readyForNext: () => true,
         previous: "HRLPackageReview",
         previousEventTitle:
           "Backward Stage Change: OSF Review to HRL Package Review",
@@ -117,6 +176,7 @@ export const STAGES: ReadonlyArray<STAGE> = [
         text: "Title V / CA",
         next: undefined,
         nextEventTitle: undefined,
+        readyForNext: () => true,
         previous: "OSFPackageReview",
         previousEventTitle:
           "Backward Stage Change: Title V / CA Review to OSF Review",
@@ -128,6 +188,7 @@ export const STAGES: ReadonlyArray<STAGE> = [
     text: "Complete",
     next: undefined,
     nextEventTitle: undefined,
+    readyForNext: () => true,
     previous: undefined,
     previousEventTitle: undefined,
   },
