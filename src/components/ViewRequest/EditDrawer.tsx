@@ -17,6 +17,9 @@ import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { RPARequest, useMutateRequest, useRequest } from "api/requestsApi";
 import { SaveIcon } from "@fluentui/react-icons-mdl2";
+import emailTemplates from "api/emailTemplates";
+import { useOSFs } from "api/osfApi";
+import { useSendEmail } from "api/emailApi";
 
 const EditDrawer = ({
   isOpen,
@@ -30,6 +33,8 @@ const EditDrawer = ({
   const params = useParams();
   const request = useRequest(Number(params.requestId));
   const updateRequest = useMutateRequest();
+  const OSFs = useOSFs();
+  const sendEmail = useSendEmail();
 
   const { Author, Created, ...data } = request.data ?? {};
   const myForm = useForm<RPARequest>({
@@ -65,7 +70,21 @@ const EditDrawer = ({
   }, [updateRequest.isSuccess, setIsOpen, updateRequest]);
 
   const onSubmit: SubmitHandler<RPARequest> = (data) => {
-    updateRequest.mutateAsync(data);
+    updateRequest.mutateAsync(data).then(() => {
+      if (request.data && OSFs.data && request.data.subStage === "HRLReview") {
+        const email = emailTemplates.reviewStageChangesMade(
+          request.data,
+          myForm.formState.dirtyFields,
+          OSFs.data
+        );
+        if (email) {
+          sendEmail.mutateAsync({
+            email,
+            requestId: Number(request.data.Id),
+          });
+        }
+      }
+    });
   };
 
   return (

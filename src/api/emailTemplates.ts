@@ -51,7 +51,7 @@ const emailTemplates = {
   },
   reviewStageChangesMade: (
     requestData: RPARequest,
-    dirtyFields: string[],
+    dirtyFields: any,
     OSFs: OSF[]
   ) => {
     // Fields OSF cares about:
@@ -68,10 +68,9 @@ const emailTemplates = {
       .set("remote", "Remote");
 
     let dirtyFieldText = "";
-    dirtyFields.forEach((field) => {
-      if (importantFields.has(field)) {
-        dirtyFieldText += importantFields.get(field) + "\n";
-      }
+
+    importantFields.forEach((value, key) => {
+      dirtyFieldText += dirtyFields[key] ? value + "\n" : "";
     });
 
     const email: IEmailProperties = {
