@@ -33,7 +33,7 @@ const SendRequest = () => {
   const readyForNextStage = currentStage?.readyForNext(request?.data) ?? false;
 
   let disableSend = true;
-  if (currentStage?.next && readyForNextStage) {
+  if (currentStage?.next) {
     if (currentStage?.key === "Draft") {
       disableSend = false;
     } else if (myRoles.isHRL || myRoles.isCOSF) {
