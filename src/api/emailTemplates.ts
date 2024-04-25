@@ -22,10 +22,11 @@ const emailTemplates = {
       case "PackageReview":
         email = {
           To: [OSFs.find((osf) => osf.Title === requestData.osf)?.email || ""],
-          Subject: "An RPA Request has been updated and requires your review",
-          Body: `RPA Request # ${request.requestId} has been assigned to you for initial approval.
-          
-          Link to request: ${_spPageContextInfo.webAbsoluteUrl}/app/index.aspx#/Request/${request.requestId}`,
+          Subject: `OSF Action: RPA ${requestData.positionTitle} is pending OSF review.`,
+          Body: `This email has been generated to inform you that a Request for Personnel Action (RPA) for - ${requestData.positionTitle} - has been submitted and is pending the OSF review.
+
+          To action this request, follow the below link:
+          <a href="${_spPageContextInfo.webAbsoluteUrl}/app/index.aspx#/Request/${request.requestId}">${_spPageContextInfo.webAbsoluteUrl}/app/index.aspx#/Request/${request.requestId}</a>`,
         };
         break;
 
