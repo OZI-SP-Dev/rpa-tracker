@@ -27,6 +27,10 @@ import { usePostRequest } from "api/postRequestApi";
 import { useMyRoles } from "api/rolesApi";
 import { PropsWithChildren } from "react";
 
+declare const _spPageContextInfo: {
+  userId: number;
+};
+
 export type PostTypes =
   | "jobBoardPostDate"
   | "joaPostDate"
@@ -72,6 +76,12 @@ const DetailsTemplate = ({
     request.data?.stage === "Draft" ||
     (request.data?.stage === "PackageReview" && !postDate);
 
+  const isEditor =
+    myRoles.isHRL ||
+    myRoles.isOSF ||
+    myRoles.isCOSF ||
+    Number(request.data?.Author?.Id) === _spPageContextInfo.userId;
+
   return (
     <Card style={{ margin: "0.25em 0px" }}>
       <Accordion collapsible>
@@ -100,18 +110,21 @@ const DetailsTemplate = ({
                         Post
                       </Button>
                     )}
-                    {isEditable && setEditSection && setIsEditOpen && (
-                      <Button
-                        icon={<EditIcon />}
-                        aria-label="Edit"
-                        onClick={() => {
-                          setEditSection(sectionName);
-                          setIsEditOpen(true);
-                        }}
-                      >
-                        Edit
-                      </Button>
-                    )}
+                    {isEditable &&
+                      isEditor &&
+                      setEditSection &&
+                      setIsEditOpen && (
+                        <Button
+                          icon={<EditIcon />}
+                          aria-label="Edit"
+                          onClick={() => {
+                            setEditSection(sectionName);
+                            setIsEditOpen(true);
+                          }}
+                        >
+                          Edit
+                        </Button>
+                      )}
                   </>
                 )}
                 {postDate && (
