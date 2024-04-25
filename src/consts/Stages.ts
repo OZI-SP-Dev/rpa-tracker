@@ -51,50 +51,19 @@ export const STAGES: ReadonlyArray<STAGE> = [
     next: "Recruiting",
     nextEventTitle: "Forward Stage Change: Package Review to Recruiting",
     readyForNext: (request) => {
-      let ready = true;
-      if (request) {
-        request.methods.forEach((method) => {
-          switch (method) {
-            case "joa": {
-              if (!request.joaPostDate) {
-                ready = false;
-              }
-              break;
-            }
-            case "linkedinPost": {
-              if (!request.linkedInPostDate) {
-                ready = false;
-              }
-              break;
-            }
-            case "linkedinSearch": {
-              if (!request.linkedInSearchDate) {
-                ready = false;
-              }
-              break;
-            }
-            case "resumeSearch": {
-              if (!request.resumeSearchDate) {
-                ready = false;
-              }
-              break;
-            }
-            case "usaJobsFlyer": {
-              if (!request.usaJobsPostDate) {
-                ready = false;
-              }
-              break;
-            }
-            case "lcmc": {
-              if (!request.jobBoardPostDate) {
-                ready = false;
-              }
-              break;
-            }
-          }
-        });
-      }
-      return ready;
+      //find current stage
+      const currentStage = STAGES.find(({ key }) => key === request?.stage);
+      //find subStage and run it's check - if subStage not found block the move
+      console.log(
+        currentStage?.subStages
+          ?.find(({ key }) => key === request?.subStage)
+          ?.readyForNext(request)
+      );
+      return (
+        currentStage?.subStages
+          ?.find(({ key }) => key === request?.subStage)
+          ?.readyForNext(request) || false
+      );
     },
     previous: "Draft",
     previousEventTitle: "Backward Stage Change: Package Review to RPA Request",
@@ -113,7 +82,52 @@ export const STAGES: ReadonlyArray<STAGE> = [
         text: "HRL/COSF Review",
         next: undefined,
         nextEventTitle: undefined,
-        readyForNext: () => true,
+        readyForNext: (request) => {
+          let ready = true;
+          if (request) {
+            request.methods.forEach((method) => {
+              switch (method) {
+                case "joa": {
+                  if (!request.joaPostDate) {
+                    ready = false;
+                  }
+                  break;
+                }
+                case "linkedinPost": {
+                  if (!request.linkedInPostDate) {
+                    ready = false;
+                  }
+                  break;
+                }
+                case "linkedinSearch": {
+                  if (!request.linkedInSearchDate) {
+                    ready = false;
+                  }
+                  break;
+                }
+                case "resumeSearch": {
+                  if (!request.resumeSearchDate) {
+                    ready = false;
+                  }
+                  break;
+                }
+                case "usaJobsFlyer": {
+                  if (!request.usaJobsPostDate) {
+                    ready = false;
+                  }
+                  break;
+                }
+                case "lcmc": {
+                  if (!request.jobBoardPostDate) {
+                    ready = false;
+                  }
+                  break;
+                }
+              }
+            });
+          }
+          return ready;
+        },
         previous: "OSFReview",
         previousEventTitle:
           "Backward Stage Change: HRL/COSF Review to OSF Review",
@@ -145,7 +159,16 @@ export const STAGES: ReadonlyArray<STAGE> = [
     text: "Package Prep & Approval",
     next: "Complete",
     nextEventTitle: "Forward Stage Change: Package Approval to Complete",
-    readyForNext: () => true,
+    readyForNext: (request) => {
+      //find current stage
+      const currentStage = STAGES.find(({ key }) => key === request?.stage);
+      //find subStage and run it's check - if subStage not found allow to move forward
+      return (
+        currentStage?.subStages
+          ?.find(({ key }) => key === request?.subStage)
+          ?.readyForNext(request) || true
+      );
+    },
     previous: "Selection",
     previousEventTitle:
       "Backward Stage Change: Package Approval to Candidate Selection",

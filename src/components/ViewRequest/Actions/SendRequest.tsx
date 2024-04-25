@@ -32,10 +32,22 @@ const SendRequest = () => {
 
   const readyForNextStage = currentStage?.readyForNext(request?.data) ?? false;
 
-  const disableSend =
-    !currentStage?.next ||
-    (currentStage?.key !== "Draft" && !myRoles.isHRL && !myRoles.isCOSF) ||
-    !readyForNextStage;
+  let disableSend = true;
+  if (currentStage?.next && readyForNextStage) {
+    if (currentStage?.key === "Draft") {
+      disableSend = false;
+    } else if (myRoles.isHRL || myRoles.isCOSF) {
+      disableSend = false;
+    } else if (
+      (request.data?.subStage === "OSFReview" ||
+        request.data?.subStage === "OSFPackageReview") &&
+      myRoles.isOSF
+    ) {
+      disableSend = false;
+    } else if (request.data?.subStage === "CAPackageReview" && myRoles.isCA) {
+      disableSend = false;
+    }
+  }
 
   const updateHandler = () => {
     if (request.data && currentStage?.next) {
