@@ -129,12 +129,15 @@ const SendRequest = () => {
                 <Button
                   appearance="primary"
                   onClick={() => navigate("/New/" + params.requestId)}
-                  disabled={!readyForNextStage}
                 >
                   Make Edits
                 </Button>
               ) : (
-                <Button appearance="primary" onClick={updateHandler}>
+                <Button
+                  appearance="primary"
+                  onClick={updateHandler}
+                  disabled={!readyForNextStage}
+                >
                   Send
                 </Button>
               )}

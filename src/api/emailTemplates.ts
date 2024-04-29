@@ -55,7 +55,7 @@ const emailTemplates = {
     OSFs: OSF[]
   ) => {
     // Fields OSF cares about:
-    const importantFields = new Map()
+    const importantFields = new Map<keyof RPARequest, string>()
       .set("requestType", "Request Type")
       .set("supervisor", "Supervisor")
       .set("grade", "Grade")
