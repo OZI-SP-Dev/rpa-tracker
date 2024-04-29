@@ -92,6 +92,12 @@ export interface RPARequest {
   linkedinSearchKeyword4?: string;
   linkedinSearchComments?: string;
   supervisory: "Yes" | "No";
+  jobBoardPostDate?: Date;
+  joaPostDate?: Date;
+  linkedInPostDate?: Date;
+  linkedInSearchDate?: Date;
+  resumeSearchDate?: Date;
+  usaJobsPostDate?: Date;
 }
 
 /**
@@ -101,7 +107,7 @@ export interface RPARequest {
  */
 const useContentTypes = () => {
   return useQuery({
-    queryKey: ["requests", "contentTypes"],
+    queryKey: ["contentTypes", "requests"],
     queryFn: () => spWebContext.web.lists.getByTitle("requests").contentTypes(),
     staleTime: Infinity, // Prevent refetch
     cacheTime: Infinity, // Prevent garbage collection
@@ -216,7 +222,7 @@ export const useMutateRequest = () => {
   const { dispatchToast } = useToastController("toaster");
 
   return useMutation(
-    ["requests"],
+    ["updateRequest"],
     async (newRequest: RPARequest) => {
       let id = newRequest.Id ? parseInt(newRequest.Id) : 0;
       if (id) {
@@ -267,9 +273,10 @@ export const useMutateRequest = () => {
       return data;
     },
     {
-      onSuccess: async () => {
+      onSuccess: async (_data, request) => {
         // Mark requests as needing refreshed
-        queryClient.invalidateQueries(["requests"]);
+        queryClient.invalidateQueries(["requests", Number(request.Id)]);
+        queryClient.invalidateQueries(["paged-requests"]);
         dispatchToast(
           <Toast>
             <ToastTitle>Request saved!</ToastTitle>
@@ -578,6 +585,24 @@ const transformRequestFromSP = (request: any): RPARequest => {
     linkedinSearchKeyword4: request.linkedinSearchKeyword4,
     linkedinSearchComments: request.linkedinSearchComments,
     supervisory: request.supervisory,
+    jobBoardPostDate: request.jobBoardPostDate
+      ? new Date(request.jobBoardPostDate)
+      : undefined,
+    joaPostDate: request.joaPostDate
+      ? new Date(request.joaPostDate)
+      : undefined,
+    linkedInPostDate: request.linkedInPostDate
+      ? new Date(request.linkedInPostDate)
+      : undefined,
+    linkedInSearchDate: request.linkedInSearchDate
+      ? new Date(request.linkedInSearchDate)
+      : undefined,
+    resumeSearchDate: request.resumeSearchDate
+      ? new Date(request.resumeSearchDate)
+      : undefined,
+    usaJobsPostDate: request.usaJobsPostDate
+      ? new Date(request.usaJobsPostDate)
+      : undefined,
   };
 };
 

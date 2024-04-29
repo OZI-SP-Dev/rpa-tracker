@@ -38,14 +38,14 @@ const ReworkRequest = () => {
       if (subStage && subStage.previous) {
         newData.newStage = currentStage.key;
         newData.newSubStage = subStage.previous;
-        newData.eventTitle = subStage.previousEventTitle;
+        newData.eventTitle = subStage.previousEventTitle || "";
       } else {
         const previousStage = STAGES.find(
           ({ key }) => key === currentStage.previous
         );
         newData.newStage = currentStage.previous;
         newData.newSubStage = previousStage?.subStages?.[0].key || ""; // first substage or empty string
-        newData.eventTitle = currentStage.previousEventTitle;
+        newData.eventTitle = currentStage.previousEventTitle || "";
       }
       updateStage.mutate(newData);
     }

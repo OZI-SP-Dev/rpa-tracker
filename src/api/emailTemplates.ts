@@ -9,6 +9,7 @@ const emailTemplates = {
     request: {
       requestId: number;
       newStage: string;
+      newSubStage: string;
       eventTitle: string;
     },
     requestData: RPARequest,
@@ -20,19 +21,71 @@ const emailTemplates = {
         break;
 
       case "PackageReview":
-        email = {
-          To: [OSFs.find((osf) => osf.Title === requestData.osf)?.email || ""],
-          Subject: "An RPA Request has been updated and requires your review",
-          Body: `RPA Request # ${request.requestId} has been assigned to you for initial approval.
-          
-          Link to request: ${_spPageContextInfo.webAbsoluteUrl}/app/index.aspx#/Request/${request.requestId}`,
-        };
+        {
+          switch (request.newSubStage) {
+            case "OSFReview":
+              email = {
+                To: [
+                  OSFs.find((osf) => osf.Title === requestData.osf)?.email ||
+                    "",
+                ],
+                CC: [requestData.supervisor.EMail],
+                Subject: `OSF Action: RPA ${requestData.positionTitle} is pending OSF review.`,
+                Body: `This email has been generated to inform you that a Request for Personnel Action (RPA) for - ${requestData.positionTitle} - has been submitted and is pending the OSF review.
+
+              To action this request, follow the below link:
+              <a href="${_spPageContextInfo.webAbsoluteUrl}/app/index.aspx#/Request/${request.requestId}">${_spPageContextInfo.webAbsoluteUrl}/app/index.aspx#/Request/${request.requestId}</a>`,
+              };
+              break;
+
+            default:
+              break;
+          }
+        }
         break;
 
       default:
         break;
     }
     return email?.To ? email : undefined;
+  },
+  reviewStageChangesMade: (
+    requestData: RPARequest,
+    dirtyFields: any,
+    OSFs: OSF[]
+  ) => {
+    // Fields OSF cares about:
+    const importantFields = new Map<keyof RPARequest, string>()
+      .set("requestType", "Request Type")
+      .set("supervisor", "Supervisor")
+      .set("grade", "Grade")
+      .set("mpcn", "MPCN")
+      .set("positionSensitivity", "Position Sensitivity")
+      .set("dutyLocation", "Duty Location")
+      .set("salaryHigh", "Salaray (High)")
+      .set("salaryLow", "Salary (Low)")
+      .set("telework", "Telework")
+      .set("remote", "Remote");
+
+    let dirtyFieldText = "";
+
+    importantFields.forEach((value, key) => {
+      dirtyFieldText += dirtyFields[key] ? value + "\n" : "";
+    });
+
+    const email: IEmailProperties = {
+      To: [OSFs.find((osf) => osf.Title === requestData.osf)?.email || ""],
+      CC: [requestData.supervisor.EMail],
+      Subject: `A change/edit has been made to the following RPA: ${requestData.positionTitle}`,
+      Body: `This email has been generated to inform you that a change/edit has been made to the OSF approved RPA request: ${requestData.positionTitle}
+      
+      Edits have been made to the following fields:
+      ${dirtyFieldText}
+      To view this request, follow the below link:
+      <a href="${_spPageContextInfo.webAbsoluteUrl}/app/index.aspx#/Request/${requestData.Id}">${_spPageContextInfo.webAbsoluteUrl}/app/index.aspx#/Request/${requestData.Id}</a>`,
+    };
+
+    return email?.To && dirtyFieldText ? email : undefined;
   },
 };
 

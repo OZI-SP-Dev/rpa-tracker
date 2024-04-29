@@ -11,6 +11,7 @@ import {
 } from "@fluentui/react-components";
 import { NavigateForwardIcon } from "@fluentui/react-icons-mdl2";
 import { useRequest, useUpdateStage, validateRequest } from "api/requestsApi";
+import { useMyRoles } from "api/rolesApi";
 import { STAGES } from "consts/Stages";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -20,12 +21,32 @@ const SendRequest = () => {
   const request = useRequest(requestId);
   const updateStage = useUpdateStage();
   const navigate = useNavigate();
+  const myRoles = useMyRoles();
 
   const currentStage = STAGES.find(({ key }) => key === request.data?.stage);
 
   let draftErrors;
   if (currentStage?.key === "Draft" && request.data) {
     draftErrors = validateRequest(request.data);
+  }
+
+  const readyForNextStage = currentStage?.readyForNext(request?.data) ?? false;
+
+  let disableSend = true;
+  if (currentStage?.next) {
+    if (currentStage?.key === "Draft") {
+      disableSend = false;
+    } else if (myRoles.isHRL || myRoles.isCOSF) {
+      disableSend = false;
+    } else if (
+      (request.data?.subStage === "OSFReview" ||
+        request.data?.subStage === "OSFPackageReview") &&
+      myRoles.isOSF
+    ) {
+      disableSend = false;
+    } else if (request.data?.subStage === "CAPackageReview" && myRoles.isCA) {
+      disableSend = false;
+    }
   }
 
   const updateHandler = () => {
@@ -67,7 +88,7 @@ const SendRequest = () => {
             }}
             icon={<NavigateForwardIcon className="orange" />}
             size="large"
-            disabled={!currentStage?.next}
+            disabled={disableSend}
           />
         </Tooltip>
       </DialogTrigger>
@@ -93,8 +114,10 @@ const SendRequest = () => {
                   <p>USA Jobs Flyer Additional Information is incomplete.</p>
                 )}
               </>
-            ) : (
+            ) : readyForNextStage ? (
               <p>Are you sure you want to send the request? </p>
+            ) : (
+              <p>Complete all items before sending forward.</p>
             )}
           </DialogContent>
           <DialogActions>
@@ -110,7 +133,11 @@ const SendRequest = () => {
                   Make Edits
                 </Button>
               ) : (
-                <Button appearance="primary" onClick={updateHandler}>
+                <Button
+                  appearance="primary"
+                  onClick={updateHandler}
+                  disabled={!readyForNextStage}
+                >
                   Send
                 </Button>
               )}

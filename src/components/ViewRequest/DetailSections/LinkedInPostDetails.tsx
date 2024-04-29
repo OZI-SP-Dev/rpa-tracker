@@ -1,18 +1,8 @@
-import {
-  Accordion,
-  AccordionHeader,
-  AccordionItem,
-  AccordionPanel,
-  Button,
-  Card,
-  CardHeader,
-  Subtitle1,
-} from "@fluentui/react-components";
 import { useRequest } from "api/requestsApi";
 import { useParams } from "react-router-dom";
-import { EditIcon } from "@fluentui/react-icons-mdl2";
 import { LinkedInLogoIcon } from "@fluentui/react-icons-mdl2-branded";
 import ViewRequestLIJobPostDetails from "../Methods/LinkedInJobPost";
+import DetailsTemplate from "./DetailsTemplate";
 
 const LinkedInPostDetails = ({
   setEditSection,
@@ -25,39 +15,16 @@ const LinkedInPostDetails = ({
   const request = useRequest(Number(params.requestId));
 
   return (
-    <Card style={{ margin: "0.25em 0px" }}>
-      <Accordion collapsible>
-        <AccordionItem value="linkedinPost">
-          <CardHeader
-            header={
-              <AccordionHeader
-                icon={<LinkedInLogoIcon style={{ color: "#0077B5" }} />}
-              >
-                <Subtitle1>LinkedIn Job Posting</Subtitle1>
-              </AccordionHeader>
-            }
-            action={
-              <Button
-                appearance="transparent"
-                icon={<EditIcon />}
-                aria-label="Edit"
-                onClick={() => {
-                  setEditSection("LinkedInPost");
-                  setIsEditOpen(true);
-                }}
-              >
-                Edit
-              </Button>
-            }
-          />
-          <AccordionPanel>
-            {request.data && (
-              <ViewRequestLIJobPostDetails data={request.data} />
-            )}
-          </AccordionPanel>
-        </AccordionItem>
-      </Accordion>
-    </Card>
+    <DetailsTemplate
+      sectionName="linkedinPost"
+      sectionDescription="LinkedIn Job Posting"
+      setEditSection={setEditSection}
+      setIsEditOpen={setIsEditOpen}
+      detailSelection="linkedInPostDate"
+      icon={<LinkedInLogoIcon style={{ color: "#0077B5" }} />}
+    >
+      {request.data && <ViewRequestLIJobPostDetails data={request.data} />}
+    </DetailsTemplate>
   );
 };
 

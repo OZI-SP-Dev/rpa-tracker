@@ -1,8 +1,11 @@
+import { RPARequest } from "api/requestsApi";
+
 interface STARTSTAGE {
   key: string;
   text: string;
   next: string;
   nextEventTitle: string;
+  readyForNext: (request: RPARequest | undefined) => boolean;
   previous: undefined;
   previousEventTitle: undefined;
   subStages?: ReadonlyArray<STAGE>;
@@ -13,6 +16,7 @@ interface MIDSTAGE {
   text: string;
   next: string;
   nextEventTitle: string;
+  readyForNext: (request: RPARequest | undefined) => boolean;
   previous: string;
   previousEventTitle: string;
   subStages?: ReadonlyArray<STAGE>;
@@ -23,8 +27,9 @@ interface ENDSTAGE {
   text: string;
   next: undefined;
   nextEventTitle: undefined;
-  previous: undefined;
-  previousEventTitle: undefined;
+  readyForNext: (request: RPARequest | undefined) => true;
+  previous: string | undefined;
+  previousEventTitle: string | undefined;
   subStages?: ReadonlyArray<STAGE>;
 }
 
@@ -33,76 +38,180 @@ type STAGE = STARTSTAGE | MIDSTAGE | ENDSTAGE;
 export const STAGES: ReadonlyArray<STAGE> = [
   {
     key: "Draft",
-    text: "In Draft",
+    text: "RPA Request",
     next: "PackageReview",
-    nextEventTitle: "Forward Stage Change: In Draft to Package Review",
+    nextEventTitle: "Forward Stage Change: RPA Request to Package Review",
+    readyForNext: () => true,
     previous: undefined,
     previousEventTitle: undefined,
   },
   {
     key: "PackageReview",
-    text: "Package Review/Approval",
-    next: "Post",
-    nextEventTitle: "Forward Stage Change: Package Review to Posting",
+    text: "Package Review/Concurrence",
+    next: "Recruiting",
+    nextEventTitle: "Forward Stage Change: Package Review to Recruiting",
+    readyForNext: (request) => {
+      //find current stage
+      const currentStage = STAGES.find(({ key }) => key === request?.stage);
+      //find subStage and run it's check - if subStage not found block the move
+      console.log(
+        currentStage?.subStages
+          ?.find(({ key }) => key === request?.subStage)
+          ?.readyForNext(request)
+      );
+      return (
+        currentStage?.subStages
+          ?.find(({ key }) => key === request?.subStage)
+          ?.readyForNext(request) || false
+      );
+    },
     previous: "Draft",
-    previousEventTitle: "Backward Stage Change: Package Review to In Draft",
+    previousEventTitle: "Backward Stage Change: Package Review to RPA Request",
     subStages: [
       {
-        key: "Initial",
-        text: "Initial...",
-        next: undefined,
-        nextEventTitle: undefined,
+        key: "OSFReview",
+        text: "OSF Review",
+        next: "HRLReview",
+        nextEventTitle: "Forward Stage Change: OSF Review to HRL/COSF Review",
+        readyForNext: () => true,
         previous: undefined,
         previousEventTitle: undefined,
+      },
+      {
+        key: "HRLReview",
+        text: "HRL/COSF Review",
+        next: undefined,
+        nextEventTitle: undefined,
+        readyForNext: (request) => {
+          let ready = true;
+          if (request) {
+            request.methods.forEach((method) => {
+              switch (method) {
+                case "joa": {
+                  if (!request.joaPostDate) {
+                    ready = false;
+                  }
+                  break;
+                }
+                case "linkedinPost": {
+                  if (!request.linkedInPostDate) {
+                    ready = false;
+                  }
+                  break;
+                }
+                case "linkedinSearch": {
+                  if (!request.linkedInSearchDate) {
+                    ready = false;
+                  }
+                  break;
+                }
+                case "resumeSearch": {
+                  if (!request.resumeSearchDate) {
+                    ready = false;
+                  }
+                  break;
+                }
+                case "usaJobsFlyer": {
+                  if (!request.usaJobsPostDate) {
+                    ready = false;
+                  }
+                  break;
+                }
+                case "lcmc": {
+                  if (!request.jobBoardPostDate) {
+                    ready = false;
+                  }
+                  break;
+                }
+              }
+            });
+          }
+          return ready;
+        },
+        previous: "OSFReview",
+        previousEventTitle:
+          "Backward Stage Change: HRL/COSF Review to OSF Review",
       },
     ],
   },
   {
-    key: "Post",
-    text: "Post Announcement(s)",
+    key: "Recruiting",
+    text: "Recruiting",
     next: "Selection",
-    nextEventTitle: "Forward Stage Change: Posting to Candidate Selection",
+    nextEventTitle: "Forward Stage Change: Recruiting to Candidate Selection",
+    readyForNext: () => true,
     previous: "PackageReview",
-    previousEventTitle: "Backward Stage Change: Posting to Package Review",
+    previousEventTitle: "Backward Stage Change: Recruiting to Package Review",
   },
   {
     key: "Selection",
     text: "Candidate Selection",
-    next: "OfferReview",
-    nextEventTitle: "Forward Stage Change: Candidate Selection to Offer Review",
-    previous: "Post",
-    previousEventTitle: "Backward Stage Change: Candidate Selection to Posting",
+    next: "PackageApproval",
+    nextEventTitle:
+      "Forward Stage Change: Candidate Selection to Package Approval",
+    readyForNext: () => true,
+    previous: "Recruiting",
+    previousEventTitle:
+      "Backward Stage Change: Candidate Selection to Recruiting",
   },
   {
-    key: "OfferReview",
-    text: "Offer Package Approval",
-    next: "Offer",
-    nextEventTitle: "Forward Stage Change: Offer Review to Offer",
+    key: "PackageApproval",
+    text: "Package Prep & Approval",
+    next: "Complete",
+    nextEventTitle: "Forward Stage Change: Package Approval to Complete",
+    readyForNext: (request) => {
+      //find current stage
+      const currentStage = STAGES.find(({ key }) => key === request?.stage);
+      //find subStage and run it's check - if subStage not found allow to move forward
+      return (
+        currentStage?.subStages
+          ?.find(({ key }) => key === request?.subStage)
+          ?.readyForNext(request) || true
+      );
+    },
     previous: "Selection",
     previousEventTitle:
-      "Backward Stage Change: Offer Review to Candidate Selection",
-  },
-  {
-    key: "Offer",
-    text: "Offer",
-    next: "RPA",
-    nextEventTitle: "Forward Stage Change: Offer to Generate RPA",
-    previous: "OfferReview",
-    previousEventTitle: "Backward Stage Change: Offer to Offer Review",
-  },
-  {
-    key: "RPA",
-    text: "Generate RPA",
-    next: "Complete",
-    nextEventTitle: "Forward Stage Change: Generate RPA to Complete",
-    previous: "Offer",
-    previousEventTitle: "Backward Stage Change: Generate RPA to Offer Review",
+      "Backward Stage Change: Package Approval to Candidate Selection",
+    subStages: [
+      {
+        key: "HRLPackageReview",
+        text: "HRL Package Review",
+        next: "OSFPackageReview",
+        nextEventTitle:
+          "Forward Stage Change: HRL Package Review to OSF Review",
+        readyForNext: () => true,
+        previous: undefined,
+        previousEventTitle: undefined,
+      },
+      {
+        key: "OSFPackageReview",
+        text: "OSF/CSF Package Review",
+        next: "CAPackageReview",
+        nextEventTitle:
+          "Forward Stage Change: OSF Review to Title V / CA Review",
+        readyForNext: () => true,
+        previous: "HRLPackageReview",
+        previousEventTitle:
+          "Backward Stage Change: OSF Review to HRL Package Review",
+      },
+      {
+        key: "CAPackageReview",
+        text: "Title V / CA",
+        next: undefined,
+        nextEventTitle: undefined,
+        readyForNext: () => true,
+        previous: "OSFPackageReview",
+        previousEventTitle:
+          "Backward Stage Change: Title V / CA Review to OSF Review",
+      },
+    ],
   },
   {
     key: "Complete",
     text: "Complete",
     next: undefined,
     nextEventTitle: undefined,
+    readyForNext: () => true,
     previous: undefined,
     previousEventTitle: undefined,
   },

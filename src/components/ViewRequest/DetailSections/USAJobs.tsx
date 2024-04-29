@@ -1,17 +1,9 @@
-import {
-  Accordion,
-  AccordionHeader,
-  AccordionItem,
-  AccordionPanel,
-  Button,
-  Card,
-  CardHeader,
-  Subtitle1,
-} from "@fluentui/react-components";
 import { useRequest } from "api/requestsApi";
 import { useParams } from "react-router-dom";
-import { AirplaneIcon, EditIcon } from "@fluentui/react-icons-mdl2";
+import { AirplaneIcon } from "@fluentui/react-icons-mdl2";
 import ViewRequestJobsFlyerDetails from "../Methods/JobsFlyer";
+
+import DetailsTemplate from "./DetailsTemplate";
 
 const USAJobsDetails = ({
   setEditSection,
@@ -24,39 +16,16 @@ const USAJobsDetails = ({
   const request = useRequest(Number(params.requestId));
 
   return (
-    <Card style={{ margin: "0.25em 0px" }}>
-      <Accordion collapsible defaultOpenItems="usaJobsFlyer">
-        <AccordionItem value="usaJobsFlyer">
-          <CardHeader
-            header={
-              <AccordionHeader
-                icon={<AirplaneIcon style={{ color: "#120A8F" }} />}
-              >
-                <Subtitle1>USA Jobs</Subtitle1>
-              </AccordionHeader>
-            }
-            action={
-              <Button
-                appearance="transparent"
-                icon={<EditIcon />}
-                aria-label="Edit"
-                onClick={() => {
-                  setEditSection("usaJobsFlyer");
-                  setIsEditOpen(true);
-                }}
-              >
-                Edit
-              </Button>
-            }
-          />
-          <AccordionPanel>
-            {request.data && (
-              <ViewRequestJobsFlyerDetails data={request.data} />
-            )}
-          </AccordionPanel>
-        </AccordionItem>
-      </Accordion>
-    </Card>
+    <DetailsTemplate
+      sectionName="usaJobsFlyer"
+      sectionDescription="USA Jobs"
+      setEditSection={setEditSection}
+      setIsEditOpen={setIsEditOpen}
+      detailSelection="usaJobsPostDate"
+      icon={<AirplaneIcon style={{ color: "#120A8F" }} />}
+    >
+      {request.data && <ViewRequestJobsFlyerDetails data={request.data} />}
+    </DetailsTemplate>
   );
 };
 
