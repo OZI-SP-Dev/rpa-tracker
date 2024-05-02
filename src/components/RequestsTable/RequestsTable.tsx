@@ -128,7 +128,7 @@ const CurrentStage = createTableColumn<RPARequest>({
     const stageIndex = STAGES.findIndex(({ key }) => key === item.stage);
     const currentStage = STAGES[stageIndex]?.text;
 
-    const subStage = STAGES[stageIndex].subStages?.find(
+    const subStage = STAGES[stageIndex]?.subStages?.find(
       ({ key }) => key === item.subStage
     )?.text;
 
