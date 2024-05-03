@@ -100,6 +100,12 @@ export interface RPARequest {
   resumeSearchDate?: Date;
   usaJobsPostDate?: Date;
   hrl?: Person;
+  jobBoardPostId?: string;
+  joaPostId?: string;
+  linkedInPostId?: string;
+  linkedInSearchId?: string;
+  resumeSearchId?: string;
+  usaJobsPostId?: string;
 }
 
 /**
@@ -699,6 +705,12 @@ const transformRequestFromSP = (request: any): RPARequest => {
     usaJobsPostDate: request.usaJobsPostDate
       ? new Date(request.usaJobsPostDate)
       : undefined,
+    jobBoardPostId: request.jobBoardPostId,
+    joaPostId: request.joaPostId,
+    linkedInPostId: request.linkedInPostId,
+    linkedInSearchId: request.linkedInSearchId,
+    resumeSearchId: request.resumeSearchId,
+    usaJobsPostId: request.usaJobsPostId,
   };
 };
 

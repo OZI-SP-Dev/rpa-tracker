@@ -13,6 +13,8 @@ import {
   DialogSurface,
   DialogTitle,
   DialogTrigger,
+  Input,
+  Label,
   Subtitle1,
   Text,
 } from "@fluentui/react-components";
@@ -26,18 +28,20 @@ import {
 import { usePostRequest } from "api/postRequestApi";
 import { useMyRoles } from "api/rolesApi";
 import { PropsWithChildren } from "react";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
 
 declare const _spPageContextInfo: {
   userId: number;
 };
 
-export type PostTypes =
-  | "jobBoardPostDate"
-  | "joaPostDate"
-  | "linkedInPostDate"
-  | "linkedInSearchDate"
-  | "resumeSearchDate"
-  | "usaJobsPostDate";
+const POSTTYPES = [
+  { key: "jobBoardPostDate", id: "jobBoardPostId" },
+  { key: "joaPostDate", id: "joaPostId" },
+  { key: "linkedInPostDate", id: "linkedInPostId" },
+  { key: "linkedInSearchDate", id: "linkedInSearchId" },
+  { key: "resumeSearchDate", id: "resumeSearchId" },
+  { key: "usaJobsPostDate", id: "usaJobsPostId" },
+] as const;
 
 const DetailsTemplate = ({
   sectionName,
@@ -52,7 +56,7 @@ const DetailsTemplate = ({
   sectionDescription: string;
   setEditSection?: (section: string) => void;
   setIsEditOpen?: (open: boolean) => void;
-  detailSelection?: PostTypes;
+  detailSelection?: (typeof POSTTYPES)[number]["key"];
   icon?: JSX.Element;
 }>) => {
   const params = useParams();
@@ -82,6 +86,30 @@ const DetailsTemplate = ({
     myRoles.isCOSF ||
     Number(request.data?.Author?.Id) === _spPageContextInfo.userId;
 
+  const sectionId = POSTTYPES.find(({ key }) => key === detailSelection)?.id;
+
+  const { control, handleSubmit, reset } = useForm<{
+    ItemId: string;
+  }>({
+    defaultValues: { ItemId: sectionId ? request.data?.[sectionId] : "" },
+  });
+
+  const onSubmit: SubmitHandler<{ ItemId: string }> = (data) => {
+    if (detailSelection) {
+      const idField = POSTTYPES.find(({ key }) => key === detailSelection)?.id;
+
+      let requestData = {
+        [detailSelection]: new Date(),
+        ...(idField && { [idField]: data.ItemId }),
+      };
+
+      postRequest.mutate({
+        requestId: Number(params.requestId),
+        postRequest: requestData,
+      });
+    }
+  };
+
   return (
     <Card style={{ margin: "0.25em 0px" }}>
       <Accordion collapsible>
@@ -97,18 +125,36 @@ const DetailsTemplate = ({
                 {!postDate && (
                   <>
                     {isPostable && detailSelection && (
-                      <Button
-                        icon={<CheckMarkIcon />}
-                        aria-label="Mark as posted"
-                        onClick={() => {
-                          postRequest.mutate({
-                            requestId: Number(params.requestId),
-                            postRequest: { [detailSelection]: new Date() },
-                          });
-                        }}
-                      >
-                        Post
-                      </Button>
+                      <Dialog modalType="modal" onOpenChange={() => reset()}>
+                        <DialogTrigger disableButtonEnhancement>
+                          <Button icon={<CheckMarkIcon />}>Post</Button>
+                        </DialogTrigger>
+                        <DialogSurface>
+                          <form onSubmit={handleSubmit(onSubmit)}>
+                            <DialogBody>
+                              <DialogTitle>Mark as posted</DialogTitle>
+                              <DialogContent>
+                                <Label htmlFor="ItemId">Posting ID</Label>
+                                <Controller
+                                  name="ItemId"
+                                  control={control}
+                                  render={({ field }) => (
+                                    <Input id="ItemId" {...field} />
+                                  )}
+                                />
+                              </DialogContent>
+                              <DialogActions>
+                                <DialogTrigger disableButtonEnhancement>
+                                  <Button appearance="secondary">Cancel</Button>
+                                </DialogTrigger>
+                                <Button appearance="primary" type="submit">
+                                  Post
+                                </Button>
+                              </DialogActions>
+                            </DialogBody>
+                          </form>
+                        </DialogSurface>
+                      </Dialog>
                     )}
                     {isEditable &&
                       isEditor &&
