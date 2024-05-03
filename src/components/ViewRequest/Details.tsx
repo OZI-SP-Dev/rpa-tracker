@@ -1,4 +1,10 @@
-import { Label, Text, Title2, Title3 } from "@fluentui/react-components";
+import {
+  Button,
+  Label,
+  Text,
+  Title2,
+  Title3,
+} from "@fluentui/react-components";
 import { useRequest } from "api/requestsApi";
 import { useParams } from "react-router-dom";
 import JobBoardDetails from "./DetailSections/JobBoardDetails";
@@ -7,6 +13,12 @@ import LinkedInPostDetails from "./DetailSections/LinkedInPostDetails";
 import LinkedInSearchDetails from "./DetailSections/LinkedInSearchDetails";
 import USAJobsDetails from "./DetailSections/USAJobs";
 import ResumeSearchDetails from "./DetailSections/ResumeSearchDetails";
+import { useMyRoles } from "api/rolesApi";
+import { useClaimRequest } from "api/hrlApi";
+
+declare const _spPageContextInfo: {
+  userId: number;
+};
 
 const ViewRequestDetails = ({
   setEditSection,
@@ -17,6 +29,20 @@ const ViewRequestDetails = ({
 }) => {
   const params = useParams();
   const request = useRequest(Number(params.requestId));
+  const { isHRL } = useMyRoles();
+  const claimRequest = useClaimRequest();
+
+  const restrictedStage = [
+    "Draft",
+    "Complete",
+    "Cancelled",
+    "Undefined",
+  ].includes(request.data?.stage || "Undefined");
+
+  const isHRLClaimable: boolean =
+    (isHRL ?? false) && // Current user has HRL role
+    !restrictedStage && // Current request is not in a restricted stage
+    Number(request.data?.hrl?.Id) !== _spPageContextInfo.userId; // not already assigned to me
 
   return (
     <>
@@ -41,6 +67,24 @@ const ViewRequestDetails = ({
               OSF
             </Label>
             <Text id="osf">{request.data.osf}</Text>
+
+            <Label weight="semibold" htmlFor="hrl">
+              HRL
+            </Label>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr auto" }}>
+              <Text id="hrl">{request.data.hrl?.Title || "Unassigned"}</Text>
+              {isHRLClaimable && (
+                <Button
+                  onClick={() =>
+                    claimRequest.mutate({ requestId: Number(request.data.Id) })
+                  }
+                  disabled={claimRequest.isLoading}
+                  style={{ width: "fit-content" }}
+                >
+                  Self Assign
+                </Button>
+              )}
+            </div>
 
             <Label weight="semibold" htmlFor="mcrRequired">
               MCR Required

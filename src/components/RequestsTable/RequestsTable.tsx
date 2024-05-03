@@ -18,6 +18,12 @@ import {
   TableColumnDefinition,
   TableColumnId,
   TableColumnSizingOptions,
+  Toolbar,
+  ToolbarButton,
+  ToolbarDivider,
+  ToolbarProps,
+  ToolbarRadioButton,
+  ToolbarRadioGroup,
   createTableColumn,
 } from "@fluentui/react-components";
 import {
@@ -162,7 +168,15 @@ const RequestsTable = () => {
     sortDirection: "ascending",
   });
   const [filterState, setFilterState] = useState<RequestFilter[]>([]);
-  const pagedItems = usePagedRequests(page, sortState, filterState);
+  const [checkedValues, setCheckedValues] = useState<Record<string, string[]>>({
+    filterOptions: ["myItems"],
+  });
+  const pagedItems = usePagedRequests(
+    page,
+    sortState,
+    filterState,
+    checkedValues.filterOptions.includes("openItems")
+  );
   const refMap = useRef<Record<string, HTMLElement | null>>({});
   const [columnSizingOptions, setColumnSizingOptions] =
     useState<TableColumnSizingOptions>({
@@ -200,6 +214,15 @@ const RequestsTable = () => {
     setPage(0);
   };
 
+  const onCheckedValueChange: ToolbarProps["onCheckedValueChange"] = (
+    _e,
+    { name, checkedItems }
+  ) => {
+    setCheckedValues((s) => {
+      return s ? { ...s, [name]: checkedItems } : { [name]: checkedItems };
+    });
+  };
+
   const columns: TableColumnDefinition<RPARequest>[] = [
     PositionTitle,
     RequestType,
@@ -222,6 +245,38 @@ const RequestsTable = () => {
         filterState={filterState}
         setFilterState={setFilterState}
       />
+      <Toolbar
+        checkedValues={checkedValues}
+        onCheckedValueChange={onCheckedValueChange}
+      >
+        <ToolbarRadioGroup>
+          <ToolbarRadioButton as="button" name="filterOptions" value="myItems">
+            My Items
+          </ToolbarRadioButton>
+          <ToolbarRadioButton
+            as="button"
+            name="filterOptions"
+            value="openItems"
+          >
+            Open Items
+          </ToolbarRadioButton>
+          <ToolbarRadioButton
+            as="button"
+            name="filterOptions"
+            value="allItems"
+            disabled
+          >
+            All Items
+          </ToolbarRadioButton>
+        </ToolbarRadioGroup>
+        <ToolbarDivider />
+        <ToolbarButton
+          icon={<FilterIcon />}
+          onClick={() => setDrawerIsOpen(true)}
+        >
+          Filters
+        </ToolbarButton>
+      </Toolbar>
       <DataGrid
         items={pagedItems.data?.results || []}
         columns={columns}
