@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 export interface OSF {
   Title: string;
   email: string;
+  defaultHRLEmail: string;
 }
 
 export const useOSFs = () => {
