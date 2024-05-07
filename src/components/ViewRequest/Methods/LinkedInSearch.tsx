@@ -4,6 +4,11 @@ import { RPARequest } from "api/requestsApi";
 const ViewRequestLISearchDetails = (props: { data: RPARequest }) => {
   return (
     <section className="viewRequestDetails">
+      <Label weight="semibold" htmlFor="linkedInSearchId">
+        Posting ID
+      </Label>
+      <Text id="linkedInSearchId">{props.data.linkedInSearchId}</Text>
+
       <Label weight="semibold" htmlFor="linkedinSearchTitles">
         Job Titles
       </Label>

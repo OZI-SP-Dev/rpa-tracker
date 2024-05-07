@@ -138,7 +138,14 @@ export const usePagedRequests = (
   const OSFs = useOSFs();
 
   return useQuery({
-    queryKey: ["paged-requests", sortParams, filterParams, page, allOpen],
+    queryKey: [
+      "paged-requests",
+      sortParams,
+      filterParams,
+      page,
+      allOpen,
+      myRoles.roles,
+    ],
     enabled: OSFs.isFetched, // wait until OSFs are fetched
     queryFn: () =>
       getPagedRequests(
@@ -395,24 +402,29 @@ export const useMutateRequest = () => {
   );
 };
 
-export const useDeleteRequest = () => {
+export const useCancelRequest = () => {
   const { dispatchToast } = useToastController("toaster");
+  const addEvent = useAddEvent();
   return useMutation(
-    ["deleteRequest"],
+    ["cancelRequest"],
     async (requestId: number) => {
       await spWebContext.web.lists
         .getByTitle("requests")
         .items.getById(requestId)
-        .recycle();
+        .update({ stage: "Cancelled" });
     },
     {
-      onSuccess: async () => {
+      onSuccess: async (_data, requestId) => {
         dispatchToast(
           <Toast>
             <ToastTitle>Deleted request</ToastTitle>
           </Toast>,
           { intent: "success" }
         );
+        addEvent.mutate({
+          Title: "Request Cancelled",
+          requestId: requestId,
+        });
       },
       onError: async (error) => {
         console.log(error);
@@ -426,7 +438,7 @@ export const useDeleteRequest = () => {
                   </ToastTrigger>
                 }
               >
-                Error deleting request
+                Error canelling request
               </ToastTitle>
             </Toast>,
             { intent: "error", timeout: -1 }

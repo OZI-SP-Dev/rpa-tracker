@@ -96,11 +96,11 @@ const DetailsTemplate = ({
 
   const onSubmit: SubmitHandler<{ ItemId: string }> = (data) => {
     if (detailSelection) {
-      const idField = POSTTYPES.find(({ key }) => key === detailSelection)?.id;
+      //const idField = POSTTYPES.find(({ key }) => key === detailSelection)?.id;
 
       let requestData = {
         [detailSelection]: new Date(),
-        ...(idField && { [idField]: data.ItemId }),
+        ...(sectionId && { [sectionId]: data.ItemId }),
       };
 
       postRequest.mutate({
@@ -125,7 +125,14 @@ const DetailsTemplate = ({
                 {!postDate && (
                   <>
                     {isPostable && detailSelection && (
-                      <Dialog modalType="modal" onOpenChange={() => reset()}>
+                      <Dialog
+                        modalType="modal"
+                        onOpenChange={() =>
+                          reset({
+                            ItemId: sectionId ? request.data?.[sectionId] : "",
+                          })
+                        }
+                      >
                         <DialogTrigger disableButtonEnhancement>
                           <Button icon={<CheckMarkIcon />}>Post</Button>
                         </DialogTrigger>
@@ -133,7 +140,14 @@ const DetailsTemplate = ({
                           <form onSubmit={handleSubmit(onSubmit)}>
                             <DialogBody>
                               <DialogTitle>Mark as posted</DialogTitle>
-                              <DialogContent>
+                              <DialogContent
+                                style={{
+                                  display: "grid",
+                                  gridTemplateColumns: "auto 1fr",
+                                  columnGap: "0.5em",
+                                  alignItems: "center",
+                                }}
+                              >
                                 <Label htmlFor="ItemId">Posting ID</Label>
                                 <Controller
                                   name="ItemId"
@@ -200,7 +214,10 @@ const DetailsTemplate = ({
                                 onClick={() => {
                                   postRequest.mutate({
                                     requestId: Number(params.requestId),
-                                    postRequest: { [detailSelection]: "" },
+                                    postRequest: {
+                                      [detailSelection]: "",
+                                      ...(sectionId && { [sectionId]: "" }),
+                                    },
                                   });
                                 }}
                               >

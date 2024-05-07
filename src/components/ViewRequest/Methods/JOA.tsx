@@ -4,6 +4,11 @@ import { RPARequest } from "api/requestsApi";
 const ViewRequestJOADetails = (props: { data: RPARequest }) => {
   return (
     <section className="viewRequestDetails">
+      <Label weight="semibold" htmlFor="joaPostId">
+        Posting ID
+      </Label>
+      <Text id="joaPostId">{props.data.joaPostId}</Text>
+
       <Label weight="semibold" htmlFor="closeDateJOA">
         Close Date
       </Label>

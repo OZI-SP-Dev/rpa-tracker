@@ -10,21 +10,32 @@ import {
   Tooltip,
 } from "@fluentui/react-components";
 import { DeleteIcon } from "@fluentui/react-icons-mdl2";
-import { useDeleteRequest } from "api/requestsApi";
+import { useCancelRequest, useRequest } from "api/requestsApi";
 import { Navigate, useParams } from "react-router-dom";
 
-const DeleteRequest = () => {
-  const params = useParams();
-  const deleteRequest = useDeleteRequest();
+declare const _spPageContextInfo: {
+  userId: number;
+};
 
-  const deleteHandler = () => {
-    deleteRequest.mutate(Number(params.requestId));
+const CancelRequest = () => {
+  const params = useParams();
+  const request = useRequest(Number(params.requestId));
+  const cancelRequest = useCancelRequest();
+
+  const blockedStages = ["Complete", "Cancelled"];
+
+  const canCancel =
+    Number(request.data?.Author?.Id) === _spPageContextInfo.userId &&
+    !blockedStages.includes(request.data?.stage || "");
+
+  const cancelHandler = () => {
+    cancelRequest.mutate(Number(params.requestId));
   };
 
   return (
     <>
-      {deleteRequest.isSuccess && <Navigate to="/" />}
-      {!deleteRequest.isSuccess && (
+      {cancelRequest.isSuccess && <Navigate to="/" />}
+      {!cancelRequest.isSuccess && (
         <Dialog modalType="alert">
           <DialogTrigger disableButtonEnhancement>
             <Tooltip withArrow content="Delete" relationship="label">
@@ -36,22 +47,23 @@ const DeleteRequest = () => {
                 }}
                 icon={<DeleteIcon className="red" />}
                 size="large"
+                disabled={!canCancel}
               />
             </Tooltip>
           </DialogTrigger>
           <DialogSurface>
             <DialogBody>
-              <DialogTitle>Delete request</DialogTitle>
+              <DialogTitle>Cancel request</DialogTitle>
               <DialogContent>
-                Are you sure you wish to delete this request?
+                Are you sure you wish to cancel this request?
               </DialogContent>
               <DialogActions>
                 <DialogTrigger disableButtonEnhancement>
-                  <Button appearance="secondary">Cancel</Button>
+                  <Button appearance="secondary">No</Button>
                 </DialogTrigger>
                 <DialogTrigger disableButtonEnhancement>
-                  <Button appearance="primary" onClick={deleteHandler}>
-                    Delete
+                  <Button appearance="primary" onClick={cancelHandler}>
+                    Cancel Request
                   </Button>
                 </DialogTrigger>
               </DialogActions>
@@ -63,4 +75,4 @@ const DeleteRequest = () => {
   );
 };
 
-export default DeleteRequest;
+export default CancelRequest;

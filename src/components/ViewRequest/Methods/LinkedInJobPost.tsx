@@ -5,6 +5,11 @@ import { DCWFCodes } from "consts/DCWF";
 const ViewRequestLIJobPostDetails = (props: { data: RPARequest }) => {
   return (
     <section className="viewRequestDetails">
+      <Label weight="semibold" htmlFor="linkedInPostId">
+        Posting ID
+      </Label>
+      <Text id="linkedInPostId">{props.data.linkedInPostId}</Text>
+
       <Label weight="semibold" htmlFor="temporary">
         Type of Appointment
       </Label>

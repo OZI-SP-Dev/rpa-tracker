@@ -1,7 +1,7 @@
 import SendRequest from "./Actions/SendRequest";
 import ReworkRequest from "./Actions/ReworkRequest";
 import EditRequest from "./Actions/EditRequest";
-import DeleteRequest from "./Actions/DeleteRequest";
+import CancelRequest from "./Actions/CancelRequest";
 
 const ActionBar = ({ openEditForm }: { openEditForm: () => void }) => {
   return (
@@ -9,7 +9,7 @@ const ActionBar = ({ openEditForm }: { openEditForm: () => void }) => {
       <SendRequest />
       <ReworkRequest />
       <EditRequest openEditForm={openEditForm} />
-      <DeleteRequest />
+      <CancelRequest />
     </div>
   );
 };
