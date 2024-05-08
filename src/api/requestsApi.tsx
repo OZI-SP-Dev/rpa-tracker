@@ -18,7 +18,7 @@ import { FieldValues } from "react-hook-form";
 import emailTemplates from "api/emailTemplates";
 import { OSF, useOSFs } from "api/osfApi";
 import { useSendEmail } from "api/emailApi";
-import { useMyRoles } from "api/rolesApi";
+import { useMyRoles, useRoles } from "api/rolesApi";
 
 const PAGESIZE = 5;
 
@@ -453,6 +453,7 @@ export const useUpdateStage = () => {
   const queryClient = useQueryClient();
   const addEvent = useAddEvent();
   const OSFs = useOSFs();
+  const allRoles = useRoles();
   const sendEmail = useSendEmail();
   const { dispatchToast } = useToastController("toaster");
 
@@ -497,7 +498,8 @@ export const useUpdateStage = () => {
           const email = emailTemplates.createStageUpdateEmail(
             request,
             requestData,
-            OSFs.data
+            OSFs.data,
+            allRoles.data || []
           );
           if (email) {
             await sendEmail.mutateAsync({

@@ -1,6 +1,7 @@
 import { IEmailProperties } from "@pnp/sp/sputilities";
 import { RPARequest } from "api/requestsApi";
 import { OSF } from "api/osfApi";
+import { SPRole } from "api/rolesApi";
 
 declare const _spPageContextInfo: { webAbsoluteUrl: string };
 
@@ -13,7 +14,8 @@ const emailTemplates = {
       eventTitle: string;
     },
     requestData: RPARequest,
-    OSFs: OSF[]
+    OSFs: OSF[],
+    allRoles: SPRole[]
   ) => {
     let email: IEmailProperties | undefined;
     switch (request.newStage) {
@@ -53,6 +55,10 @@ const emailTemplates = {
               To action this request, follow the below link:
               <a href="${_spPageContextInfo.webAbsoluteUrl}/app/index.aspx#/Request/${request.requestId}">${_spPageContextInfo.webAbsoluteUrl}/app/index.aspx#/Request/${request.requestId}</a>`,
               };
+              const COSF = allRoles.filter((role) => role.Title === "COSF");
+              COSF?.forEach((sprole) => {
+                email?.To.push(sprole.user.EMail);
+              });
               break;
 
             default:
