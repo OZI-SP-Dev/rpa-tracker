@@ -438,7 +438,7 @@ export const useCancelRequest = () => {
                   </ToastTrigger>
                 }
               >
-                Error canelling request
+                Error cancelling request
               </ToastTitle>
             </Toast>,
             { intent: "error", timeout: -1 }

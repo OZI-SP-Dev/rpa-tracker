@@ -15,8 +15,7 @@ const StatusBar = () => {
 
   const stageIndex = STAGES.findIndex(({ key }) => key === request.data?.stage);
   const currentStage =
-    STAGES[stageIndex]?.text ||
-    (request.data?.stage === "Canelled" ? "Cancelled" : "Loading...");
+    STAGES[stageIndex]?.text || request.data?.stage || "Loading...";
   const subStageIndex = STAGES[stageIndex]?.subStages?.findIndex(
     ({ key }) => key === request.data?.subStage
   );
