@@ -38,7 +38,7 @@ const CancelRequest = () => {
       {!cancelRequest.isSuccess && (
         <Dialog modalType="alert">
           <DialogTrigger disableButtonEnhancement>
-            <Tooltip withArrow content="Delete" relationship="label">
+            <Tooltip withArrow content="Cancel Request" relationship="label">
               <Button
                 style={{
                   border: "none",

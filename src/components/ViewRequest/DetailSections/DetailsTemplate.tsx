@@ -98,7 +98,7 @@ const DetailsTemplate = ({
     if (detailSelection) {
       //const idField = POSTTYPES.find(({ key }) => key === detailSelection)?.id;
 
-      let requestData = {
+      const requestData = {
         [detailSelection]: new Date(),
         ...(sectionId && { [sectionId]: data.ItemId }),
       };
