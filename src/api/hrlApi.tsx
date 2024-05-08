@@ -6,7 +6,7 @@ import {
   useToastController,
 } from "@fluentui/react-components";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { spWebContext } from "./SPWebContext";
+import { spWebContext } from "api/SPWebContext";
 
 declare const _spPageContextInfo: {
   userId: number;

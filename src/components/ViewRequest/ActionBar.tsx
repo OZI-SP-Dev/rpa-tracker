@@ -1,7 +1,7 @@
-import SendRequest from "./Actions/SendRequest";
-import ReworkRequest from "./Actions/ReworkRequest";
-import EditRequest from "./Actions/EditRequest";
-import CancelRequest from "./Actions/CancelRequest";
+import SendRequest from "components/ViewRequest/Actions/SendRequest";
+import ReworkRequest from "components/ViewRequest/Actions/ReworkRequest";
+import EditRequest from "components/ViewRequest/Actions/EditRequest";
+import CancelRequest from "components/ViewRequest/Actions/CancelRequest";
 
 const ActionBar = ({ openEditForm }: { openEditForm: () => void }) => {
   return (

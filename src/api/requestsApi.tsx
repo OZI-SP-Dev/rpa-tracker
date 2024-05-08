@@ -13,12 +13,12 @@ import {
   ToastTrigger,
   useToastController,
 } from "@fluentui/react-components";
-import { useAddEvent } from "./eventsApi";
+import { useAddEvent } from "api/eventsApi";
 import { FieldValues } from "react-hook-form";
-import emailTemplates from "./emailTemplates";
-import { OSF, useOSFs } from "./osfApi";
-import { useSendEmail } from "./emailApi";
-import { useMyRoles } from "./rolesApi";
+import emailTemplates from "api/emailTemplates";
+import { OSF, useOSFs } from "api/osfApi";
+import { useSendEmail } from "api/emailApi";
+import { useMyRoles } from "api/rolesApi";
 
 const PAGESIZE = 5;
 

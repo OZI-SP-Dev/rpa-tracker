@@ -9,7 +9,7 @@ import {
 } from "api/requestsApi";
 import "components/Request/Request.css";
 import { addDays } from "@fluentui/react";
-import Wizard from "./NewRequestForm.Wizard";
+import Wizard from "components/Request/NewRequestForm.Wizard";
 import { useParams } from "react-router-dom";
 import { useEffect } from "react";
 

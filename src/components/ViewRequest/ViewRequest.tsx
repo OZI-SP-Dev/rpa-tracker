@@ -2,10 +2,10 @@ import ActionBar from "components/ViewRequest/ActionBar";
 import StatusBar from "components/ViewRequest/StatusBar";
 import ViewRequestDetails from "components/ViewRequest/Details";
 import ViewRequestDocuments from "components/ViewRequest/Documents";
-import ViewRequestNotes from "./Notes";
+import ViewRequestNotes from "components/ViewRequest/Notes";
 import "./ViewRequest.css";
 import { useState } from "react";
-import EditDrawer from "./EditDrawer";
+import EditDrawer from "components/ViewRequest/EditDrawer";
 
 const ViewRequest = () => {
   const [isEditOpen, setIsEditOpen] = useState(false);

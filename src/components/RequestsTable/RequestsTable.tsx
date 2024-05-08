@@ -34,10 +34,10 @@ import {
 import { useCallback, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { FilterIcon } from "@fluentui/react-icons-mdl2";
-import FilterRequestsDrawer from "./FilterRequests";
+import FilterRequestsDrawer from "components/RequestsTable/FilterRequests";
 import { STAGES } from "consts/Stages";
-import TableMessages from "./TableMessages";
-import UserAvatar from "./UserAvatar";
+import TableMessages from "components/RequestsTable/TableMessages";
+import UserAvatar from "components/RequestsTable/UserAvatar";
 
 const PositionTitle = createTableColumn<RPARequest>({
   columnId: "positionTitle",

@@ -1,6 +1,6 @@
 import { IEmailProperties } from "@pnp/sp/sputilities";
-import { RPARequest } from "./requestsApi";
-import { OSF } from "./osfApi";
+import { RPARequest } from "api/requestsApi";
+import { OSF } from "api/osfApi";
 
 declare const _spPageContextInfo: { webAbsoluteUrl: string };
 

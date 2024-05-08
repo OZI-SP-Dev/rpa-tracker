@@ -1,5 +1,5 @@
 import { DocumentSearchRegular } from "@fluentui/react-icons";
-import DetailsTemplate from "./DetailsTemplate";
+import DetailsTemplate from "components/ViewRequest/DetailSections/DetailsTemplate";
 import { Label, Text } from "@fluentui/react-components";
 import { useRequest } from "api/requestsApi";
 import { useParams } from "react-router-dom";

@@ -7,12 +7,12 @@ import {
 } from "@fluentui/react-components";
 import { useRequest } from "api/requestsApi";
 import { useParams } from "react-router-dom";
-import JobBoardDetails from "./DetailSections/JobBoardDetails";
-import JOADetails from "./DetailSections/JOADetails";
-import LinkedInPostDetails from "./DetailSections/LinkedInPostDetails";
-import LinkedInSearchDetails from "./DetailSections/LinkedInSearchDetails";
-import USAJobsDetails from "./DetailSections/USAJobs";
-import ResumeSearchDetails from "./DetailSections/ResumeSearchDetails";
+import JobBoardDetails from "components/ViewRequest/DetailSections/JobBoardDetails";
+import JOADetails from "components/ViewRequest/DetailSections/JOADetails";
+import LinkedInPostDetails from "components/ViewRequest/DetailSections/LinkedInPostDetails";
+import LinkedInSearchDetails from "components/ViewRequest/DetailSections/LinkedInSearchDetails";
+import USAJobsDetails from "components/ViewRequest/DetailSections/USAJobs";
+import ResumeSearchDetails from "components/ViewRequest/DetailSections/ResumeSearchDetails";
 import { useMyRoles } from "api/rolesApi";
 import { useClaimRequest } from "api/hrlApi";
 
