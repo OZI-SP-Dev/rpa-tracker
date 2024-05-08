@@ -1,5 +1,6 @@
 import { Label, Text } from "@fluentui/react-components";
 import { RPARequest } from "api/requestsApi";
+import UpdatePostId from "components/ViewRequest/DetailSections/UpdatePostId";
 
 const ViewRequestJobsFlyerDetails = (props: { data: RPARequest }) => {
   return (
@@ -7,7 +8,10 @@ const ViewRequestJobsFlyerDetails = (props: { data: RPARequest }) => {
       <Label weight="semibold" htmlFor="usaJobsPostId">
         Posting ID
       </Label>
-      <Text id="usaJobsPostId">{props.data.usaJobsPostId}</Text>
+      <div>
+        <Text id="usaJobsPostId">{props.data.usaJobsPostId}</Text>
+        <UpdatePostId detailSelection="usaJobsPostId" />
+      </div>
 
       <Label weight="semibold" htmlFor="closeDateUsaJobsFlyer">
         Close Date

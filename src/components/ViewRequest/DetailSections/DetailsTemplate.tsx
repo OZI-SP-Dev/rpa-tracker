@@ -96,8 +96,6 @@ const DetailsTemplate = ({
 
   const onSubmit: SubmitHandler<{ ItemId: string }> = (data) => {
     if (detailSelection) {
-      //const idField = POSTTYPES.find(({ key }) => key === detailSelection)?.id;
-
       const requestData = {
         [detailSelection]: new Date(),
         ...(sectionId && { [sectionId]: data.ItemId }),

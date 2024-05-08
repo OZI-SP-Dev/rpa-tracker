@@ -1,6 +1,7 @@
 import { Label, Text } from "@fluentui/react-components";
 import { RPARequest } from "api/requestsApi";
 import { DCWFCodes } from "consts/DCWF";
+import UpdatePostId from "components/ViewRequest/DetailSections/UpdatePostId";
 
 const ViewRequestLIJobPostDetails = (props: { data: RPARequest }) => {
   return (
@@ -8,7 +9,10 @@ const ViewRequestLIJobPostDetails = (props: { data: RPARequest }) => {
       <Label weight="semibold" htmlFor="linkedInPostId">
         Posting ID
       </Label>
-      <Text id="linkedInPostId">{props.data.linkedInPostId}</Text>
+      <div>
+        <Text id="linkedInPostId">{props.data.linkedInPostId}</Text>
+        <UpdatePostId detailSelection="linkedInPostId" />
+      </div>
 
       <Label weight="semibold" htmlFor="temporary">
         Type of Appointment

@@ -1,5 +1,6 @@
 import { Label, Text } from "@fluentui/react-components";
 import { RPARequest } from "api/requestsApi";
+import UpdatePostId from "components/ViewRequest/DetailSections/UpdatePostId";
 
 const ViewRequestLISearchDetails = (props: { data: RPARequest }) => {
   return (
@@ -7,7 +8,10 @@ const ViewRequestLISearchDetails = (props: { data: RPARequest }) => {
       <Label weight="semibold" htmlFor="linkedInSearchId">
         Posting ID
       </Label>
-      <Text id="linkedInSearchId">{props.data.linkedInSearchId}</Text>
+      <div>
+        <Text id="linkedInSearchId">{props.data.linkedInSearchId}</Text>
+        <UpdatePostId detailSelection="linkedInSearchId" />
+      </div>
 
       <Label weight="semibold" htmlFor="linkedinSearchTitles">
         Job Titles

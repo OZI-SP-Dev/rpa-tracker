@@ -1,5 +1,6 @@
 import { Label, Text } from "@fluentui/react-components";
 import { RPARequest } from "api/requestsApi";
+import UpdatePostId from "components/ViewRequest/DetailSections/UpdatePostId";
 
 const ViewRequestJOADetails = (props: { data: RPARequest }) => {
   return (
@@ -7,7 +8,10 @@ const ViewRequestJOADetails = (props: { data: RPARequest }) => {
       <Label weight="semibold" htmlFor="joaPostId">
         Posting ID
       </Label>
-      <Text id="joaPostId">{props.data.joaPostId}</Text>
+      <div>
+        <Text id="joaPostId">{props.data.joaPostId}</Text>
+        <UpdatePostId detailSelection="joaPostId" />
+      </div>
 
       <Label weight="semibold" htmlFor="closeDateJOA">
         Close Date
