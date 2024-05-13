@@ -10,8 +10,10 @@ import {
   Input,
   Label,
 } from "@fluentui/react-components";
+import { EditIcon } from "@fluentui/react-icons-mdl2";
 import { usePostRequest } from "api/postRequestApi";
 import { useRequest } from "api/requestsApi";
+import { useEffect, useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 
@@ -32,6 +34,14 @@ const UpdatePostId = ({
   const params = useParams();
   const request = useRequest(Number(params.requestId));
   const postRequest = usePostRequest();
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    if (postRequest.isSuccess) {
+      postRequest.reset();
+      setOpen(false);
+    }
+  }, [postRequest.isSuccess, postRequest.reset, setOpen]);
 
   const { control, handleSubmit, reset } = useForm<{
     ItemId: string;
@@ -52,17 +62,21 @@ const UpdatePostId = ({
 
   return (
     <Dialog
+      open={open}
       modalType="modal"
-      onOpenChange={() =>
+      onOpenChange={(_e, data) => {
         reset({
           ItemId: request.data?.[detailSelection],
-        })
-      }
+        });
+        setOpen(data.open);
+      }}
     >
       <DialogTrigger disableButtonEnhancement>
-        <Button appearance="subtle" size="small" style={{ marginLeft: "auto" }}>
-          Update ID
-        </Button>
+        <Button
+          icon={<EditIcon />}
+          size="small"
+          style={{ marginLeft: "auto" }}
+        />
       </DialogTrigger>
       <DialogSurface>
         <form onSubmit={handleSubmit(onSubmit)}>

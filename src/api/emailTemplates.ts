@@ -55,10 +55,13 @@ const emailTemplates = {
               To action this request, follow the below link:
               <a href="${_spPageContextInfo.webAbsoluteUrl}/app/index.aspx#/Request/${request.requestId}">${_spPageContextInfo.webAbsoluteUrl}/app/index.aspx#/Request/${request.requestId}</a>`,
               };
-              const COSF = allRoles.filter((role) => role.Title === "COSF");
-              COSF?.forEach((sprole) => {
-                email?.To.push(sprole.user.EMail);
-              });
+
+              if (requestData.methods.includes("lcmc")) {
+                const COSF = allRoles.filter((role) => role.Title === "COSF");
+                COSF?.forEach((sprole) => {
+                  email?.To.push(sprole.user.EMail);
+                });
+              }
               break;
 
             default:
