@@ -8,10 +8,7 @@ const ViewRequestLCMCDetails = (props: { data: RPARequest }) => {
       <Label weight="semibold" htmlFor="jobBoardPostId">
         Posting ID
       </Label>
-      <div>
-        <Text id="jobBoardPostId">{props.data.jobBoardPostId}</Text>
-        <UpdatePostId detailSelection="jobBoardPostId" />
-      </div>
+      <UpdatePostId detailSelection="jobBoardPostId" />
 
       <Label weight="semibold" htmlFor="closeDateLCMC">
         Close Date

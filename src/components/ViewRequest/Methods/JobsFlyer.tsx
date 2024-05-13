@@ -8,10 +8,7 @@ const ViewRequestJobsFlyerDetails = (props: { data: RPARequest }) => {
       <Label weight="semibold" htmlFor="usaJobsPostId">
         Posting ID
       </Label>
-      <div>
-        <Text id="usaJobsPostId">{props.data.usaJobsPostId}</Text>
-        <UpdatePostId detailSelection="usaJobsPostId" />
-      </div>
+      <UpdatePostId detailSelection="usaJobsPostId" />
 
       <Label weight="semibold" htmlFor="closeDateUsaJobsFlyer">
         Close Date

@@ -1,13 +1,9 @@
 import { DocumentSearchRegular } from "@fluentui/react-icons";
 import DetailsTemplate from "components/ViewRequest/DetailSections/DetailsTemplate";
-import { Label, Text } from "@fluentui/react-components";
-import { useRequest } from "api/requestsApi";
-import { useParams } from "react-router-dom";
+import { Label } from "@fluentui/react-components";
 import UpdatePostId from "components/ViewRequest/DetailSections/UpdatePostId";
 
 const ResumeSearchDetails = () => {
-  const params = useParams();
-  const request = useRequest(Number(params.requestId));
   return (
     <DetailsTemplate
       sectionName="resume"
@@ -19,10 +15,7 @@ const ResumeSearchDetails = () => {
         <Label weight="semibold" htmlFor="resumeSearchId">
           Posting ID
         </Label>
-        <div>
-          <Text id="resumeSearchId">{request.data?.resumeSearchId}</Text>
-          <UpdatePostId detailSelection="resumeSearchId" />
-        </div>
+        <UpdatePostId detailSelection="resumeSearchId" />
       </section>
     </DetailsTemplate>
   );

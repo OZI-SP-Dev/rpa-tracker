@@ -9,6 +9,7 @@ import {
   DialogTrigger,
   Input,
   Label,
+  Text,
 } from "@fluentui/react-components";
 import { EditIcon } from "@fluentui/react-icons-mdl2";
 import { usePostRequest } from "api/postRequestApi";
@@ -39,7 +40,7 @@ const UpdatePostId = ({
   const myRoles = useMyRoles();
 
   const show =
-    request.data?.stage === "PackageReview" || myRoles.isHRL || myRoles.isCOSF;
+    request.data?.[detailSelection] && (myRoles.isHRL || myRoles.isCOSF);
 
   useEffect(() => {
     if (postRequest.isSuccess) {
@@ -82,8 +83,18 @@ const UpdatePostId = ({
             <Button
               icon={<EditIcon />}
               size="small"
-              style={{ marginLeft: "auto" }}
-            />
+              style={{
+                maxWidth: "fit-content",
+                paddingLeft: "0px",
+                borderLeft: "0px",
+              }}
+              appearance="subtle"
+              iconPosition="after"
+            >
+              <Text id={detailSelection}>
+                {request.data?.[detailSelection]}
+              </Text>
+            </Button>
           </DialogTrigger>
           <DialogSurface>
             <form onSubmit={handleSubmit(onSubmit)}>
@@ -118,6 +129,9 @@ const UpdatePostId = ({
             </form>
           </DialogSurface>
         </Dialog>
+      )}
+      {!show && (
+        <Text id={detailSelection}>{request.data?.[detailSelection]}</Text>
       )}
     </>
   );

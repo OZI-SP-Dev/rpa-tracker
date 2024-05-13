@@ -8,10 +8,7 @@ const ViewRequestLISearchDetails = (props: { data: RPARequest }) => {
       <Label weight="semibold" htmlFor="linkedInSearchId">
         Posting ID
       </Label>
-      <div>
-        <Text id="linkedInSearchId">{props.data.linkedInSearchId}</Text>
-        <UpdatePostId detailSelection="linkedInSearchId" />
-      </div>
+      <UpdatePostId detailSelection="linkedInSearchId" />
 
       <Label weight="semibold" htmlFor="linkedinSearchTitles">
         Job Titles

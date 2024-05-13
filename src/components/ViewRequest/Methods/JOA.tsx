@@ -8,10 +8,7 @@ const ViewRequestJOADetails = (props: { data: RPARequest }) => {
       <Label weight="semibold" htmlFor="joaPostId">
         Posting ID
       </Label>
-      <div>
-        <Text id="joaPostId">{props.data.joaPostId}</Text>
-        <UpdatePostId detailSelection="joaPostId" />
-      </div>
+      <UpdatePostId detailSelection="joaPostId" />
 
       <Label weight="semibold" htmlFor="closeDateJOA">
         Close Date

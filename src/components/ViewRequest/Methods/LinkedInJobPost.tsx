@@ -9,10 +9,7 @@ const ViewRequestLIJobPostDetails = (props: { data: RPARequest }) => {
       <Label weight="semibold" htmlFor="linkedInPostId">
         Posting ID
       </Label>
-      <div>
-        <Text id="linkedInPostId">{props.data.linkedInPostId}</Text>
-        <UpdatePostId detailSelection="linkedInPostId" />
-      </div>
+      <UpdatePostId detailSelection="linkedInPostId" />
 
       <Label weight="semibold" htmlFor="temporary">
         Type of Appointment
