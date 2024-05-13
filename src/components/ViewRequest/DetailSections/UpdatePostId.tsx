@@ -39,8 +39,7 @@ const UpdatePostId = ({
   const [open, setOpen] = useState(false);
   const myRoles = useMyRoles();
 
-  const show =
-    request.data?.[detailSelection] && (myRoles.isHRL || myRoles.isCOSF);
+  const show = myRoles.isHRL || myRoles.isCOSF;
 
   useEffect(() => {
     if (postRequest.isSuccess) {
