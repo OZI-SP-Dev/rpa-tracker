@@ -147,21 +147,32 @@ export const usePagedRequests = (
       myRoles.roles,
     ],
     enabled: OSFs.isFetched, // wait until OSFs are fetched
-    queryFn: () =>
-      getPagedRequests(
-        queryClient.getQueryData([
-          "paged-requests",
-          sortParams,
-          filterParams,
-          page - 1,
-          allOpen,
-        ]),
+    queryFn: () => {
+      let skiptoken = 0;
+
+      if (page > 0) {
+        const data: PagedRequest[] =
+          queryClient.getQueryData([
+            "paged-requests",
+            sortParams,
+            filterParams,
+            page - 1,
+            allOpen,
+            myRoles.roles,
+          ]) || [];
+
+        skiptoken = Number(data[data.length - 1].Id);
+      }
+
+      return getPagedRequests(
+        skiptoken,
         sortParams,
         filterParams,
         allOpen,
         myRoles,
         OSFs.data || []
-      ),
+      );
+    },
     // results must remain cached
     // if results are not kept in cache a scenario may arise where you are on
     //  a page > 1, but the previous page has been removed from cache. The
@@ -200,18 +211,13 @@ declare const _spPageContextInfo: {
 };
 
 const getPagedRequests = async (
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  data: any,
+  skiptoken: number,
   sortParams: SortParams,
   filterParams: RequestFilter[],
   allOpen: boolean,
   myRoles: MYROLES,
   OSFs: OSF[]
 ) => {
-  if (data?.hasNext) {
-    return data.getNext();
-  }
-
   const requestedFields =
     "Id,positionTitle,requestType,paySystem,series,grade,officeSymbol,stage,subStage,Created," +
     "Author/Id,Author/EMail,Author/Title";
@@ -281,13 +287,13 @@ const getPagedRequests = async (
     .items.select(requestedFields)
     .expand(expandedFields)
     .filter(queryString)
-    .top(PAGESIZE)
     .orderBy(
       sortParams.sortColumn?.toString() || "Created",
       sortParams.sortDirection !== "descending"
     )
     .orderBy("Id", true) // Include this or non-unique sort values can cause issues
-    .getPaged();
+    .skip(skiptoken)
+    .top(PAGESIZE)();
 };
 
 const getRequest = async (Id: number) => {
@@ -344,7 +350,9 @@ export const useMutateRequest = () => {
           .getByTitle("requests")
           .rootFolder.folders.addUsingPath(folderName);
 
-        const newFolderFields = await newFolder.folder.listItemAllFields();
+        const newFolderFields = await spWebContext.web
+          .getFolderByServerRelativePath(newFolder.ServerRelativeUrl)
+          .listItemAllFields();
         id = newFolderFields.Id;
 
         await spWebContext.web.lists
@@ -579,7 +587,7 @@ const transformRequestToSP = async (
     if (supervisor.Id === "-1") {
       supervisorId = (
         await spWebContext.web.ensureUser(supervisor.EMail)
-      ).data.Id.toString();
+      ).Id.toString();
     } else {
       supervisorId = supervisor.Id;
     }
@@ -590,7 +598,7 @@ const transformRequestToSP = async (
     if (organizationalPOC.Id === "-1") {
       organizationalPOCId = (
         await spWebContext.web.ensureUser(organizationalPOC.EMail)
-      ).data.Id.toString();
+      ).Id.toString();
     } else {
       organizationalPOCId = organizationalPOC.Id;
     }
@@ -601,7 +609,7 @@ const transformRequestToSP = async (
     if (issueTo.Id === "-1") {
       issueToId = (
         await spWebContext.web.ensureUser(issueTo.EMail)
-      ).data.Id.toString();
+      ).Id.toString();
     } else {
       issueToId = issueTo.Id;
     }
@@ -610,7 +618,7 @@ const transformRequestToSP = async (
   let hrlId;
   if (hrl) {
     if (hrl.Id === "-1") {
-      hrlId = (await spWebContext.web.ensureUser(hrl.EMail)).data.Id.toString();
+      hrlId = (await spWebContext.web.ensureUser(hrl.EMail)).Id.toString();
     } else {
       hrlId = hrl.Id;
     }
@@ -730,19 +738,10 @@ const transformRequestFromSP = (request: any): RPARequest => {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const transformPagedRequestsFromSP = (requests: any) => {
-  const returnObject: {
-    results: PagedRequest[];
-    hasNext: boolean;
-    getNext: () => void;
-  } = {
-    results: [],
-    hasNext: requests.hasNext,
-    getNext: requests?.getNext,
-  };
+  const returnObject: PagedRequest[] = [];
 
-  //eslint-disable-next-line @typescript-eslint/no-explicit-any
-  requests.results.forEach((request: any) => {
-    returnObject.results.push({
+  requests.forEach((request: any) => {
+    returnObject.push({
       Id: request.Id,
       Author: request.Author,
       requestType: request.requestType,

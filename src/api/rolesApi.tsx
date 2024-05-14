@@ -78,7 +78,7 @@ export const useAddRole = () => {
         userId:
           Number(item.user.Id) > 0
             ? Number(item.user.Id)
-            : (await spWebContext.web.ensureUser(item.user.EMail)).data.Id,
+            : (await spWebContext.web.ensureUser(item.user.EMail)).Id,
         Title: item.Title,
       };
 

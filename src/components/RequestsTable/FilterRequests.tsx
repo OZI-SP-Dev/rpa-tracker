@@ -348,7 +348,7 @@ const FilterRequestsDrawer = ({
                     if (items?.[0]?.Title) {
                       const userId = (
                         await spWebContext.web.ensureUser(items?.[0].EMail)
-                      ).data.Id;
+                      ).Id;
                       field.onChange({ ...items[0], Id: userId });
                     } else {
                       field.onChange([]);
