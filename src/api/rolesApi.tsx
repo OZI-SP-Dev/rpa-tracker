@@ -1,7 +1,7 @@
 import { spWebContext, webUrl } from "api/SPWebContext";
 import "@pnp/sp/site-groups/web";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Person } from "./requestsApi";
+import { Person } from "api/requestsApi";
 import { useMemo } from "react";
 import {
   Link,

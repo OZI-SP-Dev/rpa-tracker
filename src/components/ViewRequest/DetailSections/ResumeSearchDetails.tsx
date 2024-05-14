@@ -1,5 +1,7 @@
 import { DocumentSearchRegular } from "@fluentui/react-icons";
-import DetailsTemplate from "./DetailsTemplate";
+import DetailsTemplate from "components/ViewRequest/DetailSections/DetailsTemplate";
+import { Label } from "@fluentui/react-components";
+import UpdatePostId from "components/ViewRequest/DetailSections/UpdatePostId";
 
 const ResumeSearchDetails = () => {
   return (
@@ -8,7 +10,14 @@ const ResumeSearchDetails = () => {
       sectionDescription="Resume Search"
       detailSelection="resumeSearchDate"
       icon={<DocumentSearchRegular />}
-    ></DetailsTemplate>
+    >
+      <section className="viewRequestDetails">
+        <Label weight="semibold" htmlFor="resumeSearchId">
+          Posting ID
+        </Label>
+        <UpdatePostId detailSelection="resumeSearchId" />
+      </section>
+    </DetailsTemplate>
   );
 };
 

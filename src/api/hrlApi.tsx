@@ -8,17 +8,21 @@ import {
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { spWebContext } from "api/SPWebContext";
 
-export const usePostRequest = () => {
+declare const _spPageContextInfo: {
+  userId: number;
+};
+
+export const useClaimRequest = () => {
   const queryClient = useQueryClient();
   const { dispatchToast } = useToastController("toaster");
 
   return useMutation(
-    ["postRequest"],
-    async (request: { requestId: number; postRequest: object }) => {
+    ["claimRequest"],
+    async (request: { requestId: number }) => {
       await spWebContext.web.lists
         .getByTitle("requests")
         .items.getById(request.requestId)
-        .update(request.postRequest);
+        .update({ hrlId: _spPageContextInfo.userId });
     },
     {
       onSuccess: async (_data, request) => {
@@ -36,7 +40,7 @@ export const usePostRequest = () => {
                   </ToastTrigger>
                 }
               >
-                Error posting item
+                Error assigning HRL
               </ToastTitle>
             </Toast>,
             { intent: "error", timeout: -1 }

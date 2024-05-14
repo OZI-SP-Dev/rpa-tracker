@@ -1,8 +1,8 @@
 import { Title2 } from "@fluentui/react-components";
 import { useDocuments } from "api/documentsApi";
 import { useParams } from "react-router-dom";
-import { DocumentView } from "./Documents/DocumentView";
-import { DocumentUploader } from "./Documents/DocumentUploader";
+import { DocumentView } from "components/ViewRequest/Documents/DocumentView";
+import { DocumentUploader } from "components/ViewRequest/Documents/DocumentUploader";
 
 const ViewRequestDocuments = () => {
   const params = useParams();

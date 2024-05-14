@@ -1,6 +1,7 @@
 import { IEmailProperties } from "@pnp/sp/sputilities";
-import { RPARequest } from "./requestsApi";
-import { OSF } from "./osfApi";
+import { RPARequest } from "api/requestsApi";
+import { OSF } from "api/osfApi";
+import { SPRole } from "api/rolesApi";
 
 declare const _spPageContextInfo: { webAbsoluteUrl: string };
 
@@ -13,7 +14,8 @@ const emailTemplates = {
       eventTitle: string;
     },
     requestData: RPARequest,
-    OSFs: OSF[]
+    OSFs: OSF[],
+    allRoles: SPRole[]
   ) => {
     let email: IEmailProperties | undefined;
     switch (request.newStage) {
@@ -36,6 +38,30 @@ const emailTemplates = {
               To action this request, follow the below link:
               <a href="${_spPageContextInfo.webAbsoluteUrl}/app/index.aspx#/Request/${request.requestId}">${_spPageContextInfo.webAbsoluteUrl}/app/index.aspx#/Request/${request.requestId}</a>`,
               };
+              break;
+
+            case "HRLReview":
+              email = {
+                To: [
+                  requestData.hrl?.EMail ||
+                    OSFs.find((osf) => osf.Title === requestData.osf)
+                      ?.defaultHRLEmail ||
+                    "",
+                ],
+                CC: [requestData.supervisor.EMail],
+                Subject: `HRL/COSF Action: RPA ${requestData.positionTitle} is pending HRL/COSF review.`,
+                Body: `This email has been generated to inform you that a Request for Personnel Action (RPA) for - ${requestData.positionTitle} - has been submitted and is pending the HRL/COSF review.
+
+              To action this request, follow the below link:
+              <a href="${_spPageContextInfo.webAbsoluteUrl}/app/index.aspx#/Request/${request.requestId}">${_spPageContextInfo.webAbsoluteUrl}/app/index.aspx#/Request/${request.requestId}</a>`,
+              };
+
+              if (requestData.methods.includes("lcmc")) {
+                const COSF = allRoles.filter((role) => role.Title === "COSF");
+                COSF?.forEach((sprole) => {
+                  email?.To.push(sprole.user.EMail);
+                });
+              }
               break;
 
             default:

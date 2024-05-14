@@ -1,8 +1,8 @@
-import ViewRequestLCMCDetails from "../Methods/LCMC";
+import ViewRequestLCMCDetails from "components/ViewRequest/Methods/LCMC";
 import { useRequest } from "api/requestsApi";
 import { useParams } from "react-router-dom";
 import { BoardsIcon } from "@fluentui/react-icons-mdl2";
-import DetailsTemplate from "./DetailsTemplate";
+import DetailsTemplate from "components/ViewRequest/DetailSections/DetailsTemplate";
 
 const JobBoardDetails = ({
   setEditSection,

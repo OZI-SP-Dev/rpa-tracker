@@ -16,7 +16,7 @@ import { AddIcon, DeleteIcon } from "@fluentui/react-icons-mdl2";
 import { SPRole, useDeleteRole, useRoles } from "api/rolesApi";
 import UserAvatar from "components/RequestsTable/UserAvatar";
 import { useState } from "react";
-import AddRoleDrawer from "./AddRoleDrawer";
+import AddRoleDrawer from "components/Roles/AddRoleDrawer";
 
 const roleColumns: TableColumnDefinition<SPRole>[] = [
   createTableColumn<SPRole>({

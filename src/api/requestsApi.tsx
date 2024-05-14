@@ -13,11 +13,12 @@ import {
   ToastTrigger,
   useToastController,
 } from "@fluentui/react-components";
-import { useAddEvent } from "./eventsApi";
+import { useAddEvent } from "api/eventsApi";
 import { FieldValues } from "react-hook-form";
-import emailTemplates from "./emailTemplates";
-import { useOSFs } from "./osfApi";
-import { useSendEmail } from "./emailApi";
+import emailTemplates from "api/emailTemplates";
+import { OSF, useOSFs } from "api/osfApi";
+import { useSendEmail } from "api/emailApi";
+import { useMyRoles, useRoles } from "api/rolesApi";
 
 const PAGESIZE = 5;
 
@@ -98,6 +99,13 @@ export interface RPARequest {
   linkedInSearchDate?: Date;
   resumeSearchDate?: Date;
   usaJobsPostDate?: Date;
+  hrl?: Person;
+  jobBoardPostId?: string;
+  joaPostId?: string;
+  linkedInPostId?: string;
+  linkedInSearchId?: string;
+  resumeSearchId?: string;
+  usaJobsPostId?: string;
 }
 
 /**
@@ -122,12 +130,23 @@ const defaultSortParams: SortParams = {
 export const usePagedRequests = (
   page = 0,
   sortParams = defaultSortParams,
-  filterParams: RequestFilter[]
+  filterParams: RequestFilter[],
+  allOpen = false
 ) => {
   const queryClient = useQueryClient();
+  const myRoles = useMyRoles();
+  const OSFs = useOSFs();
 
   return useQuery({
-    queryKey: ["paged-requests", sortParams, filterParams, page],
+    queryKey: [
+      "paged-requests",
+      sortParams,
+      filterParams,
+      page,
+      allOpen,
+      myRoles.roles,
+    ],
+    enabled: OSFs.isFetched, // wait until OSFs are fetched
     queryFn: () =>
       getPagedRequests(
         queryClient.getQueryData([
@@ -135,9 +154,13 @@ export const usePagedRequests = (
           sortParams,
           filterParams,
           page - 1,
+          allOpen,
         ]),
         sortParams,
-        filterParams
+        filterParams,
+        allOpen,
+        myRoles,
+        OSFs.data || []
       ),
     // results must remain cached
     // if results are not kept in cache a scenario may arise where you are on
@@ -161,11 +184,29 @@ export const useRequest = (requestId: number) => {
   });
 };
 
+interface MYROLES {
+  isAdmin?: boolean;
+  isCA?: boolean;
+  isCOSF?: boolean;
+  isCSF?: boolean;
+  isHRL?: boolean;
+  isOSF?: boolean;
+  isHQ?: boolean;
+  roles: string[];
+}
+
+declare const _spPageContextInfo: {
+  userEmail: string;
+};
+
 const getPagedRequests = async (
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data: any,
   sortParams: SortParams,
-  filterParams: RequestFilter[]
+  filterParams: RequestFilter[],
+  allOpen: boolean,
+  myRoles: MYROLES,
+  OSFs: OSF[]
 ) => {
   if (data?.hasNext) {
     return data.getNext();
@@ -174,10 +215,63 @@ const getPagedRequests = async (
   const requestedFields =
     "Id,positionTitle,requestType,paySystem,series,grade,officeSymbol,stage,subStage,Created," +
     "Author/Id,Author/EMail,Author/Title";
-
   const expandedFields = "Author";
 
-  let queryString = "ContentType eq 'RPADocSet'";
+  let queryString =
+    "ContentType eq 'RPADocSet' and stage ne 'Complete'" +
+    " and stage ne 'Cancelled'";
+
+  // if not showing all open requests, filter for those items relevant to current user
+  // current user may have multiple roles!
+  if (!allOpen) {
+    // if current user is a CSF or COSF, they may see all post-draft requests
+    // no other filters need be added
+    if (myRoles.isCSF || myRoles.isCOSF) {
+      queryString += ` and (stage ne 'Draft' or Author/EMail eq '${_spPageContextInfo.userEmail}')`;
+    } else {
+      //current user is not CSF or OSF, apply additional filters
+      const roleFilters = [];
+
+      // if you're the author, you can always view your items
+      roleFilters.push(`Author/EMail eq '${_spPageContextInfo.userEmail}'`);
+
+      // HRL sees requests assigned to them, and unassigned requests
+      if (myRoles.isHRL) {
+        roleFilters.push(
+          `stage ne 'Draft' and (hrl/Id eq null or hrl/EMail eq '${_spPageContextInfo.userEmail}')`
+        );
+      }
+
+      // OSF sees requests assigned to their org
+      if (myRoles.isOSF) {
+        const myOrgs = OSFs.filter((osf) => {
+          return osf.email === _spPageContextInfo.userEmail;
+        });
+        myOrgs.forEach((org) => {
+          roleFilters.push(`stage ne 'Draft' and (osf eq '${org.Title}')`);
+        });
+      }
+
+      // HQ only see NH-04 requests in the Candidate Offer Stage
+      if (myRoles.isHQ) {
+        roleFilters.push(
+          `stage eq 'PackageApproval' and requestType eq 'Create/Update NH-04')`
+        );
+      }
+
+      if (roleFilters.length >= 1) {
+        queryString += ` and (`;
+        roleFilters.forEach((filter, index) => {
+          if (index >= 1) {
+            queryString += ` or `;
+          }
+          queryString += `(${filter})`;
+        });
+        queryString += `)`;
+      }
+    }
+  }
+
   filterParams.forEach((filter) => {
     queryString += ` and ${filter.queryString}`;
   });
@@ -205,9 +299,10 @@ const getRequest = async (Id: number) => {
     "Author/Id,Author/EMail,Author/Title," +
     "supervisor/Id,supervisor/EMail,supervisor/Title," +
     "organizationalPOC/Id,organizationalPOC/EMail,organizationalPOC/Title," +
-    "issueTo/Id,issueTo/EMail,issueTo/Title";
+    "issueTo/Id,issueTo/EMail,issueTo/Title," +
+    "hrl/Id,hrl/EMail,hrl/Title";
 
-  const expandedFields = "Author,supervisor,organizationalPOC,issueTo";
+  const expandedFields = "Author,supervisor,organizationalPOC,issueTo,hrl";
 
   return spWebContext.web.lists
     .getByTitle("requests")
@@ -307,24 +402,29 @@ export const useMutateRequest = () => {
   );
 };
 
-export const useDeleteRequest = () => {
+export const useCancelRequest = () => {
   const { dispatchToast } = useToastController("toaster");
+  const addEvent = useAddEvent();
   return useMutation(
-    ["deleteRequest"],
+    ["cancelRequest"],
     async (requestId: number) => {
       await spWebContext.web.lists
         .getByTitle("requests")
         .items.getById(requestId)
-        .recycle();
+        .update({ stage: "Cancelled" });
     },
     {
-      onSuccess: async () => {
+      onSuccess: async (_data, requestId) => {
         dispatchToast(
           <Toast>
             <ToastTitle>Deleted request</ToastTitle>
           </Toast>,
           { intent: "success" }
         );
+        addEvent.mutate({
+          Title: "Request Cancelled",
+          requestId: requestId,
+        });
       },
       onError: async (error) => {
         console.log(error);
@@ -338,7 +438,7 @@ export const useDeleteRequest = () => {
                   </ToastTrigger>
                 }
               >
-                Error deleting request
+                Error cancelling request
               </ToastTitle>
             </Toast>,
             { intent: "error", timeout: -1 }
@@ -353,6 +453,7 @@ export const useUpdateStage = () => {
   const queryClient = useQueryClient();
   const addEvent = useAddEvent();
   const OSFs = useOSFs();
+  const allRoles = useRoles();
   const sendEmail = useSendEmail();
   const { dispatchToast } = useToastController("toaster");
 
@@ -397,7 +498,8 @@ export const useUpdateStage = () => {
           const email = emailTemplates.createStageUpdateEmail(
             request,
             requestData,
-            OSFs.data
+            OSFs.data,
+            allRoles.data || []
           );
           if (email) {
             await sendEmail.mutateAsync({
@@ -442,6 +544,7 @@ type InternalRequestItem = Omit<
   | "supervisor"
   | "organizationalPOC"
   | "issueTo"
+  | "hrl"
   | "Created"
 > & {
   methods: string;
@@ -450,6 +553,7 @@ type InternalRequestItem = Omit<
   supervisorId?: string;
   organizationalPOCId?: string;
   issueToId?: string;
+  hrlId?: string;
 };
 
 const transformRequestToSP = async (
@@ -466,6 +570,7 @@ const transformRequestToSP = async (
     supervisor,
     organizationalPOC,
     issueTo,
+    hrl,
     ...rest
   } = request;
 
@@ -502,11 +607,21 @@ const transformRequestToSP = async (
     }
   }
 
+  let hrlId;
+  if (hrl) {
+    if (hrl.Id === "-1") {
+      hrlId = (await spWebContext.web.ensureUser(hrl.EMail)).data.Id.toString();
+    } else {
+      hrlId = hrl.Id;
+    }
+  }
+
   return {
     // if Person fields have been selected, include them
     ...(supervisorId && { supervisorId: supervisorId }),
     ...(organizationalPOCId && { organizationalPOCId: organizationalPOCId }),
     ...(issueToId && { issueToId: issueToId }),
+    ...(hrlId && { hrlId: hrlId }),
 
     // stringify arrays for storage in SharePoint
     methods: JSON.stringify(methods),
@@ -545,6 +660,7 @@ const transformRequestFromSP = (request: any): RPARequest => {
     supervisor: request.supervisor,
     organizationalPOC: request.organizationalPOC,
     issueTo: request.issueTo,
+    hrl: request.hrl,
     fullPartTime: request.fullPartTime,
     salaryLow: request.salaryLow,
     salaryHigh: request.salaryHigh,
@@ -603,6 +719,12 @@ const transformRequestFromSP = (request: any): RPARequest => {
     usaJobsPostDate: request.usaJobsPostDate
       ? new Date(request.usaJobsPostDate)
       : undefined,
+    jobBoardPostId: request.jobBoardPostId,
+    joaPostId: request.joaPostId,
+    linkedInPostId: request.linkedInPostId,
+    linkedInSearchId: request.linkedInSearchId,
+    resumeSearchId: request.resumeSearchId,
+    usaJobsPostId: request.usaJobsPostId,
   };
 };
 

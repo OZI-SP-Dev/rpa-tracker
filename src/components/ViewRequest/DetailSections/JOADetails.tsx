@@ -1,7 +1,7 @@
 import { useRequest } from "api/requestsApi";
 import { useParams } from "react-router-dom";
-import ViewRequestJOADetails from "../Methods/JOA";
-import DetailsTemplate from "./DetailsTemplate";
+import ViewRequestJOADetails from "components/ViewRequest/Methods/JOA";
+import DetailsTemplate from "components/ViewRequest/DetailSections/DetailsTemplate";
 
 const JOADetails = ({
   setEditSection,

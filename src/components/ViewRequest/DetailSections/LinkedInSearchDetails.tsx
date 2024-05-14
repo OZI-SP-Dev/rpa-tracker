@@ -1,8 +1,8 @@
 import { useRequest } from "api/requestsApi";
 import { useParams } from "react-router-dom";
-import ViewRequestLISearchDetails from "../Methods/LinkedInSearch";
+import ViewRequestLISearchDetails from "components/ViewRequest/Methods/LinkedInSearch";
 import { LinkedInLogoIcon } from "@fluentui/react-icons-mdl2-branded";
-import DetailsTemplate from "./DetailsTemplate";
+import DetailsTemplate from "components/ViewRequest/DetailSections/DetailsTemplate";
 
 const LinkedInSearchDetails = ({
   setEditSection,

@@ -1,14 +1,14 @@
 import { useEffect, useReducer } from "react";
 import { useFormContext } from "react-hook-form";
 import { Button, Spinner } from "@fluentui/react-components";
-import HiringInfo from "./NewFormSection/NewForm.HiringInfo";
-import JOA from "./NewFormSection/NewForm.JOA";
-import JobBoard from "./NewFormSection/NewForm.JobBoard";
-import LinkedInPost from "./NewFormSection/NewForm.LinkedInPost";
-import LinkedInSearch from "./NewFormSection/NewForm.LinkedInSearch";
-import RoutingInfo from "./NewFormSection/NewForm.Routing";
-import USAJobs from "./NewFormSection/NewForm.USAJobs";
-import Done from "./NewFormSection/NewForm.Done";
+import HiringInfo from "components/Request/NewFormSection/NewForm.HiringInfo";
+import JOA from "components/Request/NewFormSection/NewForm.JOA";
+import JobBoard from "components/Request/NewFormSection/NewForm.JobBoard";
+import LinkedInPost from "components/Request/NewFormSection/NewForm.LinkedInPost";
+import LinkedInSearch from "components/Request/NewFormSection/NewForm.LinkedInSearch";
+import RoutingInfo from "components/Request/NewFormSection/NewForm.Routing";
+import USAJobs from "components/Request/NewFormSection/NewForm.USAJobs";
+import Done from "components/Request/NewFormSection/NewForm.Done";
 import { useParams } from "react-router-dom";
 
 interface INPUTSTEPFUNCTIONS {

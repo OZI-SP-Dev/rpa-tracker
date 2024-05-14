@@ -18,6 +18,12 @@ import {
   TableColumnDefinition,
   TableColumnId,
   TableColumnSizingOptions,
+  Toolbar,
+  ToolbarButton,
+  ToolbarDivider,
+  ToolbarProps,
+  ToolbarRadioButton,
+  ToolbarRadioGroup,
   createTableColumn,
 } from "@fluentui/react-components";
 import {
@@ -28,10 +34,10 @@ import {
 import { useCallback, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { FilterIcon } from "@fluentui/react-icons-mdl2";
-import FilterRequestsDrawer from "./FilterRequests";
+import FilterRequestsDrawer from "components/RequestsTable/FilterRequests";
 import { STAGES } from "consts/Stages";
-import TableMessages from "./TableMessages";
-import UserAvatar from "./UserAvatar";
+import TableMessages from "components/RequestsTable/TableMessages";
+import UserAvatar from "components/RequestsTable/UserAvatar";
 
 const PositionTitle = createTableColumn<RPARequest>({
   columnId: "positionTitle",
@@ -128,7 +134,7 @@ const CurrentStage = createTableColumn<RPARequest>({
     const stageIndex = STAGES.findIndex(({ key }) => key === item.stage);
     const currentStage = STAGES[stageIndex]?.text;
 
-    const subStage = STAGES[stageIndex].subStages?.find(
+    const subStage = STAGES[stageIndex]?.subStages?.find(
       ({ key }) => key === item.subStage
     )?.text;
 
@@ -162,7 +168,15 @@ const RequestsTable = () => {
     sortDirection: "ascending",
   });
   const [filterState, setFilterState] = useState<RequestFilter[]>([]);
-  const pagedItems = usePagedRequests(page, sortState, filterState);
+  const [checkedValues, setCheckedValues] = useState<Record<string, string[]>>({
+    filterOptions: ["myItems"],
+  });
+  const pagedItems = usePagedRequests(
+    page,
+    sortState,
+    filterState,
+    checkedValues.filterOptions.includes("openItems")
+  );
   const refMap = useRef<Record<string, HTMLElement | null>>({});
   const [columnSizingOptions, setColumnSizingOptions] =
     useState<TableColumnSizingOptions>({
@@ -200,6 +214,15 @@ const RequestsTable = () => {
     setPage(0);
   };
 
+  const onCheckedValueChange: ToolbarProps["onCheckedValueChange"] = (
+    _e,
+    { name, checkedItems }
+  ) => {
+    setCheckedValues((s) => {
+      return s ? { ...s, [name]: checkedItems } : { [name]: checkedItems };
+    });
+  };
+
   const columns: TableColumnDefinition<RPARequest>[] = [
     PositionTitle,
     RequestType,
@@ -222,6 +245,38 @@ const RequestsTable = () => {
         filterState={filterState}
         setFilterState={setFilterState}
       />
+      <Toolbar
+        checkedValues={checkedValues}
+        onCheckedValueChange={onCheckedValueChange}
+      >
+        <ToolbarRadioGroup>
+          <ToolbarRadioButton as="button" name="filterOptions" value="myItems">
+            My Items
+          </ToolbarRadioButton>
+          <ToolbarRadioButton
+            as="button"
+            name="filterOptions"
+            value="openItems"
+          >
+            Open Items
+          </ToolbarRadioButton>
+          <ToolbarRadioButton
+            as="button"
+            name="filterOptions"
+            value="allItems"
+            disabled
+          >
+            All Items
+          </ToolbarRadioButton>
+        </ToolbarRadioGroup>
+        <ToolbarDivider />
+        <ToolbarButton
+          icon={<FilterIcon />}
+          onClick={() => setDrawerIsOpen(true)}
+        >
+          Filters
+        </ToolbarButton>
+      </Toolbar>
       <DataGrid
         items={pagedItems.data?.results || []}
         columns={columns}

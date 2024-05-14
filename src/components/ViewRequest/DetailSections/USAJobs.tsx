@@ -1,9 +1,8 @@
 import { useRequest } from "api/requestsApi";
 import { useParams } from "react-router-dom";
 import { AirplaneIcon } from "@fluentui/react-icons-mdl2";
-import ViewRequestJobsFlyerDetails from "../Methods/JobsFlyer";
-
-import DetailsTemplate from "./DetailsTemplate";
+import ViewRequestJobsFlyerDetails from "components/ViewRequest/Methods/JobsFlyer";
+import DetailsTemplate from "components/ViewRequest/DetailSections/DetailsTemplate";
 
 const USAJobsDetails = ({
   setEditSection,
