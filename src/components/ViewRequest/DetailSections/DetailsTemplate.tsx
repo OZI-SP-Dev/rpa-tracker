@@ -17,8 +17,9 @@ import {
   Label,
   Subtitle1,
   Text,
+  Tooltip,
 } from "@fluentui/react-components";
-import { useRequest } from "api/requestsApi";
+import { Person, useRequest } from "api/requestsApi";
 import { useParams } from "react-router-dom";
 import {
   CheckMarkIcon,
@@ -35,12 +36,42 @@ declare const _spPageContextInfo: {
 };
 
 const POSTTYPES = [
-  { key: "jobBoardPostDate", id: "jobBoardPostId" },
-  { key: "joaPostDate", id: "joaPostId" },
-  { key: "linkedInPostDate", id: "linkedInPostId" },
-  { key: "linkedInSearchDate", id: "linkedInSearchId" },
-  { key: "resumeSearchDate", id: "resumeSearchId" },
-  { key: "usaJobsPostDate", id: "usaJobsPostId" },
+  {
+    key: "jobBoardPostDate",
+    id: "jobBoardPostId",
+    person: "jobBoardPostPerson",
+    personId: "jobBoardPostPersonId",
+  },
+  {
+    key: "joaPostDate",
+    id: "joaPostId",
+    person: "joaPostPerson",
+    personId: "joaPostPersonId",
+  },
+  {
+    key: "linkedInPostDate",
+    id: "linkedInPostId",
+    person: "linkedInPostPerson",
+    personId: "linkedInPostPersonId",
+  },
+  {
+    key: "linkedInSearchDate",
+    id: "linkedInSearchId",
+    person: "linkedInSearchPerson",
+    personId: "linkedInSearchPersonId",
+  },
+  {
+    key: "resumeSearchDate",
+    id: "resumeSearchId",
+    person: "resumeSearchPerson",
+    personId: "resumeSearchPersonId",
+  },
+  {
+    key: "usaJobsPostDate",
+    id: "usaJobsPostId",
+    person: "usaJobsPostPerson",
+    personId: "usaJobsPostPersonId",
+  },
 ] as const;
 
 const DetailsTemplate = ({
@@ -86,19 +117,28 @@ const DetailsTemplate = ({
     myRoles.isCOSF ||
     Number(request.data?.Author?.Id) === _spPageContextInfo.userId;
 
-  const sectionId = POSTTYPES.find(({ key }) => key === detailSelection)?.id;
+  // const sectionId = POSTTYPES.find(({ key }) => key === detailSelection)?.id;
+  const section = POSTTYPES.find(({ key }) => key === detailSelection);
+
+  let poster: undefined | Person = undefined;
+  if (section) {
+    poster = request.data?.[section.person];
+  }
 
   const { control, handleSubmit, reset } = useForm<{
     ItemId: string;
   }>({
-    defaultValues: { ItemId: sectionId ? request.data?.[sectionId] : "" },
+    defaultValues: { ItemId: section ? request.data?.[section.id] : "" },
   });
 
   const onSubmit: SubmitHandler<{ ItemId: string }> = (data) => {
     if (detailSelection) {
       const requestData = {
         [detailSelection]: new Date(),
-        ...(sectionId && { [sectionId]: data.ItemId }),
+        ...(section && {
+          [section.id]: data.ItemId,
+          [section.personId]: _spPageContextInfo.userId,
+        }),
       };
 
       postRequest.mutate({
@@ -127,7 +167,7 @@ const DetailsTemplate = ({
                         modalType="modal"
                         onOpenChange={() =>
                           reset({
-                            ItemId: sectionId ? request.data?.[sectionId] : "",
+                            ItemId: section ? request.data?.[section.id] : "",
                           })
                         }
                       >
@@ -159,7 +199,11 @@ const DetailsTemplate = ({
                                 <DialogTrigger disableButtonEnhancement>
                                   <Button appearance="secondary">Cancel</Button>
                                 </DialogTrigger>
-                                <Button appearance="primary" type="submit">
+                                <Button
+                                  disabled={postRequest.isLoading}
+                                  appearance="primary"
+                                  type="submit"
+                                >
                                   Post
                                 </Button>
                               </DialogActions>
@@ -189,7 +233,12 @@ const DetailsTemplate = ({
                   <>
                     <div style={{ marginRight: "0.5em" }}>
                       <Text weight="semibold">Posted: </Text>
-                      <Text>{postDate.toLocaleDateString()}</Text>
+                      <Tooltip
+                        content={<Text>{poster?.Title}</Text>}
+                        relationship="description"
+                      >
+                        <Text>{postDate.toLocaleDateString()}</Text>
+                      </Tooltip>
                     </div>
                     {isPostable && detailSelection && (
                       <Dialog modalType="alert">
@@ -214,7 +263,7 @@ const DetailsTemplate = ({
                                     requestId: Number(params.requestId),
                                     postRequest: {
                                       [detailSelection]: "",
-                                      ...(sectionId && { [sectionId]: "" }),
+                                      ...(section && { [section.id]: "" }),
                                     },
                                   });
                                 }}

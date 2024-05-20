@@ -106,6 +106,12 @@ export interface RPARequest {
   linkedInSearchId?: string;
   resumeSearchId?: string;
   usaJobsPostId?: string;
+  jobBoardPostPerson?: Person;
+  joaPostPerson?: Person;
+  linkedInPostPerson?: Person;
+  linkedInSearchPerson?: Person;
+  resumeSearchPerson?: Person;
+  usaJobsPostPerson?: Person;
 }
 
 /**
@@ -306,9 +312,16 @@ const getRequest = async (Id: number) => {
     "supervisor/Id,supervisor/EMail,supervisor/Title," +
     "organizationalPOC/Id,organizationalPOC/EMail,organizationalPOC/Title," +
     "issueTo/Id,issueTo/EMail,issueTo/Title," +
-    "hrl/Id,hrl/EMail,hrl/Title";
+    "hrl/Id,hrl/EMail,hrl/Title," +
+    "jobBoardPostPerson/Id,jobBoardPostPerson/EMail,jobBoardPostPerson/Title," +
+    "joaPostPerson/Id,joaPostPerson/EMail,joaPostPerson/Title," +
+    "linkedInPostPerson/Id,linkedInPostPerson/EMail,linkedInPostPerson/Title," +
+    "linkedInSearchPerson/Id,linkedInSearchPerson/EMail,linkedInSearchPerson/Title," +
+    "resumeSearchPerson/Id,resumeSearchPerson/EMail,resumeSearchPerson/Title," +
+    "usaJobsPostPerson/Id,usaJobsPostPerson/EMail,usaJobsPostPerson/Title";
 
-  const expandedFields = "Author,supervisor,organizationalPOC,issueTo,hrl";
+  const expandedFields =
+    "Author,supervisor,organizationalPOC,issueTo,hrl,jobBoardPostPerson,joaPostPerson,linkedInPostPerson,linkedInSearchPerson,resumeSearchPerson,usaJobsPostPerson";
 
   return spWebContext.web.lists
     .getByTitle("requests")
@@ -554,6 +567,12 @@ type InternalRequestItem = Omit<
   | "issueTo"
   | "hrl"
   | "Created"
+  | "jobBoardPostPerson"
+  | "joaPostPerson"
+  | "linkedInPostPerson"
+  | "linkedInSearchPerson"
+  | "resumeSearchPerson"
+  | "usaJobsPostPerson"
 > & {
   methods: string;
   dcwf: string;
@@ -562,6 +581,12 @@ type InternalRequestItem = Omit<
   organizationalPOCId?: string;
   issueToId?: string;
   hrlId?: string;
+  jobBoardPostPersonId?: string;
+  joaPostPersonId?: string;
+  linkedInPostPersonId?: string;
+  linkedInSearchPersonId?: string;
+  resumeSearchPersonId?: string;
+  usaJobsPostPersonId?: string;
 };
 
 const transformRequestToSP = async (
@@ -579,6 +604,12 @@ const transformRequestToSP = async (
     organizationalPOC,
     issueTo,
     hrl,
+    jobBoardPostPerson,
+    joaPostPerson,
+    linkedInPostPerson,
+    linkedInSearchPerson,
+    resumeSearchPerson,
+    usaJobsPostPerson,
     ...rest
   } = request;
 
@@ -624,12 +655,86 @@ const transformRequestToSP = async (
     }
   }
 
+  let jobBoardPostPersonId;
+  if (jobBoardPostPerson) {
+    if (jobBoardPostPerson.Id === "-1") {
+      jobBoardPostPersonId = (
+        await spWebContext.web.ensureUser(jobBoardPostPerson.EMail)
+      ).Id.toString();
+    } else {
+      jobBoardPostPersonId = jobBoardPostPerson.Id;
+    }
+  }
+
+  let joaPostPersonId;
+  if (joaPostPerson) {
+    if (joaPostPerson.Id === "-1") {
+      joaPostPersonId = (
+        await spWebContext.web.ensureUser(joaPostPerson.EMail)
+      ).Id.toString();
+    } else {
+      joaPostPersonId = joaPostPerson.Id;
+    }
+  }
+
+  let linkedInPostPersonId;
+  if (linkedInPostPerson) {
+    if (linkedInPostPerson.Id === "-1") {
+      linkedInPostPersonId = (
+        await spWebContext.web.ensureUser(linkedInPostPerson.EMail)
+      ).Id.toString();
+    } else {
+      linkedInPostPersonId = linkedInPostPerson.Id;
+    }
+  }
+
+  let linkedInSearchPersonId;
+  if (linkedInSearchPerson) {
+    if (linkedInSearchPerson.Id === "-1") {
+      linkedInSearchPersonId = (
+        await spWebContext.web.ensureUser(linkedInSearchPerson.EMail)
+      ).Id.toString();
+    } else {
+      linkedInSearchPersonId = linkedInSearchPerson.Id;
+    }
+  }
+
+  let resumeSearchPersonId;
+  if (resumeSearchPerson) {
+    if (resumeSearchPerson.Id === "-1") {
+      resumeSearchPersonId = (
+        await spWebContext.web.ensureUser(resumeSearchPerson.EMail)
+      ).Id.toString();
+    } else {
+      resumeSearchPersonId = resumeSearchPerson.Id;
+    }
+  }
+
+  let usaJobsPostPersonId;
+  if (usaJobsPostPerson) {
+    if (usaJobsPostPerson.Id === "-1") {
+      usaJobsPostPersonId = (
+        await spWebContext.web.ensureUser(usaJobsPostPerson.EMail)
+      ).Id.toString();
+    } else {
+      usaJobsPostPersonId = usaJobsPostPerson.Id;
+    }
+  }
+
   return {
     // if Person fields have been selected, include them
     ...(supervisorId && { supervisorId: supervisorId }),
     ...(organizationalPOCId && { organizationalPOCId: organizationalPOCId }),
     ...(issueToId && { issueToId: issueToId }),
     ...(hrlId && { hrlId: hrlId }),
+    ...(jobBoardPostPersonId && { jobBoardPostPersonId: jobBoardPostPersonId }),
+    ...(joaPostPersonId && { joaPostPersonId: joaPostPersonId }),
+    ...(linkedInPostPersonId && { linkedInPostPersonId: linkedInPostPersonId }),
+    ...(linkedInSearchPersonId && {
+      linkedInSearchPersonId: linkedInSearchPersonId,
+    }),
+    ...(resumeSearchPersonId && { resumeSearchPersonId: resumeSearchPersonId }),
+    ...(usaJobsPostPersonId && { usaJobsPostPersonId: usaJobsPostPersonId }),
 
     // stringify arrays for storage in SharePoint
     methods: JSON.stringify(methods),
@@ -733,6 +838,12 @@ const transformRequestFromSP = (request: any): RPARequest => {
     linkedInSearchId: request.linkedInSearchId,
     resumeSearchId: request.resumeSearchId,
     usaJobsPostId: request.usaJobsPostId,
+    jobBoardPostPerson: request.jobBoardPostPerson,
+    joaPostPerson: request.joaPostPerson,
+    linkedInPostPerson: request.linkedInPostPerson,
+    linkedInSearchPerson: request.linkedInSearchPerson,
+    resumeSearchPerson: request.resumeSearchPerson,
+    usaJobsPostPerson: request.usaJobsPostPerson,
   };
 };
 
