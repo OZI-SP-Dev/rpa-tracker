@@ -10,6 +10,7 @@ import {
   Tooltip,
 } from "@fluentui/react-components";
 import { NavigateForwardIcon } from "@fluentui/react-icons-mdl2";
+import { useAddNote } from "api/notesApi";
 import { useRequest, useUpdateStage, validateRequest } from "api/requestsApi";
 import { useMyRoles } from "api/rolesApi";
 import { STAGES } from "consts/Stages";
@@ -20,6 +21,7 @@ const SendRequest = () => {
   const requestId = Number(params.requestId);
   const request = useRequest(requestId);
   const updateStage = useUpdateStage();
+  const addNote = useAddNote(requestId);
   const navigate = useNavigate();
   const myRoles = useMyRoles();
 
@@ -45,6 +47,8 @@ const SendRequest = () => {
     ) {
       disableSend = false;
     } else if (request.data?.subStage === "CAPackageReview" && myRoles.isCA) {
+      disableSend = false;
+    } else if (currentStage?.key === "Recruiting" && myRoles.isCSF) {
       disableSend = false;
     }
   }
@@ -72,7 +76,11 @@ const SendRequest = () => {
         newData.newSubStage = nextStage?.subStages?.[0].key || ""; // first substage of next stage or empty string
         newData.eventTitle = currentStage.nextEventTitle;
       }
-      updateStage.mutate(newData);
+      updateStage.mutateAsync(newData).then(() => {
+        if (currentStage?.key === "Recruiting") {
+          addNote.mutate("Moved to Canditate Selection");
+        }
+      });
     }
   };
 
