@@ -851,6 +851,7 @@ const transformRequestFromSP = (request: any): RPARequest => {
 const transformPagedRequestsFromSP = (requests: any) => {
   const returnObject: PagedRequest[] = [];
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   requests.forEach((request: any) => {
     returnObject.push({
       Id: request.Id,

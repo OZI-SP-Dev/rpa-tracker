@@ -231,15 +231,15 @@ const DetailsTemplate = ({
                 )}
                 {postDate && (
                   <>
-                    <div style={{ marginRight: "0.5em" }}>
-                      <Text weight="semibold">Posted: </Text>
-                      <Tooltip
-                        content={<Text>{poster?.Title}</Text>}
-                        relationship="description"
-                      >
+                    <Tooltip
+                      content={<Text>Posted by: {poster?.Title}</Text>}
+                      relationship="description"
+                    >
+                      <div style={{ marginRight: "0.5em" }}>
+                        <Text weight="semibold">Posted: </Text>
                         <Text>{postDate.toLocaleDateString()}</Text>
-                      </Tooltip>
-                    </div>
+                      </div>
+                    </Tooltip>
                     {isPostable && detailSelection && (
                       <Dialog modalType="alert">
                         <DialogTrigger disableButtonEnhancement>
