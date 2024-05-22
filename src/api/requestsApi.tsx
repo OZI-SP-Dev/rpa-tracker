@@ -113,6 +113,7 @@ export interface RPARequest {
   resumeSearchPerson?: Person;
   usaJobsPostPerson?: Person;
   panelRequired?: "Yes" | "No";
+  currentEmployee?: "Yes" | "No";
 }
 
 /**
@@ -486,6 +487,7 @@ export const useUpdateStage = () => {
       newStage: (typeof STAGES)[number]["key"];
       newSubStage: string;
       eventTitle: string;
+      currentEmployee?: "Yes" | "No";
     }) => {
       await spWebContext.web.lists
         .getByTitle("requests")
@@ -493,6 +495,9 @@ export const useUpdateStage = () => {
         .update({
           stage: request.newStage,
           subStage: request.newSubStage,
+          ...(request.currentEmployee && {
+            currentEmployee: request.currentEmployee,
+          }),
         });
     },
     {
@@ -846,6 +851,7 @@ const transformRequestFromSP = (request: any): RPARequest => {
     resumeSearchPerson: request.resumeSearchPerson,
     usaJobsPostPerson: request.usaJobsPostPerson,
     panelRequired: request.panelRequired,
+    currentEmployee: request.currentEmployee,
   };
 };
 

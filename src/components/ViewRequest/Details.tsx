@@ -66,6 +66,15 @@ const ViewRequestDetails = ({
 
             <HiringPanel />
 
+            {request.data.currentEmployee && (
+              <>
+                <Label weight="semibold" htmlFor="currentEmployee">
+                  Current Federal Employee
+                </Label>
+                <Text id="currentEmployee">{request.data.currentEmployee}</Text>
+              </>
+            )}
+
             <Label weight="semibold" htmlFor="osf">
               OSF
             </Label>

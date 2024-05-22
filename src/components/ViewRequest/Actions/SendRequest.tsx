@@ -26,6 +26,7 @@ const SendRequest = () => {
   const myRoles = useMyRoles();
 
   const currentStage = STAGES.find(({ key }) => key === request.data?.stage);
+  const askIfCurrentEmployee = currentStage?.key === "Selection";
 
   let draftErrors;
   if (currentStage?.key === "Draft" && request.data) {
@@ -50,16 +51,19 @@ const SendRequest = () => {
       disableSend = false;
     } else if (currentStage?.key === "Recruiting" && myRoles.isCSF) {
       disableSend = false;
+    } else if (currentStage?.key === "Selection" && myRoles.isCSF) {
+      disableSend = false;
     }
   }
 
-  const updateHandler = () => {
+  const updateHandler = (currentEmployee?: "Yes" | "No") => {
     if (request.data && currentStage?.next) {
       const newData = {
         requestId,
         newStage: "",
         newSubStage: "",
         eventTitle: "",
+        ...(currentEmployee && { currentEmployee: currentEmployee }),
       };
 
       const subStage = currentStage.subStages?.find(
@@ -78,7 +82,16 @@ const SendRequest = () => {
       }
       updateStage.mutateAsync(newData).then(() => {
         if (currentStage?.key === "Recruiting") {
-          addNote.mutate("Moved to Canditate Selection");
+          addNote.mutate("Moved to Candidate Selection");
+        }
+        if (currentStage?.key === "Selection") {
+          let myString = "Moved to Package Prep and Approval.\n";
+          myString += "Candiate is ";
+          if (currentEmployee === "No") {
+            myString += "not ";
+          }
+          myString += "a current federal employee.";
+          addNote.mutate(myString);
         }
       });
     }
@@ -103,54 +116,90 @@ const SendRequest = () => {
       <DialogSurface>
         <DialogBody>
           <DialogTitle>Send request</DialogTitle>
-          <DialogContent>
-            {draftErrors?.hasErrors ? (
-              <>
-                {draftErrors?.HiringInfo && <p>Hiring Info is incomplete.</p>}
-                {draftErrors?.JobBoard && (
-                  <p>LCMC Job Board Information is incomplete.</p>
+          {askIfCurrentEmployee ? (
+            <>
+              <DialogContent>
+                <p>Is selected candidate a current federal employee?</p>
+              </DialogContent>
+              <DialogActions fluid>
+                <DialogTrigger disableButtonEnhancement>
+                  <Button appearance="secondary">Cancel</Button>
+                </DialogTrigger>
+                <DialogTrigger disableButtonEnhancement>
+                  <Button
+                    appearance="primary"
+                    onClick={() => updateHandler("No")}
+                  >
+                    Not Federal Employee
+                  </Button>
+                </DialogTrigger>
+                <DialogTrigger disableButtonEnhancement>
+                  <Button
+                    appearance="primary"
+                    onClick={() => updateHandler("Yes")}
+                  >
+                    Federal Employee
+                  </Button>
+                </DialogTrigger>
+              </DialogActions>
+            </>
+          ) : (
+            <>
+              <DialogContent>
+                {draftErrors?.hasErrors ? (
+                  <>
+                    {draftErrors?.HiringInfo && (
+                      <p>Hiring Info is incomplete.</p>
+                    )}
+                    {draftErrors?.JobBoard && (
+                      <p>LCMC Job Board Information is incomplete.</p>
+                    )}
+                    {draftErrors?.JOA && (
+                      <p>JOA Additional Information is incomplete.</p>
+                    )}
+                    {draftErrors?.LinkedInPost && (
+                      <p>
+                        LinkedIn Job Posting Additional Information is
+                        incomplete.
+                      </p>
+                    )}
+                    {draftErrors?.USAJobs && (
+                      <p>
+                        USA Jobs Flyer Additional Information is incomplete.
+                      </p>
+                    )}
+                  </>
+                ) : readyForNextStage ? (
+                  <p>Are you sure you want to send the request? </p>
+                ) : (
+                  <p>Complete all items before sending forward.</p>
                 )}
-                {draftErrors?.JOA && (
-                  <p>JOA Additional Information is incomplete.</p>
-                )}
-                {draftErrors?.LinkedInPost && (
-                  <p>
-                    LinkedIn Job Posting Additional Information is incomplete.
-                  </p>
-                )}
-                {draftErrors?.USAJobs && (
-                  <p>USA Jobs Flyer Additional Information is incomplete.</p>
-                )}
-              </>
-            ) : readyForNextStage ? (
-              <p>Are you sure you want to send the request? </p>
-            ) : (
-              <p>Complete all items before sending forward.</p>
-            )}
-          </DialogContent>
-          <DialogActions>
-            <DialogTrigger disableButtonEnhancement>
-              <Button appearance="secondary">Cancel</Button>
-            </DialogTrigger>
-            <DialogTrigger disableButtonEnhancement>
-              {draftErrors?.hasErrors ? (
-                <Button
-                  appearance="primary"
-                  onClick={() => navigate("/New/" + params.requestId)}
-                >
-                  Make Edits
-                </Button>
-              ) : (
-                <Button
-                  appearance="primary"
-                  onClick={updateHandler}
-                  disabled={!readyForNextStage}
-                >
-                  Send
-                </Button>
-              )}
-            </DialogTrigger>
-          </DialogActions>
+              </DialogContent>
+              <DialogActions>
+                <DialogTrigger disableButtonEnhancement>
+                  <Button appearance="secondary">Cancel</Button>
+                </DialogTrigger>
+                <DialogTrigger disableButtonEnhancement>
+                  {draftErrors?.hasErrors ? (
+                    <Button
+                      appearance="primary"
+                      onClick={() => navigate("/New/" + params.requestId)}
+                    >
+                      Make Edits
+                    </Button>
+                  ) : (
+                    <Button
+                      appearance="primary"
+                      onClick={() => updateHandler()}
+                      disabled={!readyForNextStage}
+                    >
+                      Send
+                    </Button>
+                  )}
+                </DialogTrigger>
+              </DialogActions>
+            </>
+          )}
         </DialogBody>
       </DialogSurface>
     </Dialog>
