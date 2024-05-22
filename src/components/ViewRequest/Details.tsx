@@ -15,6 +15,7 @@ import USAJobsDetails from "components/ViewRequest/DetailSections/USAJobs";
 import ResumeSearchDetails from "components/ViewRequest/DetailSections/ResumeSearchDetails";
 import { useMyRoles } from "api/rolesApi";
 import { useClaimRequest } from "api/hrlApi";
+import HiringPanel from "components/ViewRequest/HiringPanel";
 
 declare const _spPageContextInfo: {
   userId: number;
@@ -62,6 +63,8 @@ const ViewRequestDetails = ({
               Request Type
             </Label>
             <Text id="requestType">{request.data.requestType}</Text>
+
+            <HiringPanel />
 
             <Label weight="semibold" htmlFor="osf">
               OSF

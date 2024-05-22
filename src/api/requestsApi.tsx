@@ -112,6 +112,7 @@ export interface RPARequest {
   linkedInSearchPerson?: Person;
   resumeSearchPerson?: Person;
   usaJobsPostPerson?: Person;
+  panelRequired?: "Yes" | "No";
 }
 
 /**
@@ -844,6 +845,7 @@ const transformRequestFromSP = (request: any): RPARequest => {
     linkedInSearchPerson: request.linkedInSearchPerson,
     resumeSearchPerson: request.resumeSearchPerson,
     usaJobsPostPerson: request.usaJobsPostPerson,
+    panelRequired: request.panelRequired,
   };
 };
 
