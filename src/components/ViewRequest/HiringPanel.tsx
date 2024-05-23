@@ -10,12 +10,15 @@ const HiringPanel = () => {
   const request = useRequest(Number(params.requestId));
   const postRequest = usePostRequest();
 
-  const onChange = useCallback((ev: ChangeEvent<HTMLInputElement>) => {
-    postRequest.mutate({
-      requestId: Number(params.requestId),
-      postRequest: { panelRequired: ev.currentTarget.checked ? "Yes" : "No" },
-    });
-  }, []);
+  const onChange = useCallback(
+    (ev: ChangeEvent<HTMLInputElement>) => {
+      postRequest.mutate({
+        requestId: Number(params.requestId),
+        postRequest: { panelRequired: ev.currentTarget.checked ? "Yes" : "No" },
+      });
+    },
+    [params.requestId]
+  );
 
   const selectionStageIndex = STAGES.findIndex(
     (stage) => stage.key === "Selection"
@@ -28,7 +31,10 @@ const HiringPanel = () => {
     return <></>;
   }
 
-  if (currentStageIndex > selectionStageIndex) {
+  if (
+    currentStageIndex > selectionStageIndex ||
+    request.data?.stage === "Cancelled"
+  ) {
     return (
       <>
         <Label weight="semibold" htmlFor="panelRequired">
