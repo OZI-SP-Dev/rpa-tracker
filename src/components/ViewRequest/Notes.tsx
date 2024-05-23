@@ -132,7 +132,9 @@ const ViewRequestNotes = () => {
                     </>
                   }
                 />
-                <Body2>{parseUTF16(note.text)}</Body2>
+                <Body2 style={{ whiteSpace: "pre-line" }}>
+                  {parseUTF16(note.text)}
+                </Body2>
               </Card>
             );
           })}
