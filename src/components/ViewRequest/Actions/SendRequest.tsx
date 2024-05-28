@@ -86,7 +86,7 @@ const SendRequest = () => {
         }
         if (currentStage?.key === "Selection") {
           let myString = "Moved to Package Prep and Approval.\n";
-          myString += "Candiate is ";
+          myString += "Candidate is ";
           if (currentEmployee === "No") {
             myString += "not ";
           }
