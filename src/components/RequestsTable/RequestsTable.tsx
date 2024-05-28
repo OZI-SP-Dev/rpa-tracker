@@ -221,6 +221,7 @@ const RequestsTable = () => {
     setCheckedValues((s) => {
       return s ? { ...s, [name]: checkedItems } : { [name]: checkedItems };
     });
+    setPage(0);
   };
 
   const columns: TableColumnDefinition<RPARequest>[] = [
@@ -278,7 +279,7 @@ const RequestsTable = () => {
         </ToolbarButton>
       </Toolbar>
       <DataGrid
-        items={pagedItems.data?.results || []}
+        items={pagedItems.data || []}
         columns={columns}
         getRowId={(item) => item.Id}
         resizableColumns
@@ -341,7 +342,11 @@ const RequestsTable = () => {
         </Button>
         <Button
           appearance="primary"
-          disabled={!pagedItems.data?.hasNext || pagedItems.isFetching}
+          disabled={
+            !pagedItems.data ||
+            pagedItems.isFetching ||
+            pagedItems.data.length < 5
+          }
           icon={pagedItems.isFetching ? <Spinner /> : <ArrowNextRegular />}
           iconPosition="after"
           onClick={() => setPage(page + 1)}

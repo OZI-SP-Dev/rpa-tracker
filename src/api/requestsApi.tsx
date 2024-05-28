@@ -106,6 +106,14 @@ export interface RPARequest {
   linkedInSearchId?: string;
   resumeSearchId?: string;
   usaJobsPostId?: string;
+  jobBoardPostPerson?: Person;
+  joaPostPerson?: Person;
+  linkedInPostPerson?: Person;
+  linkedInSearchPerson?: Person;
+  resumeSearchPerson?: Person;
+  usaJobsPostPerson?: Person;
+  panelRequired?: "Yes" | "No";
+  currentEmployee?: "Yes" | "No";
 }
 
 /**
@@ -147,21 +155,32 @@ export const usePagedRequests = (
       myRoles.roles,
     ],
     enabled: OSFs.isFetched, // wait until OSFs are fetched
-    queryFn: () =>
-      getPagedRequests(
-        queryClient.getQueryData([
-          "paged-requests",
-          sortParams,
-          filterParams,
-          page - 1,
-          allOpen,
-        ]),
+    queryFn: () => {
+      let skiptoken = 0;
+
+      if (page > 0) {
+        const data: PagedRequest[] =
+          queryClient.getQueryData([
+            "paged-requests",
+            sortParams,
+            filterParams,
+            page - 1,
+            allOpen,
+            myRoles.roles,
+          ]) || [];
+
+        skiptoken = Number(data[data.length - 1].Id);
+      }
+
+      return getPagedRequests(
+        skiptoken,
         sortParams,
         filterParams,
         allOpen,
         myRoles,
         OSFs.data || []
-      ),
+      );
+    },
     // results must remain cached
     // if results are not kept in cache a scenario may arise where you are on
     //  a page > 1, but the previous page has been removed from cache. The
@@ -200,18 +219,13 @@ declare const _spPageContextInfo: {
 };
 
 const getPagedRequests = async (
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  data: any,
+  skiptoken: number,
   sortParams: SortParams,
   filterParams: RequestFilter[],
   allOpen: boolean,
   myRoles: MYROLES,
   OSFs: OSF[]
 ) => {
-  if (data?.hasNext) {
-    return data.getNext();
-  }
-
   const requestedFields =
     "Id,positionTitle,requestType,paySystem,series,grade,officeSymbol,stage,subStage,Created," +
     "Author/Id,Author/EMail,Author/Title";
@@ -281,13 +295,13 @@ const getPagedRequests = async (
     .items.select(requestedFields)
     .expand(expandedFields)
     .filter(queryString)
-    .top(PAGESIZE)
     .orderBy(
       sortParams.sortColumn?.toString() || "Created",
       sortParams.sortDirection !== "descending"
     )
     .orderBy("Id", true) // Include this or non-unique sort values can cause issues
-    .getPaged();
+    .skip(skiptoken)
+    .top(PAGESIZE)();
 };
 
 const getRequest = async (Id: number) => {
@@ -300,9 +314,16 @@ const getRequest = async (Id: number) => {
     "supervisor/Id,supervisor/EMail,supervisor/Title," +
     "organizationalPOC/Id,organizationalPOC/EMail,organizationalPOC/Title," +
     "issueTo/Id,issueTo/EMail,issueTo/Title," +
-    "hrl/Id,hrl/EMail,hrl/Title";
+    "hrl/Id,hrl/EMail,hrl/Title," +
+    "jobBoardPostPerson/Id,jobBoardPostPerson/EMail,jobBoardPostPerson/Title," +
+    "joaPostPerson/Id,joaPostPerson/EMail,joaPostPerson/Title," +
+    "linkedInPostPerson/Id,linkedInPostPerson/EMail,linkedInPostPerson/Title," +
+    "linkedInSearchPerson/Id,linkedInSearchPerson/EMail,linkedInSearchPerson/Title," +
+    "resumeSearchPerson/Id,resumeSearchPerson/EMail,resumeSearchPerson/Title," +
+    "usaJobsPostPerson/Id,usaJobsPostPerson/EMail,usaJobsPostPerson/Title";
 
-  const expandedFields = "Author,supervisor,organizationalPOC,issueTo,hrl";
+  const expandedFields =
+    "Author,supervisor,organizationalPOC,issueTo,hrl,jobBoardPostPerson,joaPostPerson,linkedInPostPerson,linkedInSearchPerson,resumeSearchPerson,usaJobsPostPerson";
 
   return spWebContext.web.lists
     .getByTitle("requests")
@@ -344,7 +365,9 @@ export const useMutateRequest = () => {
           .getByTitle("requests")
           .rootFolder.folders.addUsingPath(folderName);
 
-        const newFolderFields = await newFolder.folder.listItemAllFields();
+        const newFolderFields = await spWebContext.web
+          .getFolderByServerRelativePath(newFolder.ServerRelativeUrl)
+          .listItemAllFields();
         id = newFolderFields.Id;
 
         await spWebContext.web.lists
@@ -464,6 +487,7 @@ export const useUpdateStage = () => {
       newStage: (typeof STAGES)[number]["key"];
       newSubStage: string;
       eventTitle: string;
+      currentEmployee?: "Yes" | "No";
     }) => {
       await spWebContext.web.lists
         .getByTitle("requests")
@@ -471,6 +495,9 @@ export const useUpdateStage = () => {
         .update({
           stage: request.newStage,
           subStage: request.newSubStage,
+          ...(request.currentEmployee && {
+            currentEmployee: request.currentEmployee,
+          }),
         });
     },
     {
@@ -546,6 +573,12 @@ type InternalRequestItem = Omit<
   | "issueTo"
   | "hrl"
   | "Created"
+  | "jobBoardPostPerson"
+  | "joaPostPerson"
+  | "linkedInPostPerson"
+  | "linkedInSearchPerson"
+  | "resumeSearchPerson"
+  | "usaJobsPostPerson"
 > & {
   methods: string;
   dcwf: string;
@@ -554,6 +587,12 @@ type InternalRequestItem = Omit<
   organizationalPOCId?: string;
   issueToId?: string;
   hrlId?: string;
+  jobBoardPostPersonId?: string;
+  joaPostPersonId?: string;
+  linkedInPostPersonId?: string;
+  linkedInSearchPersonId?: string;
+  resumeSearchPersonId?: string;
+  usaJobsPostPersonId?: string;
 };
 
 const transformRequestToSP = async (
@@ -571,6 +610,12 @@ const transformRequestToSP = async (
     organizationalPOC,
     issueTo,
     hrl,
+    jobBoardPostPerson,
+    joaPostPerson,
+    linkedInPostPerson,
+    linkedInSearchPerson,
+    resumeSearchPerson,
+    usaJobsPostPerson,
     ...rest
   } = request;
 
@@ -579,7 +624,7 @@ const transformRequestToSP = async (
     if (supervisor.Id === "-1") {
       supervisorId = (
         await spWebContext.web.ensureUser(supervisor.EMail)
-      ).data.Id.toString();
+      ).Id.toString();
     } else {
       supervisorId = supervisor.Id;
     }
@@ -590,7 +635,7 @@ const transformRequestToSP = async (
     if (organizationalPOC.Id === "-1") {
       organizationalPOCId = (
         await spWebContext.web.ensureUser(organizationalPOC.EMail)
-      ).data.Id.toString();
+      ).Id.toString();
     } else {
       organizationalPOCId = organizationalPOC.Id;
     }
@@ -601,7 +646,7 @@ const transformRequestToSP = async (
     if (issueTo.Id === "-1") {
       issueToId = (
         await spWebContext.web.ensureUser(issueTo.EMail)
-      ).data.Id.toString();
+      ).Id.toString();
     } else {
       issueToId = issueTo.Id;
     }
@@ -610,9 +655,75 @@ const transformRequestToSP = async (
   let hrlId;
   if (hrl) {
     if (hrl.Id === "-1") {
-      hrlId = (await spWebContext.web.ensureUser(hrl.EMail)).data.Id.toString();
+      hrlId = (await spWebContext.web.ensureUser(hrl.EMail)).Id.toString();
     } else {
       hrlId = hrl.Id;
+    }
+  }
+
+  let jobBoardPostPersonId;
+  if (jobBoardPostPerson) {
+    if (jobBoardPostPerson.Id === "-1") {
+      jobBoardPostPersonId = (
+        await spWebContext.web.ensureUser(jobBoardPostPerson.EMail)
+      ).Id.toString();
+    } else {
+      jobBoardPostPersonId = jobBoardPostPerson.Id;
+    }
+  }
+
+  let joaPostPersonId;
+  if (joaPostPerson) {
+    if (joaPostPerson.Id === "-1") {
+      joaPostPersonId = (
+        await spWebContext.web.ensureUser(joaPostPerson.EMail)
+      ).Id.toString();
+    } else {
+      joaPostPersonId = joaPostPerson.Id;
+    }
+  }
+
+  let linkedInPostPersonId;
+  if (linkedInPostPerson) {
+    if (linkedInPostPerson.Id === "-1") {
+      linkedInPostPersonId = (
+        await spWebContext.web.ensureUser(linkedInPostPerson.EMail)
+      ).Id.toString();
+    } else {
+      linkedInPostPersonId = linkedInPostPerson.Id;
+    }
+  }
+
+  let linkedInSearchPersonId;
+  if (linkedInSearchPerson) {
+    if (linkedInSearchPerson.Id === "-1") {
+      linkedInSearchPersonId = (
+        await spWebContext.web.ensureUser(linkedInSearchPerson.EMail)
+      ).Id.toString();
+    } else {
+      linkedInSearchPersonId = linkedInSearchPerson.Id;
+    }
+  }
+
+  let resumeSearchPersonId;
+  if (resumeSearchPerson) {
+    if (resumeSearchPerson.Id === "-1") {
+      resumeSearchPersonId = (
+        await spWebContext.web.ensureUser(resumeSearchPerson.EMail)
+      ).Id.toString();
+    } else {
+      resumeSearchPersonId = resumeSearchPerson.Id;
+    }
+  }
+
+  let usaJobsPostPersonId;
+  if (usaJobsPostPerson) {
+    if (usaJobsPostPerson.Id === "-1") {
+      usaJobsPostPersonId = (
+        await spWebContext.web.ensureUser(usaJobsPostPerson.EMail)
+      ).Id.toString();
+    } else {
+      usaJobsPostPersonId = usaJobsPostPerson.Id;
     }
   }
 
@@ -622,6 +733,14 @@ const transformRequestToSP = async (
     ...(organizationalPOCId && { organizationalPOCId: organizationalPOCId }),
     ...(issueToId && { issueToId: issueToId }),
     ...(hrlId && { hrlId: hrlId }),
+    ...(jobBoardPostPersonId && { jobBoardPostPersonId: jobBoardPostPersonId }),
+    ...(joaPostPersonId && { joaPostPersonId: joaPostPersonId }),
+    ...(linkedInPostPersonId && { linkedInPostPersonId: linkedInPostPersonId }),
+    ...(linkedInSearchPersonId && {
+      linkedInSearchPersonId: linkedInSearchPersonId,
+    }),
+    ...(resumeSearchPersonId && { resumeSearchPersonId: resumeSearchPersonId }),
+    ...(usaJobsPostPersonId && { usaJobsPostPersonId: usaJobsPostPersonId }),
 
     // stringify arrays for storage in SharePoint
     methods: JSON.stringify(methods),
@@ -725,24 +844,24 @@ const transformRequestFromSP = (request: any): RPARequest => {
     linkedInSearchId: request.linkedInSearchId,
     resumeSearchId: request.resumeSearchId,
     usaJobsPostId: request.usaJobsPostId,
+    jobBoardPostPerson: request.jobBoardPostPerson,
+    joaPostPerson: request.joaPostPerson,
+    linkedInPostPerson: request.linkedInPostPerson,
+    linkedInSearchPerson: request.linkedInSearchPerson,
+    resumeSearchPerson: request.resumeSearchPerson,
+    usaJobsPostPerson: request.usaJobsPostPerson,
+    panelRequired: request.panelRequired,
+    currentEmployee: request.currentEmployee,
   };
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const transformPagedRequestsFromSP = (requests: any) => {
-  const returnObject: {
-    results: PagedRequest[];
-    hasNext: boolean;
-    getNext: () => void;
-  } = {
-    results: [],
-    hasNext: requests.hasNext,
-    getNext: requests?.getNext,
-  };
+  const returnObject: PagedRequest[] = [];
 
-  //eslint-disable-next-line @typescript-eslint/no-explicit-any
-  requests.results.forEach((request: any) => {
-    returnObject.results.push({
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  requests.forEach((request: any) => {
+    returnObject.push({
       Id: request.Id,
       Author: request.Author,
       requestType: request.requestType,
