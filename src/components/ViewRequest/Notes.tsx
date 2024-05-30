@@ -3,20 +3,19 @@ import {
   Button,
   Card,
   CardHeader,
-  DrawerBody,
   DrawerHeader,
   DrawerHeaderTitle,
   OverlayDrawer,
   Persona,
   Text,
-  Textarea,
   Title2,
 } from "@fluentui/react-components";
 import { CommentAddIcon } from "@fluentui/react-icons-mdl2";
 import { DismissRegular } from "@fluentui/react-icons";
-import { useAddNote, useNotes } from "api/notesApi";
+import { useNotes } from "api/notesApi";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
+import NotesForm from "./NotesForm";
 
 const parseUTF16 = (text: string) => {
   return text.replaceAll(/&#(\d{6});/g, (_a, b) => {
@@ -29,20 +28,13 @@ const ViewRequestNotes = () => {
   const requestId = Number(params.requestId);
   const notes = useNotes(requestId);
   const [isOpen, setIsOpen] = useState(false);
-  const [newNoteText, setNewNoteText] = useState("");
-  const addNote = useAddNote(requestId);
-
-  if (addNote.isSuccess) {
-    setIsOpen(false);
-    addNote.reset();
-  }
 
   return (
     <>
       <OverlayDrawer
         position="end"
         modalType="non-modal"
-        style={{ height: "100vh", minWidth: "fit-content" }}
+        style={{ height: "100vh", width: "450px" }}
         open={isOpen}
       >
         <DrawerHeader>
@@ -59,35 +51,7 @@ const ViewRequestNotes = () => {
             New Note
           </DrawerHeaderTitle>
         </DrawerHeader>
-        <DrawerBody>
-          <Textarea
-            style={{ width: "100%" }}
-            placeholder="new note text..."
-            resize="vertical"
-            rows={10}
-            value={newNoteText}
-            onChange={(_ev, data) => setNewNoteText(data.value)}
-            maxLength={2000}
-          />
-          <div style={{ width: "100%", display: "flex" }}>
-            <Button
-              disabled={addNote.isLoading}
-              onClick={() => setIsOpen(false)}
-            >
-              Cancel
-            </Button>
-            <Button
-              appearance="primary"
-              style={{ marginLeft: "auto" }}
-              disabled={addNote.isLoading}
-              onClick={() => {
-                addNote.mutate(newNoteText);
-              }}
-            >
-              Save
-            </Button>
-          </div>
-        </DrawerBody>
+        <NotesForm isOpen={isOpen} closeDrawer={() => setIsOpen(false)} />
       </OverlayDrawer>
 
       <div style={{ display: "flex" }}>
@@ -97,10 +61,7 @@ const ViewRequestNotes = () => {
           disabled={notes.isLoading || notes.isError}
           style={{ marginLeft: "auto" }}
           icon={<CommentAddIcon />}
-          onClick={() => {
-            setNewNoteText("");
-            setIsOpen(true);
-          }}
+          onClick={() => setIsOpen(true)}
         >
           Add a Note
         </Button>
