@@ -2,7 +2,6 @@ import { useParams } from "react-router-dom";
 import {
   Button,
   DrawerBody,
-  Input,
   Label,
   Textarea,
 } from "@fluentui/react-components";
@@ -10,8 +9,16 @@ import { useAddNote } from "api/notesApi";
 import { PeoplePicker } from "components/PeoplePicker/PeoplePicker";
 import { ContactIcon, TextFieldIcon } from "@fluentui/react-icons-mdl2";
 import { useState } from "react";
-import { Person } from "api/requestsApi";
+import { Person, useRequest } from "api/requestsApi";
 import { useSendEmail } from "api/emailApi";
+
+declare const _spPageContextInfo: {
+  userId: number;
+  userDisplayName: string;
+  userEmail: string;
+  userLoginName: string;
+  webAbsoluteUrl: string;
+};
 
 const NotesForm = ({
   isOpen,
@@ -22,24 +29,33 @@ const NotesForm = ({
 }) => {
   const params = useParams();
   const requestId = Number(params.requestId);
+  const request = useRequest(requestId);
   const addNote = useAddNote(requestId);
   const sendMail = useSendEmail();
 
   const [toSelections, setToSelections] = useState<Person[]>([]);
   const [ccSelections, setCcSelections] = useState<Person[]>([]);
-  const [subject, setSubject] = useState("");
   const [newNoteText, setNewNoteText] = useState("");
+
+  const subject =
+    "Action Required for RPA Tracker Request " +
+    requestId +
+    ", " +
+    request.data?.officeSymbol +
+    ", " +
+    request.data?.mpcn;
+
+  const body =
+    `A new note has been added by ${_spPageContextInfo.userDisplayName}<br><br>` +
+    `Link to request: <a href="${_spPageContextInfo.webAbsoluteUrl}/app/index.aspx#/Request/${requestId}">${_spPageContextInfo.webAbsoluteUrl}/app/index.aspx#/Request/${requestId}</a><br><br>` +
+    `Note contents:<br>${newNoteText}`;
 
   if (
     !isOpen &&
-    (toSelections.length > 0 ||
-      ccSelections.length > 0 ||
-      subject ||
-      newNoteText)
+    (toSelections.length > 0 || ccSelections.length > 0 || newNoteText)
   ) {
     setToSelections([]);
     setCcSelections([]);
-    setSubject("");
     setNewNoteText("");
   }
 
@@ -83,20 +99,6 @@ const NotesForm = ({
       />
       <br />
 
-      <Label id="Subject" weight="semibold" className="fieldLabel">
-        <TextFieldIcon className="fieldIcon" />
-        Subject
-      </Label>
-      <div>
-        <Input
-          id="Subject"
-          style={{ width: "100%" }}
-          value={subject}
-          onChange={(_ev, data) => setSubject(data.value)}
-        />
-      </div>
-      <br />
-
       <Label id="Body" weight="semibold" className="fieldLabel">
         <TextFieldIcon className="fieldIcon" />
         Body
@@ -129,7 +131,7 @@ const NotesForm = ({
                   To: [] as string[],
                   CC: [] as string[],
                   Subject: subject,
-                  Body: newNoteText,
+                  Body: body,
                 };
                 toSelections.forEach((person) => email.To.push(person.EMail));
                 ccSelections.forEach((person) => email.CC.push(person.EMail));

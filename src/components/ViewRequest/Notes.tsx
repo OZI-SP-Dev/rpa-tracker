@@ -34,7 +34,8 @@ const ViewRequestNotes = () => {
       <OverlayDrawer
         position="end"
         modalType="non-modal"
-        style={{ height: "100vh", width: "450px" }}
+        style={{ height: "100vh" }}
+        size="medium"
         open={isOpen}
       >
         <DrawerHeader>
