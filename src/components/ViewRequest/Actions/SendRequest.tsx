@@ -1,5 +1,6 @@
 import {
   Button,
+  Checkbox,
   Dialog,
   DialogActions,
   DialogBody,
@@ -14,6 +15,7 @@ import { useAddNote } from "api/notesApi";
 import { useRequest, useUpdateStage, validateRequest } from "api/requestsApi";
 import { useMyRoles } from "api/rolesApi";
 import { STAGES } from "consts/Stages";
+import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 const SendRequest = () => {
@@ -24,6 +26,10 @@ const SendRequest = () => {
   const addNote = useAddNote(requestId);
   const navigate = useNavigate();
   const myRoles = useMyRoles();
+
+  const [csfcaApproval, setCsfcaApproval] = useState(false);
+  const [hqApproval, setHqApproval] = useState(false);
+  const [titleV, setTitleV] = useState(false);
 
   const currentStage = STAGES.find(({ key }) => key === request.data?.stage);
   const askIfCurrentEmployee = currentStage?.key === "Selection";
@@ -97,6 +103,20 @@ const SendRequest = () => {
     }
   };
 
+  const draftPackageHandler = () => {
+    const newData = {
+      requestId,
+      newStage: "PackageApproval",
+      newSubStage: "PackageApproval",
+      eventTitle:
+        "Forward Stage Change: Draft Package (HRL) to Package Approval",
+      csfcaApproval: csfcaApproval ? "Yes" : "No",
+      hqApproval: hqApproval ? "Yes" : "No",
+      titleV: titleV ? "Yes" : "No",
+    };
+    updateStage.mutateAsync(newData);
+  };
+
   return (
     <Dialog modalType="alert">
       <DialogTrigger disableButtonEnhancement>
@@ -116,7 +136,41 @@ const SendRequest = () => {
       <DialogSurface>
         <DialogBody>
           <DialogTitle>Send request</DialogTitle>
-          {askIfCurrentEmployee ? (
+          {request.data?.subStage === "DraftPackageHRL" ? (
+            <>
+              <DialogContent>
+                <p>Select required approvals:</p>
+                <Checkbox
+                  checked={csfcaApproval}
+                  label="CSF/CA Approval"
+                  onChange={() => setCsfcaApproval((checked) => !checked)}
+                />
+                <Checkbox
+                  checked={hqApproval}
+                  label="HQ Approval"
+                  onChange={() => setHqApproval((checked) => !checked)}
+                />
+                <Checkbox
+                  checked={titleV}
+                  label="Title V"
+                  onChange={() => setTitleV((checked) => !checked)}
+                />
+              </DialogContent>
+              <DialogActions>
+                <DialogTrigger disableButtonEnhancement>
+                  <Button appearance="secondary">Cancel</Button>
+                </DialogTrigger>
+                <DialogTrigger disableButtonEnhancement>
+                  <Button
+                    appearance="primary"
+                    onClick={() => draftPackageHandler()}
+                  >
+                    Send
+                  </Button>
+                </DialogTrigger>
+              </DialogActions>
+            </>
+          ) : askIfCurrentEmployee ? (
             <>
               <DialogContent>
                 <p>Is selected candidate a current federal employee?</p>
