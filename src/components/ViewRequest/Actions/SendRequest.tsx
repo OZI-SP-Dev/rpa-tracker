@@ -107,7 +107,7 @@ const SendRequest = () => {
     const newData = {
       requestId,
       newStage: "PackageApproval",
-      newSubStage: "PackageApproval",
+      newSubStage: "SelectionPackageOSFApproval",
       eventTitle:
         "Forward Stage Change: Draft Package (HRL) to Package Approval",
       csfcaApproval: csfcaApproval ? "Yes" : "No",
