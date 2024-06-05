@@ -60,7 +60,7 @@ export const useMyRoles = () => {
     isCA: myData?.includes("CA"),
     isCOSF: myData?.includes("COSF"),
     isCSF: myData?.includes("CSF"),
-    isHRL: myData?.includes("HRL"),
+    isHRL: myData?.includes("HRL") || myData?.includes("COS HR Supervisor"),
     isOSF: myData?.includes("OSF"),
     roles: myData || [],
   };
