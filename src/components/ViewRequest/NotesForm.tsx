@@ -105,7 +105,7 @@ const NotesForm = ({
       </Label>
       <Textarea
         id="Body"
-        style={{ width: "100%", display: "block" }}
+        style={{ width: "100%" }}
         placeholder="new note text..."
         resize="vertical"
         rows={10}
