@@ -176,12 +176,23 @@ export const STAGES: ReadonlyArray<STAGE> = [
       {
         key: "DraftPackageHRL",
         text: "Draft Package (HRL)",
-        next: "PackageApproval",
+        next: "SelectionPackageOSFApproval",
         nextEventTitle:
-          "Forward Stage Change: Draft Package (HRL) to Package Approval",
+          "Forward Stage Change: Draft Package (HRL) to OSF Approval",
         readyForNext: () => true,
         previous: undefined,
         previousEventTitle: undefined,
+      },
+      {
+        key: "SelectionPackageOSFApproval",
+        text: "OSF Approval",
+        next: "PackageApproval",
+        nextEventTitle:
+          "Forward Stage Change: OSF Approval to Package Approval",
+        readyForNext: () => true,
+        previous: "DraftPackageHRL",
+        previousEventTitle:
+          "Backward Stage Change: OSF Approval to Draft Package (HRL)",
       },
       {
         key: "PackageApproval",
@@ -191,7 +202,7 @@ export const STAGES: ReadonlyArray<STAGE> = [
         readyForNext: () => true,
         previous: "DraftPackageHRL",
         previousEventTitle:
-          "Backward Stage Change: Package Approval to Draft Package (HRL)",
+          "Backward Stage Change: Package Approval to OSF Approval",
       },
       {
         key: "TitleV",
