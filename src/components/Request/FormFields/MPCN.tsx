@@ -10,6 +10,7 @@ const MPCNField = () => {
   const paq = useWatch({ name: "paq" });
 
   const rules = {
+    required: paq === "Yes" ? false : "MPCN is required",
     validate: {
       required: (v: any) => {
         return paq === "Yes" || v.length > 0 || "MPCN is required";
