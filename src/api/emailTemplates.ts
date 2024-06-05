@@ -32,8 +32,8 @@ const emailTemplates = {
                     "",
                 ],
                 CC: [requestData.supervisor.EMail],
-                Subject: `OSF Action: RPA ${requestData.positionTitle} is pending OSF review.`,
-                Body: `This email has been generated to inform you that a Request for Personnel Action (RPA) for - ${requestData.positionTitle} - has been submitted and is pending the OSF review.
+                Subject: `OSF Action: An incentive package for RPA ${requestData.positionTitle} is ready for OSF review/approval.`,
+                Body: `This email is to inform you that an incentive package Request for Personnel Action (RPA) ${requestData.positionTitle} is pending OSF approval.
 
               To action this request, follow the below link:
               <a href="${_spPageContextInfo.webAbsoluteUrl}/app/index.aspx#/Request/${request.requestId}">${_spPageContextInfo.webAbsoluteUrl}/app/index.aspx#/Request/${request.requestId}</a>`,

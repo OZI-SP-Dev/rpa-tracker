@@ -114,6 +114,10 @@ export interface RPARequest {
   usaJobsPostPerson?: Person;
   panelRequired?: "Yes" | "No";
   currentEmployee?: "Yes" | "No";
+  csfcaApproval?: "Yes" | "No";
+  hqApproval?: "Yes" | "No";
+  titleV?: "Yes" | "No";
+  paq?: "Yes" | "No";
 }
 
 /**
@@ -852,6 +856,10 @@ const transformRequestFromSP = (request: any): RPARequest => {
     usaJobsPostPerson: request.usaJobsPostPerson,
     panelRequired: request.panelRequired,
     currentEmployee: request.currentEmployee,
+    csfcaApproval: request.csfcaApproval,
+    hqApproval: request.hqApproval,
+    titleV: request.titleV,
+    paq: request.paq,
   };
 };
 
