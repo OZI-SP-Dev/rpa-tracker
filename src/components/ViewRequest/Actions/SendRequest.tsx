@@ -62,30 +62,41 @@ const SendRequest = () => {
     }
   }
 
+  let nextStage = "";
+  let nextSubStage = "";
+  let eventText = "";
+
+  if (request.data && currentStage?.next) {
+    const subStage = currentStage.subStages?.find(
+      ({ key }) => key === request.data.subStage
+    );
+
+    if (subStage && subStage.next && subStage.next(request.data)) {
+      // There is another substage, set that as next
+      nextStage = currentStage.key;
+      nextSubStage = subStage.next(request.data) || "";
+      eventText = subStage.nextEventTitle(request.data) || "";
+    } else {
+      // No followon substage, find next major stage
+      const nextMajorStage = STAGES.find(
+        ({ key }) => key === currentStage.next(request.data)
+      );
+      nextStage = currentStage.next(request.data) || "";
+      nextSubStage = nextMajorStage?.subStages?.[0].key || ""; // first substage of next stage or empty string
+      eventText = currentStage.nextEventTitle(request.data) || "";
+    }
+  }
+
   const updateHandler = (currentEmployee?: "Yes" | "No") => {
     if (request.data && currentStage?.next) {
       const newData = {
         requestId,
-        newStage: "",
-        newSubStage: "",
-        eventTitle: "",
+        newStage: nextStage,
+        newSubStage: nextSubStage,
+        eventTitle: eventText,
         ...(currentEmployee && { currentEmployee: currentEmployee }),
       };
 
-      const subStage = currentStage.subStages?.find(
-        ({ key }) => key === request.data.subStage
-      );
-
-      if (subStage && subStage.next) {
-        newData.newStage = currentStage.key;
-        newData.newSubStage = subStage.next;
-        newData.eventTitle = subStage.nextEventTitle;
-      } else {
-        const nextStage = STAGES.find(({ key }) => key === currentStage.next);
-        newData.newStage = currentStage.next;
-        newData.newSubStage = nextStage?.subStages?.[0].key || ""; // first substage of next stage or empty string
-        newData.eventTitle = currentStage.nextEventTitle;
-      }
       updateStage.mutateAsync(newData).then(() => {
         if (currentStage?.key === "Recruiting") {
           addNote.mutate("Moved to Candidate Selection");
@@ -110,9 +121,9 @@ const SendRequest = () => {
       newSubStage: "SelectionPackageOSFApproval",
       eventTitle:
         "Forward Stage Change: Draft Package (HRL) to Package Approval",
-      csfcaApproval: csfcaApproval ? "Yes" : "No",
-      hqApproval: hqApproval ? "Yes" : "No",
-      titleV: titleV ? "Yes" : "No",
+      csfcaApproval: (csfcaApproval ? "Yes" : "No") as "Yes" | "No",
+      hqApproval: (hqApproval ? "Yes" : "No") as "Yes" | "No",
+      titleV: (titleV ? "Yes" : "No") as "Yes" | "No",
     };
     updateStage.mutateAsync(newData);
   };
@@ -224,7 +235,11 @@ const SendRequest = () => {
                     )}
                   </>
                 ) : readyForNextStage ? (
-                  <p>Are you sure you want to send the request? </p>
+                  nextStage === "Complete" ? (
+                    <p>This will complete the RPA request.</p>
+                  ) : (
+                    <p>Are you sure you want to send the request? </p>
+                  )
                 ) : (
                   <p>Complete all items before sending forward.</p>
                 )}

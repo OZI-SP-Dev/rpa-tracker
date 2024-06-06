@@ -492,6 +492,9 @@ export const useUpdateStage = () => {
       newSubStage: string;
       eventTitle: string;
       currentEmployee?: "Yes" | "No";
+      csfcaApproval?: "Yes" | "No";
+      hqApproval?: "Yes" | "No";
+      titleV?: "Yes" | "No";
     }) => {
       await spWebContext.web.lists
         .getByTitle("requests")
@@ -501,6 +504,15 @@ export const useUpdateStage = () => {
           subStage: request.newSubStage,
           ...(request.currentEmployee && {
             currentEmployee: request.currentEmployee,
+          }),
+          ...(request.csfcaApproval && {
+            csfcaApproval: request.csfcaApproval,
+          }),
+          ...(request.hqApproval && {
+            hqApproval: request.hqApproval,
+          }),
+          ...(request.titleV && {
+            titleV: request.titleV,
           }),
         });
     },

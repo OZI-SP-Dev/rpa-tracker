@@ -3,8 +3,8 @@ import { RPARequest } from "api/requestsApi";
 interface STARTSTAGE {
   key: string;
   text: string;
-  next: string;
-  nextEventTitle: string;
+  next: (request: RPARequest | undefined) => string;
+  nextEventTitle: (request: RPARequest | undefined) => string;
   readyForNext: (request: RPARequest | undefined) => boolean;
   previous: undefined;
   previousEventTitle: undefined;
@@ -14,8 +14,8 @@ interface STARTSTAGE {
 interface MIDSTAGE {
   key: string;
   text: string;
-  next: string;
-  nextEventTitle: string;
+  next: (request: RPARequest | undefined) => string | undefined;
+  nextEventTitle: (request: RPARequest | undefined) => string | undefined;
   readyForNext: (request: RPARequest | undefined) => boolean;
   previous: string;
   previousEventTitle: string;
@@ -39,8 +39,8 @@ export const STAGES: ReadonlyArray<STAGE> = [
   {
     key: "Draft",
     text: "RPA Request",
-    next: "PackageReview",
-    nextEventTitle: "Forward Stage Change: RPA Request to Package Review",
+    next: () => "PackageReview",
+    nextEventTitle: () => "Forward Stage Change: RPA Request to Package Review",
     readyForNext: () => true,
     previous: undefined,
     previousEventTitle: undefined,
@@ -48,8 +48,8 @@ export const STAGES: ReadonlyArray<STAGE> = [
   {
     key: "PackageReview",
     text: "Package Review/Concurrence",
-    next: "Recruiting",
-    nextEventTitle: "Forward Stage Change: Package Review to Recruiting",
+    next: () => "Recruiting",
+    nextEventTitle: () => "Forward Stage Change: Package Review to Recruiting",
     readyForNext: (request) => {
       //find current stage
       const currentStage = STAGES.find(({ key }) => key === request?.stage);
@@ -71,8 +71,9 @@ export const STAGES: ReadonlyArray<STAGE> = [
       {
         key: "OSFReview",
         text: "OSF Review",
-        next: "HRLReview",
-        nextEventTitle: "Forward Stage Change: OSF Review to HRL/COSF Review",
+        next: () => "HRLReview",
+        nextEventTitle: () =>
+          "Forward Stage Change: OSF Review to HRL/COSF Review",
         readyForNext: () => true,
         previous: undefined,
         previousEventTitle: undefined,
@@ -137,8 +138,9 @@ export const STAGES: ReadonlyArray<STAGE> = [
   {
     key: "Recruiting",
     text: "Recruiting",
-    next: "Selection",
-    nextEventTitle: "Forward Stage Change: Recruiting to Candidate Selection",
+    next: () => "Selection",
+    nextEventTitle: () =>
+      "Forward Stage Change: Recruiting to Candidate Selection",
     readyForNext: () => true,
     previous: "PackageReview",
     previousEventTitle: "Backward Stage Change: Recruiting to Package Review",
@@ -146,8 +148,8 @@ export const STAGES: ReadonlyArray<STAGE> = [
   {
     key: "Selection",
     text: "Candidate Selection",
-    next: "PackageApproval",
-    nextEventTitle:
+    next: () => "PackageApproval",
+    nextEventTitle: () =>
       "Forward Stage Change: Candidate Selection to Package Approval",
     readyForNext: () => true,
     previous: "Recruiting",
@@ -157,8 +159,8 @@ export const STAGES: ReadonlyArray<STAGE> = [
   {
     key: "PackageApproval",
     text: "Package Prep & Approval",
-    next: "Complete",
-    nextEventTitle: "Forward Stage Change: Package Approval to Complete",
+    next: () => "Complete",
+    nextEventTitle: () => "Forward Stage Change: Package Approval to Complete",
     readyForNext: (request) => {
       //find current stage
       const currentStage = STAGES.find(({ key }) => key === request?.stage);
@@ -176,8 +178,8 @@ export const STAGES: ReadonlyArray<STAGE> = [
       {
         key: "DraftPackageHRL",
         text: "Draft Package (HRL)",
-        next: "SelectionPackageOSFApproval",
-        nextEventTitle:
+        next: () => "SelectionPackageOSFApproval",
+        nextEventTitle: () =>
           "Forward Stage Change: Draft Package (HRL) to OSF Approval",
         readyForNext: () => true,
         previous: undefined,
@@ -186,8 +188,8 @@ export const STAGES: ReadonlyArray<STAGE> = [
       {
         key: "SelectionPackageOSFApproval",
         text: "OSF Approval",
-        next: "PackageApproval",
-        nextEventTitle:
+        next: () => "PackageApproval",
+        nextEventTitle: () =>
           "Forward Stage Change: OSF Approval to Package Approval",
         readyForNext: () => true,
         previous: "DraftPackageHRL",
@@ -197,8 +199,18 @@ export const STAGES: ReadonlyArray<STAGE> = [
       {
         key: "PackageApproval",
         text: "Package Approval",
-        next: "TitleV",
-        nextEventTitle: "Forward Stage Change: Package Approval to Title V",
+        next: (request) => {
+          if (request?.titleV) {
+            return "TitleV";
+          }
+          return undefined;
+        },
+        nextEventTitle: (request) => {
+          if (request?.titleV) {
+            return "Forward Stage Change: Package Approval to Title V";
+          }
+          return undefined;
+        },
         readyForNext: () => true,
         previous: "DraftPackageHRL",
         previousEventTitle:

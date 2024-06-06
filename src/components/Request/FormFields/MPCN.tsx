@@ -12,9 +12,7 @@ const MPCNField = () => {
   const rules = {
     required: paq === "Yes" ? false : "MPCN is required",
     validate: {
-      required: (v: any) => {
-        return paq === "Yes" || v.length > 0 || "MPCN is required";
-      },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       minLength: (v: any) => {
         return (
           paq === "Yes" ||
@@ -22,6 +20,7 @@ const MPCNField = () => {
           "MPCN cannot be less than 7 characters"
         );
       },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       maxLength: (v: any) => {
         return (
           paq === "Yes" ||
@@ -29,6 +28,7 @@ const MPCNField = () => {
           "MPCN cannot be more than 10 characters"
         );
       },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       pattern: (v: any) =>
         paq === "Yes" ||
         (v.match(/^[A-Za-z]{0,3}\d+$/)?.length
@@ -44,6 +44,7 @@ const MPCNField = () => {
           name="paq"
           labelText="PAQ/PCIP/Pathways Position"
           fieldProps={{ layout: "horizontal" }}
+          rules={{ required: "PAQ/PCIP/Pathways Position is required" }}
         >
           <Radio key="Yes" value="Yes" label="Yes" />
           <Radio key="No" value="No" label="No" />

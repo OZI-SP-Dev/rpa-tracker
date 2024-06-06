@@ -95,6 +95,7 @@ const emailTemplates = {
   },
   reviewStageChangesMade: (
     requestData: RPARequest,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     dirtyFields: any,
     OSFs: OSF[]
   ) => {
