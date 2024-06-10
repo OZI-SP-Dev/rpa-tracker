@@ -1,5 +1,6 @@
 import {
   Button,
+  Checkbox,
   Dialog,
   DialogActions,
   DialogBody,
@@ -14,6 +15,7 @@ import { useAddNote } from "api/notesApi";
 import { useRequest, useUpdateStage, validateRequest } from "api/requestsApi";
 import { useMyRoles } from "api/rolesApi";
 import { STAGES } from "consts/Stages";
+import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 const SendRequest = () => {
@@ -24,6 +26,10 @@ const SendRequest = () => {
   const addNote = useAddNote(requestId);
   const navigate = useNavigate();
   const myRoles = useMyRoles();
+
+  const [csfcaApproval, setCsfcaApproval] = useState(false);
+  const [hqApproval, setHqApproval] = useState(false);
+  const [titleV, setTitleV] = useState(false);
 
   const currentStage = STAGES.find(({ key }) => key === request.data?.stage);
   const askIfCurrentEmployee = currentStage?.key === "Selection";
@@ -56,37 +62,48 @@ const SendRequest = () => {
     }
   }
 
+  let nextStage = "";
+  let nextSubStage = "";
+  let eventText = "";
+
+  if (request.data && currentStage?.next) {
+    const subStage = currentStage.subStages?.find(
+      ({ key }) => key === request.data.subStage
+    );
+
+    if (subStage && subStage.next && subStage.next(request.data)) {
+      // There is another substage, set that as next
+      nextStage = currentStage.key;
+      nextSubStage = subStage.next(request.data) || "";
+      eventText = subStage.nextEventTitle(request.data) || "";
+    } else {
+      // No followon substage, find next major stage
+      const nextMajorStage = STAGES.find(
+        ({ key }) => key === currentStage.next(request.data)
+      );
+      nextStage = currentStage.next(request.data) || "";
+      nextSubStage = nextMajorStage?.subStages?.[0].key || ""; // first substage of next stage or empty string
+      eventText = currentStage.nextEventTitle(request.data) || "";
+    }
+  }
+
   const updateHandler = (currentEmployee?: "Yes" | "No") => {
     if (request.data && currentStage?.next) {
       const newData = {
         requestId,
-        newStage: "",
-        newSubStage: "",
-        eventTitle: "",
+        newStage: nextStage,
+        newSubStage: nextSubStage,
+        eventTitle: eventText,
         ...(currentEmployee && { currentEmployee: currentEmployee }),
       };
 
-      const subStage = currentStage.subStages?.find(
-        ({ key }) => key === request.data.subStage
-      );
-
-      if (subStage && subStage.next) {
-        newData.newStage = currentStage.key;
-        newData.newSubStage = subStage.next;
-        newData.eventTitle = subStage.nextEventTitle;
-      } else {
-        const nextStage = STAGES.find(({ key }) => key === currentStage.next);
-        newData.newStage = currentStage.next;
-        newData.newSubStage = nextStage?.subStages?.[0].key || ""; // first substage of next stage or empty string
-        newData.eventTitle = currentStage.nextEventTitle;
-      }
       updateStage.mutateAsync(newData).then(() => {
         if (currentStage?.key === "Recruiting") {
           addNote.mutate("Moved to Candidate Selection");
         }
         if (currentStage?.key === "Selection") {
           let myString = "Moved to Package Prep and Approval.\n";
-          myString += "Candiate is ";
+          myString += "Candidate is ";
           if (currentEmployee === "No") {
             myString += "not ";
           }
@@ -95,6 +112,19 @@ const SendRequest = () => {
         }
       });
     }
+  };
+
+  const draftPackageHandler = () => {
+    const newData = {
+      requestId,
+      newStage: nextStage,
+      newSubStage: nextSubStage,
+      eventTitle: eventText,
+      csfcaApproval: (csfcaApproval ? "Yes" : "No") as "Yes" | "No",
+      hqApproval: (hqApproval ? "Yes" : "No") as "Yes" | "No",
+      titleV: (titleV ? "Yes" : "No") as "Yes" | "No",
+    };
+    updateStage.mutateAsync(newData);
   };
 
   return (
@@ -116,7 +146,41 @@ const SendRequest = () => {
       <DialogSurface>
         <DialogBody>
           <DialogTitle>Send request</DialogTitle>
-          {askIfCurrentEmployee ? (
+          {request.data?.subStage === "DraftPackageHRL" ? (
+            <>
+              <DialogContent>
+                <p>Select required approvals:</p>
+                <Checkbox
+                  checked={csfcaApproval}
+                  label="CSF/CA Approval"
+                  onChange={() => setCsfcaApproval((checked) => !checked)}
+                />
+                <Checkbox
+                  checked={hqApproval}
+                  label="HQ Approval"
+                  onChange={() => setHqApproval((checked) => !checked)}
+                />
+                <Checkbox
+                  checked={titleV}
+                  label="Title V"
+                  onChange={() => setTitleV((checked) => !checked)}
+                />
+              </DialogContent>
+              <DialogActions>
+                <DialogTrigger disableButtonEnhancement>
+                  <Button appearance="secondary">Cancel</Button>
+                </DialogTrigger>
+                <DialogTrigger disableButtonEnhancement>
+                  <Button
+                    appearance="primary"
+                    onClick={() => draftPackageHandler()}
+                  >
+                    Send
+                  </Button>
+                </DialogTrigger>
+              </DialogActions>
+            </>
+          ) : askIfCurrentEmployee ? (
             <>
               <DialogContent>
                 <p>Is selected candidate a current federal employee?</p>
@@ -170,7 +234,11 @@ const SendRequest = () => {
                     )}
                   </>
                 ) : readyForNextStage ? (
-                  <p>Are you sure you want to send the request? </p>
+                  nextStage === "Complete" ? (
+                    <p>This will complete the RPA request.</p>
+                  ) : (
+                    <p>Are you sure you want to send the request? </p>
+                  )
                 ) : (
                   <p>Complete all items before sending forward.</p>
                 )}

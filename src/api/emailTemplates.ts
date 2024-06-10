@@ -70,6 +70,24 @@ const emailTemplates = {
         }
         break;
 
+      case "PackageApproval":
+        switch (request.newSubStage) {
+          case "SelectionPackageOSFApproval":
+            email = {
+              To: [
+                OSFs.find((osf) => osf.Title === requestData.osf)?.email || "",
+              ],
+              CC: [requestData.supervisor.EMail],
+              Subject: `OSF Action: An incentive package for RPA ${requestData.positionTitle} is ready for OSF review/approval.`,
+              Body: `This email is to inform you that an incentive package Request for Personnel Action (RPA) ${requestData.positionTitle} is pending OSF approval.
+
+              To action this request, follow the below link:
+              <a href="${_spPageContextInfo.webAbsoluteUrl}/app/index.aspx#/Request/${request.requestId}">${_spPageContextInfo.webAbsoluteUrl}/app/index.aspx#/Request/${request.requestId}</a>`,
+            };
+            break;
+        }
+        break;
+
       default:
         break;
     }
@@ -77,6 +95,7 @@ const emailTemplates = {
   },
   reviewStageChangesMade: (
     requestData: RPARequest,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     dirtyFields: any,
     OSFs: OSF[]
   ) => {
