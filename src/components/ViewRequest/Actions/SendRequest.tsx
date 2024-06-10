@@ -117,10 +117,9 @@ const SendRequest = () => {
   const draftPackageHandler = () => {
     const newData = {
       requestId,
-      newStage: "PackageApproval",
-      newSubStage: "SelectionPackageOSFApproval",
-      eventTitle:
-        "Forward Stage Change: Draft Package (HRL) to Package Approval",
+      newStage: nextStage,
+      newSubStage: nextSubStage,
+      eventTitle: eventText,
       csfcaApproval: (csfcaApproval ? "Yes" : "No") as "Yes" | "No",
       hqApproval: (hqApproval ? "Yes" : "No") as "Yes" | "No",
       titleV: (titleV ? "Yes" : "No") as "Yes" | "No",

@@ -3,9 +3,9 @@ import { RPARequest } from "api/requestsApi";
 interface STARTSTAGE {
   key: string;
   text: string;
-  next: (request: RPARequest | undefined) => string;
-  nextEventTitle: (request: RPARequest | undefined) => string;
-  readyForNext: (request: RPARequest | undefined) => boolean;
+  next: (request?: RPARequest) => string;
+  nextEventTitle: (request?: RPARequest) => string;
+  readyForNext: (request?: RPARequest) => boolean;
   previous: undefined;
   previousEventTitle: undefined;
   subStages?: ReadonlyArray<STAGE>;
@@ -14,9 +14,9 @@ interface STARTSTAGE {
 interface MIDSTAGE {
   key: string;
   text: string;
-  next: (request: RPARequest | undefined) => string | undefined;
-  nextEventTitle: (request: RPARequest | undefined) => string | undefined;
-  readyForNext: (request: RPARequest | undefined) => boolean;
+  next: (request?: RPARequest) => string | undefined;
+  nextEventTitle: (request?: RPARequest) => string | undefined;
+  readyForNext: (request?: RPARequest) => boolean;
   previous: string;
   previousEventTitle: string;
   subStages?: ReadonlyArray<STAGE>;
@@ -27,7 +27,7 @@ interface ENDSTAGE {
   text: string;
   next: undefined;
   nextEventTitle: undefined;
-  readyForNext: (request: RPARequest | undefined) => true;
+  readyForNext: (request?: RPARequest) => true;
   previous: string | undefined;
   previousEventTitle: string | undefined;
   subStages?: ReadonlyArray<STAGE>;
@@ -200,19 +200,19 @@ export const STAGES: ReadonlyArray<STAGE> = [
         key: "PackageApproval",
         text: "Package Approval",
         next: (request) => {
-          if (request?.titleV) {
+          if (request?.titleV === "Yes") {
             return "TitleV";
           }
           return undefined;
         },
         nextEventTitle: (request) => {
-          if (request?.titleV) {
+          if (request?.titleV === "Yes") {
             return "Forward Stage Change: Package Approval to Title V";
           }
           return undefined;
         },
         readyForNext: () => true,
-        previous: "DraftPackageHRL",
+        previous: "SelectionPackageOSFApproval",
         previousEventTitle:
           "Backward Stage Change: Package Approval to OSF Approval",
       },
