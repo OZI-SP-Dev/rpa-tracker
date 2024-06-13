@@ -308,9 +308,9 @@ export const STAGES: ReadonlyArray<STAGE> = [
         next: undefined,
         nextEventTitle: undefined,
         readyForNext: () => true,
-        previous: "PackageApproval",
+        previous: "DraftPackageHRL",
         previousEventTitle:
-          "Backward Stage Change: Title V to Package Approval",
+          "Backward Stage Change: Title V to Draft Package (HRL)",
         showStage: (request) => request?.titleV === "Yes",
       },
     ],

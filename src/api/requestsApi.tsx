@@ -143,7 +143,8 @@ export const usePagedRequests = (
   page = 0,
   sortParams = defaultSortParams,
   filterParams: RequestFilter[],
-  allOpen = false
+  allOpen = false,
+  allItems = false
 ) => {
   const queryClient = useQueryClient();
   const myRoles = useMyRoles();
@@ -156,6 +157,7 @@ export const usePagedRequests = (
       filterParams,
       page,
       allOpen,
+      allItems,
       myRoles.roles,
     ],
     enabled: OSFs.isFetched, // wait until OSFs are fetched
@@ -170,6 +172,7 @@ export const usePagedRequests = (
             filterParams,
             page - 1,
             allOpen,
+            allItems,
             myRoles.roles,
           ]) || [];
 
@@ -181,6 +184,7 @@ export const usePagedRequests = (
         sortParams,
         filterParams,
         allOpen,
+        allItems,
         myRoles,
         OSFs.data || []
       );
@@ -227,6 +231,7 @@ const getPagedRequests = async (
   sortParams: SortParams,
   filterParams: RequestFilter[],
   allOpen: boolean,
+  allItems: boolean,
   myRoles: MYROLES,
   OSFs: OSF[]
 ) => {
@@ -235,13 +240,14 @@ const getPagedRequests = async (
     "Author/Id,Author/EMail,Author/Title";
   const expandedFields = "Author";
 
-  let queryString =
-    "ContentType eq 'RPADocSet' and stage ne 'Complete'" +
-    " and stage ne 'Cancelled'";
+  let queryString = "ContentType eq 'RPADocSet'";
+  if (!allItems) {
+    queryString += " and stage ne 'Complete' and stage ne 'Cancelled'";
+  }
 
   // if not showing all open requests, filter for those items relevant to current user
   // current user may have multiple roles!
-  if (!allOpen) {
+  if (!allOpen && !allItems) {
     // if current user is a CSF or COSF, they may see all post-draft requests
     // no other filters need be added
     if (myRoles.isCSF || myRoles.isCOSF) {

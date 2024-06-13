@@ -175,7 +175,8 @@ const RequestsTable = () => {
     page,
     sortState,
     filterState,
-    checkedValues.filterOptions.includes("openItems")
+    checkedValues.filterOptions.includes("openItems"),
+    checkedValues.filterOptions.includes("allItems")
   );
   const refMap = useRef<Record<string, HTMLElement | null>>({});
   const [columnSizingOptions, setColumnSizingOptions] =
@@ -261,12 +262,7 @@ const RequestsTable = () => {
           >
             Open Items
           </ToolbarRadioButton>
-          <ToolbarRadioButton
-            as="button"
-            name="filterOptions"
-            value="allItems"
-            disabled
-          >
+          <ToolbarRadioButton as="button" name="filterOptions" value="allItems">
             All Items
           </ToolbarRadioButton>
         </ToolbarRadioGroup>
