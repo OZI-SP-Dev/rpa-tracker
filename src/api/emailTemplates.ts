@@ -87,14 +87,13 @@ const emailTemplates = {
             break;
 
           case "SelectionPackageCSFApproval":
-            const CSFEmails: string[] = [];
-            allRoles.forEach((role) => {
-              if (role.Title === "CSF") {
-                CSFEmails.push(role.user.EMail);
-              }
-            });
             email = {
-              To: CSFEmails,
+              To: allRoles.flatMap((role) => {
+                if (role.Title === "CSF") {
+                  return role.user.EMail;
+                }
+                return [];
+              }),
               CC: [requestData.supervisor.EMail],
               Subject: `CSF Action: An incentive package for RPA ${requestData.positionTitle} is ready for CSF review/approval.`,
               Body: `This email is to inform you that an incentive package Request for Personnel Action (RPA) ${requestData.positionTitle} is pending CSF approval.
@@ -105,14 +104,13 @@ const emailTemplates = {
             break;
 
           case "SelectionPackageHQApproval":
-            const HQTOEmails: string[] = [];
-            allRoles.forEach((role) => {
-              if (role.Title === "HQ") {
-                HQTOEmails.push(role.user.EMail);
-              }
-            });
             email = {
-              To: HQTOEmails,
+              To: allRoles.flatMap((role) => {
+                if (role.Title === "HQ") {
+                  return role.user.EMail;
+                }
+                return [];
+              }),
               CC: [requestData.supervisor.EMail],
               Subject: `HQ Action: An incentive package for RPA ${requestData.positionTitle} is ready for HQ review/approval.`,
               Body: `This email is to inform you that an incentive package Request for Personnel Action (RPA) ${requestData.positionTitle} is pending HQ approval.
@@ -123,12 +121,6 @@ const emailTemplates = {
             break;
 
           case "SelectionPackageCAApproval":
-            const CACCEmails: string[] = [requestData.supervisor.EMail];
-            allRoles.forEach((role) => {
-              if (role.Title === "COS HR Supervisor") {
-                CACCEmails.push(role.user.EMail);
-              }
-            });
             email = {
               To: [
                 requestData.hrl?.EMail ||
@@ -136,7 +128,12 @@ const emailTemplates = {
                     ?.defaultHRLEmail ||
                   "",
               ],
-              CC: CACCEmails,
+              CC: allRoles.flatMap((role) => {
+                  if (role.Title === "COS HR Supervisor") {
+                    return role.user.EMail;
+                  }
+                  return [];
+                }).concat([requestData.supervisor.EMail]),
               Subject: `CA Action: An incentive package for RPA ${requestData.positionTitle} is ready for CA review/approval.`,
               Body: `This email is to inform you that an incentive package Request for Personnel Action (RPA) ${requestData.positionTitle} is pending CA approval.
 

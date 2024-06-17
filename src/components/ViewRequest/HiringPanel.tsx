@@ -10,20 +10,22 @@ const HiringPanel = () => {
   const params = useParams();
   const requestId = Number(params.requestId);
   const request = useRequest(requestId);
-  const postRequest = usePostRequest();
-  const addNote = useAddNote(requestId);
+  const { mutate: postRequestMutate, isLoading: postRequestIsLoading } =
+    usePostRequest();
+  const { mutate: addNoteMutate, isLoading: addNoteIsLoading } =
+    useAddNote(requestId);
 
   const onChange = useCallback(
     (ev: ChangeEvent<HTMLInputElement>) => {
-      postRequest.mutate({
-        requestId: requestId,
+      postRequestMutate({
+        requestId: Number(params.requestId),
         postRequest: { panelRequired: ev.currentTarget.checked ? "Yes" : "No" },
       });
-      addNote.mutate(
+      addNoteMutate(
         `Set 'Panel Required' to ${ev.currentTarget.checked ? "Yes" : "No"}`
       );
     },
-    [params.requestId]
+    [postRequestMutate, addNoteMutate, params.requestId]
   );
 
   const selectionStageIndex = STAGES.findIndex(
@@ -61,7 +63,7 @@ const HiringPanel = () => {
           id="panelRequired"
           checked={request.data?.panelRequired === "Yes" ? true : false}
           onChange={onChange}
-          disabled={postRequest.isLoading}
+          disabled={postRequestIsLoading || addNoteIsLoading}
         />
         {request.data?.panelRequired === "Yes" && (
           <Text weight="bold" style={{ color: "red" }}>

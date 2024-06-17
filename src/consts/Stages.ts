@@ -29,7 +29,7 @@ interface ENDSTAGE {
   text: string;
   next: undefined;
   nextEventTitle: undefined;
-  readyForNext: (request?: RPARequest) => true;
+  readyForNext: (request?: RPARequest) => boolean;
   previous: string | undefined;
   previousEventTitle: string | undefined;
   subStages?: ReadonlyArray<STAGE>;
@@ -210,12 +210,14 @@ export const STAGES: ReadonlyArray<STAGE> = [
           }
         },
         nextEventTitle: (request) => {
-          const next = STAGES.find(({ key }) => key === "PackageApproval")
-            ?.subStages?.find(
-              ({ key }) => key === "SelectionPackageOSFApproval"
-            )
+          const thisStage = STAGES.find(({ key }) => key === "PackageApproval");
+          const next = thisStage?.subStages
+            ?.find(({ key }) => key === "SelectionPackageOSFApproval")
             ?.next?.(request);
-          return `Forward Stage Change: OSF Approval to ${next}`;
+          const nextPrettyName = thisStage?.subStages?.find(
+            ({ key }) => key === next
+          )?.text;
+          return `Forward Stage Change: OSF Approval to ${nextPrettyName}`;
         },
         readyForNext: () => true,
         previous: "DraftPackageHRL",
@@ -238,12 +240,14 @@ export const STAGES: ReadonlyArray<STAGE> = [
           }
         },
         nextEventTitle: (request) => {
-          const next = STAGES.find(({ key }) => key === "PackageApproval")
-            ?.subStages?.find(
-              ({ key }) => key === "SelectionPackageCSFApproval"
-            )
+          const thisStage = STAGES.find(({ key }) => key === "PackageApproval");
+          const next = thisStage?.subStages
+            ?.find(({ key }) => key === "SelectionPackageCSFApproval")
             ?.next?.(request);
-          return `Forward Stage Change: CSF Approval to ${next}`;
+          const nextPrettyName = thisStage?.subStages?.find(
+            ({ key }) => key === next
+          )?.text;
+          return `Forward Stage Change: CSF Approval to ${nextPrettyName}`;
         },
         readyForNext: () => true,
         previous: "DraftPackageHRL",
@@ -266,10 +270,14 @@ export const STAGES: ReadonlyArray<STAGE> = [
           }
         },
         nextEventTitle: (request) => {
-          const next = STAGES.find(({ key }) => key === "PackageApproval")
-            ?.subStages?.find(({ key }) => key === "SelectionPackageHQApproval")
+          const thisStage = STAGES.find(({ key }) => key === "PackageApproval");
+          const next = thisStage?.subStages
+            ?.find(({ key }) => key === "SelectionPackageHQApproval")
             ?.next?.(request);
-          return `Forward Stage Change: HQ Approval to ${next}`;
+          const nextPrettyName = thisStage?.subStages?.find(
+            ({ key }) => key === next
+          )?.text;
+          return `Forward Stage Change: HQ Approval to ${nextPrettyName}`;
         },
         readyForNext: () => true,
         previous: "DraftPackageHRL",
@@ -290,10 +298,14 @@ export const STAGES: ReadonlyArray<STAGE> = [
           }
         },
         nextEventTitle: (request) => {
-          const next = STAGES.find(({ key }) => key === "PackageApproval")
-            ?.subStages?.find(({ key }) => key === "SelectionPackageCAApproval")
+          const thisStage = STAGES.find(({ key }) => key === "PackageApproval");
+          const next = thisStage?.subStages
+            ?.find(({ key }) => key === "SelectionPackageCAApproval")
             ?.next?.(request);
-          return `Forward Stage Change: CA Approval to ${next}`;
+          const nextPrettyName = thisStage?.subStages?.find(
+            ({ key }) => key === next
+          )?.text;
+          return `Forward Stage Change: CA Approval to ${nextPrettyName}`;
         },
         readyForNext: () => true,
         previous: "DraftPackageHRL",
@@ -321,9 +333,19 @@ export const STAGES: ReadonlyArray<STAGE> = [
     text: "Complete",
     next: undefined,
     nextEventTitle: undefined,
-    readyForNext: () => true,
+    readyForNext: () => false,
     previous: undefined,
     previousEventTitle: undefined,
     showStage: () => true,
+  },
+  {
+    key: "Cancelled",
+    text: "Cancelled",
+    next: undefined,
+    nextEventTitle: undefined,
+    readyForNext: () => false,
+    previous: undefined,
+    previousEventTitle: undefined,
+    showStage: () => false,
   },
 ] as const;
