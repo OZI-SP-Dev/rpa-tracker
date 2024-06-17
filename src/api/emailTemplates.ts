@@ -85,6 +85,65 @@ const emailTemplates = {
               <a href="${_spPageContextInfo.webAbsoluteUrl}/app/index.aspx#/Request/${request.requestId}">${_spPageContextInfo.webAbsoluteUrl}/app/index.aspx#/Request/${request.requestId}</a>`,
             };
             break;
+
+          case "SelectionPackageCSFApproval":
+            const CSFEmails: string[] = [];
+            allRoles.forEach((role) => {
+              if (role.Title === "CSF") {
+                CSFEmails.push(role.user.EMail);
+              }
+            });
+            email = {
+              To: CSFEmails,
+              CC: [requestData.supervisor.EMail],
+              Subject: `CSF Action: An incentive package for RPA ${requestData.positionTitle} is ready for CSF review/approval.`,
+              Body: `This email is to inform you that an incentive package Request for Personnel Action (RPA) ${requestData.positionTitle} is pending CSF approval.
+
+              To action this request, follow the below link:
+              <a href="${_spPageContextInfo.webAbsoluteUrl}/app/index.aspx#/Request/${request.requestId}">${_spPageContextInfo.webAbsoluteUrl}/app/index.aspx#/Request/${request.requestId}</a>`,
+            };
+            break;
+
+          case "SelectionPackageHQApproval":
+            const HQTOEmails: string[] = [];
+            allRoles.forEach((role) => {
+              if (role.Title === "HQ") {
+                HQTOEmails.push(role.user.EMail);
+              }
+            });
+            email = {
+              To: HQTOEmails,
+              CC: [requestData.supervisor.EMail],
+              Subject: `HQ Action: An incentive package for RPA ${requestData.positionTitle} is ready for HQ review/approval.`,
+              Body: `This email is to inform you that an incentive package Request for Personnel Action (RPA) ${requestData.positionTitle} is pending HQ approval.
+
+              To action this request, follow the below link:
+              <a href="${_spPageContextInfo.webAbsoluteUrl}/app/index.aspx#/Request/${request.requestId}">${_spPageContextInfo.webAbsoluteUrl}/app/index.aspx#/Request/${request.requestId}</a>`,
+            };
+            break;
+
+          case "SelectionPackageCAApproval":
+            const CACCEmails: string[] = [requestData.supervisor.EMail];
+            allRoles.forEach((role) => {
+              if (role.Title === "COS HR Supervisor") {
+                CACCEmails.push(role.user.EMail);
+              }
+            });
+            email = {
+              To: [
+                requestData.hrl?.EMail ||
+                  OSFs.find((osf) => osf.Title === requestData.osf)
+                    ?.defaultHRLEmail ||
+                  "",
+              ],
+              CC: CACCEmails,
+              Subject: `CA Action: An incentive package for RPA ${requestData.positionTitle} is ready for CA review/approval.`,
+              Body: `This email is to inform you that an incentive package Request for Personnel Action (RPA) ${requestData.positionTitle} is pending CA approval.
+
+              To action this request, follow the below link:
+              <a href="${_spPageContextInfo.webAbsoluteUrl}/app/index.aspx#/Request/${request.requestId}">${_spPageContextInfo.webAbsoluteUrl}/app/index.aspx#/Request/${request.requestId}</a>`,
+            };
+            break;
         }
         break;
 
