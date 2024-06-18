@@ -9,6 +9,7 @@ interface STARTSTAGE {
   previous: undefined;
   previousEventTitle: undefined;
   subStages?: ReadonlyArray<STAGE>;
+  showStage: (request?: RPARequest) => boolean;
 }
 
 interface MIDSTAGE {
@@ -20,6 +21,7 @@ interface MIDSTAGE {
   previous: string;
   previousEventTitle: string;
   subStages?: ReadonlyArray<STAGE>;
+  showStage: (request?: RPARequest) => boolean;
 }
 
 interface ENDSTAGE {
@@ -27,15 +29,26 @@ interface ENDSTAGE {
   text: string;
   next: undefined;
   nextEventTitle: undefined;
-  readyForNext: (request?: RPARequest) => true;
+  readyForNext: (request?: RPARequest) => boolean;
   previous: string | undefined;
   previousEventTitle: string | undefined;
   subStages?: ReadonlyArray<STAGE>;
+  showStage: (request?: RPARequest) => boolean;
 }
 
 type STAGE = STARTSTAGE | MIDSTAGE | ENDSTAGE;
 
 export const STAGES: ReadonlyArray<STAGE> = [
+  {
+    key: "Cancelled",
+    text: "Cancelled",
+    next: undefined,
+    nextEventTitle: undefined,
+    readyForNext: () => false,
+    previous: undefined,
+    previousEventTitle: undefined,
+    showStage: (request) => request?.stage === "Cancelled",
+  },
   {
     key: "Draft",
     text: "RPA Request",
@@ -44,6 +57,7 @@ export const STAGES: ReadonlyArray<STAGE> = [
     readyForNext: () => true,
     previous: undefined,
     previousEventTitle: undefined,
+    showStage: () => true,
   },
   {
     key: "PackageReview",
@@ -77,6 +91,7 @@ export const STAGES: ReadonlyArray<STAGE> = [
         readyForNext: () => true,
         previous: undefined,
         previousEventTitle: undefined,
+        showStage: () => true,
       },
       {
         key: "HRLReview",
@@ -132,8 +147,10 @@ export const STAGES: ReadonlyArray<STAGE> = [
         previous: "OSFReview",
         previousEventTitle:
           "Backward Stage Change: HRL/COSF Review to OSF Review",
+        showStage: () => true,
       },
     ],
+    showStage: () => true,
   },
   {
     key: "Recruiting",
@@ -144,6 +161,7 @@ export const STAGES: ReadonlyArray<STAGE> = [
     readyForNext: () => true,
     previous: "PackageReview",
     previousEventTitle: "Backward Stage Change: Recruiting to Package Review",
+    showStage: () => true,
   },
   {
     key: "Selection",
@@ -155,6 +173,7 @@ export const STAGES: ReadonlyArray<STAGE> = [
     previous: "Recruiting",
     previousEventTitle:
       "Backward Stage Change: Candidate Selection to Recruiting",
+    showStage: () => true,
   },
   {
     key: "PackageApproval",
@@ -184,57 +203,149 @@ export const STAGES: ReadonlyArray<STAGE> = [
         readyForNext: () => true,
         previous: undefined,
         previousEventTitle: undefined,
+        showStage: () => true,
       },
       {
         key: "SelectionPackageOSFApproval",
         text: "OSF Approval",
-        next: () => "PackageApproval",
-        nextEventTitle: () =>
-          "Forward Stage Change: OSF Approval to Package Approval",
+        next: (request) => {
+          if (request?.csfcaApproval === "Yes") {
+            return "SelectionPackageCSFApproval";
+          } else {
+            return STAGES.find(({ key }) => key === "PackageApproval")
+              ?.subStages?.find(
+                ({ key }) => key === "SelectionPackageCSFApproval"
+              )
+              ?.next?.(request);
+          }
+        },
+        nextEventTitle: (request) => {
+          const thisStage = STAGES.find(({ key }) => key === "PackageApproval");
+          const next = thisStage?.subStages
+            ?.find(({ key }) => key === "SelectionPackageOSFApproval")
+            ?.next?.(request);
+          const nextPrettyName = thisStage?.subStages?.find(
+            ({ key }) => key === next
+          )?.text;
+          return `Forward Stage Change: OSF Approval to ${nextPrettyName}`;
+        },
         readyForNext: () => true,
         previous: "DraftPackageHRL",
         previousEventTitle:
           "Backward Stage Change: OSF Approval to Draft Package (HRL)",
+        showStage: () => true,
       },
       {
-        key: "PackageApproval",
-        text: "Package Approval",
+        key: "SelectionPackageCSFApproval",
+        text: "CSF Approval",
+        next: (request) => {
+          if (request?.hqApproval === "Yes") {
+            return "SelectionPackageHQApproval";
+          } else {
+            return STAGES.find(({ key }) => key === "PackageApproval")
+              ?.subStages?.find(
+                ({ key }) => key === "SelectionPackageHQApproval"
+              )
+              ?.next?.(request);
+          }
+        },
+        nextEventTitle: (request) => {
+          const thisStage = STAGES.find(({ key }) => key === "PackageApproval");
+          const next = thisStage?.subStages
+            ?.find(({ key }) => key === "SelectionPackageCSFApproval")
+            ?.next?.(request);
+          const nextPrettyName = thisStage?.subStages?.find(
+            ({ key }) => key === next
+          )?.text;
+          return `Forward Stage Change: CSF Approval to ${nextPrettyName}`;
+        },
+        readyForNext: () => true,
+        previous: "DraftPackageHRL",
+        previousEventTitle:
+          "Backward Stage Change: CSF Approval to Draft Package (HRL)",
+        showStage: (request) => request?.csfcaApproval === "Yes",
+      },
+      {
+        key: "SelectionPackageHQApproval",
+        text: "HQ Approval",
+        next: (request) => {
+          if (request?.csfcaApproval === "Yes") {
+            return "SelectionPackageCAApproval";
+          } else {
+            return STAGES.find(({ key }) => key === "PackageApproval")
+              ?.subStages?.find(
+                ({ key }) => key === "SelectionPackageCAApproval"
+              )
+              ?.next?.(request);
+          }
+        },
+        nextEventTitle: (request) => {
+          const thisStage = STAGES.find(({ key }) => key === "PackageApproval");
+          const next = thisStage?.subStages
+            ?.find(({ key }) => key === "SelectionPackageHQApproval")
+            ?.next?.(request);
+          const nextPrettyName = thisStage?.subStages?.find(
+            ({ key }) => key === next
+          )?.text;
+          return `Forward Stage Change: HQ Approval to ${nextPrettyName}`;
+        },
+        readyForNext: () => true,
+        previous: "DraftPackageHRL",
+        previousEventTitle:
+          "Backward Stage Change: HQ Approval to Draft Package (HRL)",
+        showStage: (request) => request?.hqApproval === "Yes",
+      },
+      {
+        key: "SelectionPackageCAApproval",
+        text: "CA Approval",
         next: (request) => {
           if (request?.titleV === "Yes") {
             return "TitleV";
+          } else {
+            return STAGES.find(({ key }) => key === "PackageApproval")
+              ?.subStages?.find(({ key }) => key === "TitleV")
+              ?.next?.(request);
           }
-          return undefined;
         },
         nextEventTitle: (request) => {
-          if (request?.titleV === "Yes") {
-            return "Forward Stage Change: Package Approval to Title V";
-          }
-          return undefined;
+          const thisStage = STAGES.find(({ key }) => key === "PackageApproval");
+          const next = thisStage?.subStages
+            ?.find(({ key }) => key === "SelectionPackageCAApproval")
+            ?.next?.(request);
+          const nextPrettyName = thisStage?.subStages?.find(
+            ({ key }) => key === next
+          )?.text;
+          return `Forward Stage Change: CA Approval to ${nextPrettyName}`;
         },
         readyForNext: () => true,
-        previous: "SelectionPackageOSFApproval",
+        previous: "DraftPackageHRL",
         previousEventTitle:
-          "Backward Stage Change: Package Approval to OSF Approval",
+          "Backward Stage Change: CA Approval to Draft Package (HRL)",
+        showStage: (request) => request?.csfcaApproval === "Yes",
       },
+
       {
         key: "TitleV",
         text: "Title V",
         next: undefined,
         nextEventTitle: undefined,
         readyForNext: () => true,
-        previous: "PackageApproval",
+        previous: "DraftPackageHRL",
         previousEventTitle:
-          "Backward Stage Change: Title V to Package Approval",
+          "Backward Stage Change: Title V to Draft Package (HRL)",
+        showStage: (request) => request?.titleV === "Yes",
       },
     ],
+    showStage: () => true,
   },
   {
     key: "Complete",
     text: "Complete",
     next: undefined,
     nextEventTitle: undefined,
-    readyForNext: () => true,
+    readyForNext: () => false,
     previous: undefined,
     previousEventTitle: undefined,
+    showStage: () => true,
   },
 ] as const;

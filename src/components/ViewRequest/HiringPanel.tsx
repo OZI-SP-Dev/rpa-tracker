@@ -1,4 +1,5 @@
 import { Label, Switch, Text } from "@fluentui/react-components";
+import { useAddNote } from "api/notesApi";
 import { usePostRequest } from "api/postRequestApi";
 import { useRequest } from "api/requestsApi";
 import { STAGES } from "consts/Stages";
@@ -7,17 +8,24 @@ import { useParams } from "react-router-dom";
 
 const HiringPanel = () => {
   const params = useParams();
-  const request = useRequest(Number(params.requestId));
-  const postRequest = usePostRequest();
+  const requestId = Number(params.requestId);
+  const request = useRequest(requestId);
+  const { mutate: postRequestMutate, isLoading: postRequestIsLoading } =
+    usePostRequest();
+  const { mutate: addNoteMutate, isLoading: addNoteIsLoading } =
+    useAddNote(requestId);
 
   const onChange = useCallback(
     (ev: ChangeEvent<HTMLInputElement>) => {
-      postRequest.mutate({
+      postRequestMutate({
         requestId: Number(params.requestId),
         postRequest: { panelRequired: ev.currentTarget.checked ? "Yes" : "No" },
       });
+      addNoteMutate(
+        `Set 'Panel Required' to ${ev.currentTarget.checked ? "Yes" : "No"}`
+      );
     },
-    [params.requestId]
+    [postRequestMutate, addNoteMutate, params.requestId]
   );
 
   const selectionStageIndex = STAGES.findIndex(
@@ -55,7 +63,7 @@ const HiringPanel = () => {
           id="panelRequired"
           checked={request.data?.panelRequired === "Yes" ? true : false}
           onChange={onChange}
-          disabled={postRequest.isLoading}
+          disabled={postRequestIsLoading || addNoteIsLoading}
         />
         {request.data?.panelRequired === "Yes" && (
           <Text weight="bold" style={{ color: "red" }}>

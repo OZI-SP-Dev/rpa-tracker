@@ -1,13 +1,7 @@
 import { useRequest } from "api/requestsApi";
 import { useParams } from "react-router-dom";
 import { STAGES } from "consts/Stages";
-import {
-  Popover,
-  PopoverSurface,
-  PopoverTrigger,
-  Title2,
-  Title3,
-} from "@fluentui/react-components";
+import { Title2, Title3 } from "@fluentui/react-components";
 
 const StatusBar = () => {
   const params = useParams();
@@ -33,8 +27,8 @@ const StatusBar = () => {
       <Title3>Current Stage: {currentStage}</Title3>
       <ul className="request-status">
         {STAGES.map((stage, index) => (
-          <Popover withArrow openOnHover>
-            <PopoverTrigger>
+          <>
+            {stage.showStage(request.data) && (
               <li
                 key={stage.key}
                 className={
@@ -45,11 +39,8 @@ const StatusBar = () => {
               >
                 <div>{stage.text}</div>
               </li>
-            </PopoverTrigger>
-            <PopoverSurface tabIndex={-1}>
-              <>Some text</>
-            </PopoverSurface>
-          </Popover>
+            )}
+          </>
         ))}
       </ul>
       {subStageIndex !== undefined &&
@@ -58,16 +49,20 @@ const StatusBar = () => {
             <hr />
             <ul className="request-status">
               {STAGES[stageIndex].subStages?.map((stage, index) => (
-                <li
-                  key={stage.key}
-                  className={
-                    (index < subStageIndex ? "completed-stage" : "") ||
-                    (index === subStageIndex ? "active-stage" : "") ||
-                    (index > subStageIndex ? "inactive-stage" : "")
-                  }
-                >
-                  <div>{stage.text}</div>
-                </li>
+                <>
+                  {stage.showStage(request.data) && (
+                    <li
+                      key={stage.key}
+                      className={
+                        (index < subStageIndex ? "completed-stage" : "") ||
+                        (index === subStageIndex ? "active-stage" : "") ||
+                        (index > subStageIndex ? "inactive-stage" : "")
+                      }
+                    >
+                      <div>{stage.text}</div>
+                    </li>
+                  )}
+                </>
               ))}
             </ul>
           </>
