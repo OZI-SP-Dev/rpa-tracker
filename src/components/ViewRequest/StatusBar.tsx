@@ -27,16 +27,20 @@ const StatusBar = () => {
       <Title3>Current Stage: {currentStage}</Title3>
       <ul className="request-status">
         {STAGES.map((stage, index) => (
-          <li
-            key={stage.key}
-            className={
-              (index < stageIndex ? "completed-stage" : "") ||
-              (index === stageIndex ? "active-stage" : "") ||
-              (index > stageIndex ? "inactive-stage" : "")
-            }
-          >
-            <div>{stage.text}</div>
-          </li>
+          <>
+            {stage.showStage(request.data) && (
+              <li
+                key={stage.key}
+                className={
+                  (index < stageIndex ? "completed-stage" : "") ||
+                  (index === stageIndex ? "active-stage" : "") ||
+                  (index > stageIndex ? "inactive-stage" : "")
+                }
+              >
+                <div>{stage.text}</div>
+              </li>
+            )}
+          </>
         ))}
       </ul>
       {subStageIndex !== undefined &&

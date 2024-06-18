@@ -40,6 +40,16 @@ type STAGE = STARTSTAGE | MIDSTAGE | ENDSTAGE;
 
 export const STAGES: ReadonlyArray<STAGE> = [
   {
+    key: "Cancelled",
+    text: "Cancelled",
+    next: undefined,
+    nextEventTitle: undefined,
+    readyForNext: () => false,
+    previous: undefined,
+    previousEventTitle: undefined,
+    showStage: (request) => request?.stage === "Cancelled",
+  },
+  {
     key: "Draft",
     text: "RPA Request",
     next: () => "PackageReview",
@@ -337,15 +347,5 @@ export const STAGES: ReadonlyArray<STAGE> = [
     previous: undefined,
     previousEventTitle: undefined,
     showStage: () => true,
-  },
-  {
-    key: "Cancelled",
-    text: "Cancelled",
-    next: undefined,
-    nextEventTitle: undefined,
-    readyForNext: () => false,
-    previous: undefined,
-    previousEventTitle: undefined,
-    showStage: () => false,
   },
 ] as const;
