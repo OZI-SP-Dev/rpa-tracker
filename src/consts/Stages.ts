@@ -158,7 +158,52 @@ export const STAGES: ReadonlyArray<STAGE> = [
     next: () => "Selection",
     nextEventTitle: () =>
       "Forward Stage Change: Recruiting to Candidate Selection",
-    readyForNext: () => true,
+    readyForNext: (request) => {
+      let ready = true;
+      if (request) {
+        request.methods.forEach((method) => {
+          switch (method) {
+            case "joa": {
+              if (!request.joaPostDate) {
+                ready = false;
+              }
+              break;
+            }
+            case "linkedinPost": {
+              if (!request.linkedInPostDate) {
+                ready = false;
+              }
+              break;
+            }
+            case "linkedinSearch": {
+              if (!request.linkedInSearchDate) {
+                ready = false;
+              }
+              break;
+            }
+            case "resumeSearch": {
+              if (!request.resumeSearchDate) {
+                ready = false;
+              }
+              break;
+            }
+            case "usaJobsFlyer": {
+              if (!request.usaJobsPostDate) {
+                ready = false;
+              }
+              break;
+            }
+            case "lcmc": {
+              if (!request.jobBoardPostDate) {
+                ready = false;
+              }
+              break;
+            }
+          }
+        });
+      }
+      return ready;
+    },
     previous: "PackageReview",
     previousEventTitle: "Backward Stage Change: Recruiting to Package Review",
     showStage: () => true,
