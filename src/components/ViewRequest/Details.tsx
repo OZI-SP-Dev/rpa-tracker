@@ -16,6 +16,8 @@ import ResumeSearchDetails from "components/ViewRequest/DetailSections/ResumeSea
 import { useMyRoles } from "api/rolesApi";
 import { useClaimRequest } from "api/hrlApi";
 import HiringPanel from "components/ViewRequest/HiringPanel";
+import { EditIcon } from "@fluentui/react-icons-mdl2";
+import { usePostRequest } from "api/postRequestApi";
 
 declare const _spPageContextInfo: {
   userId: number;
@@ -30,8 +32,9 @@ const ViewRequestDetails = ({
 }) => {
   const params = useParams();
   const request = useRequest(Number(params.requestId));
-  const { isHRL } = useMyRoles();
+  const { isHRL, isCOSF } = useMyRoles();
   const claimRequest = useClaimRequest();
+  const postRequest = usePostRequest();
 
   const restrictedStage = [
     "Draft",
@@ -40,10 +43,27 @@ const ViewRequestDetails = ({
     "Undefined",
   ].includes(request.data?.stage || "Undefined");
 
+  const areAnnounceMethodsAddable = isHRL || isCOSF;
+
   const isHRLClaimable: boolean =
     (isHRL ?? false) && // Current user has HRL role
     !restrictedStage && // Current request is not in a restricted stage
     Number(request.data?.hrl?.Id) !== _spPageContextInfo.userId; // not already assigned to me
+
+  const addOnClick = (method: string) => {
+    if (request.data?.Id) {
+      postRequest.mutate({
+        requestId: Number(request.data.Id),
+        postRequest: {
+          methods: JSON.stringify(request.data.methods.concat([method])),
+        },
+      });
+      if (method !== "resumeSearch") {
+        setEditSection("add" + method);
+        setIsEditOpen(true);
+      }
+    }
+  };
 
   return (
     <>
@@ -165,6 +185,53 @@ const ViewRequestDetails = ({
           </article>
           <br />
           <Title3>Announcement Method(s) and details</Title3>
+          {areAnnounceMethodsAddable && (
+            <>
+              <br />
+              {!request.data.methods.includes("lcmc") && (
+                <Button icon={<EditIcon />} onClick={() => addOnClick("lcmc")}>
+                  Add to LCMC Job Announcement Board
+                </Button>
+              )}
+              {!request.data.methods.includes("joa") && (
+                <Button icon={<EditIcon />} onClick={() => addOnClick("joa")}>
+                  Add Job Opportunity Announcement (JOA)
+                </Button>
+              )}
+              {!request.data.methods.includes("linkedinPost") && (
+                <Button
+                  icon={<EditIcon />}
+                  onClick={() => addOnClick("linkedinPost")}
+                >
+                  Add LinkedIn Job Posting
+                </Button>
+              )}
+              {!request.data.methods.includes("linkedinSearch") && (
+                <Button
+                  icon={<EditIcon />}
+                  onClick={() => addOnClick("linkedinSearch")}
+                >
+                  Add LinkedIn Profile Search
+                </Button>
+              )}
+              {!request.data.methods.includes("resumeSearch") && (
+                <Button
+                  icon={<EditIcon />}
+                  onClick={() => addOnClick("resumeSearch")}
+                >
+                  Add COS Resume Repository Search
+                </Button>
+              )}
+              {!request.data.methods.includes("usaJobsFlyer") && (
+                <Button
+                  icon={<EditIcon />}
+                  onClick={() => addOnClick("usaJobsFlyer")}
+                >
+                  Add USA Jobs Flyer
+                </Button>
+              )}
+            </>
+          )}
           {request.data.methods.includes("lcmc") && (
             <JobBoardDetails
               setEditSection={setEditSection}

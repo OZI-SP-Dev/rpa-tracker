@@ -20,6 +20,11 @@ import { SaveIcon } from "@fluentui/react-icons-mdl2";
 import emailTemplates from "api/emailTemplates";
 import { useOSFs } from "api/osfApi";
 import { useSendEmail } from "api/emailApi";
+import JobBoard from "components/Request/NewFormSection/NewForm.JobBoard";
+import JOAField from "components/Request/NewFormSection/NewForm.JOA";
+import LinkedInPost from "components/Request/NewFormSection/NewForm.LinkedInPost";
+import LinkedInSearch from "components/Request/NewFormSection/NewForm.LinkedInSearch";
+import USAJobs from "components/Request/NewFormSection/NewForm.USAJobs";
 
 const EditDrawer = ({
   isOpen,
@@ -172,6 +177,13 @@ const EditDrawer = ({
             {subform === "usaJobsFlyer" && request.data && (
               <FormFields.CloseDateUsaJobs />
             )}
+            {subform === "addlcmc" && request.data && <JobBoard />}
+            {subform === "addjoa" && request.data && <JOAField />}
+            {subform === "addlinkedinPost" && request.data && <LinkedInPost />}
+            {subform === "addlinkedinSearch" && request.data && (
+              <LinkedInSearch />
+            )}
+            {subform === "addusaJobsFlyer" && request.data && <USAJobs />}
           </form>
         </FormProvider>
       </DrawerBody>

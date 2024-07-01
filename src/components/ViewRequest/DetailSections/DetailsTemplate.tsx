@@ -96,7 +96,8 @@ const DetailsTemplate = ({
   const postRequest = usePostRequest();
 
   const isPostable =
-    request.data?.stage === "PackageReview" &&
+    (request.data?.stage === "PackageReview" ||
+      request.data?.stage === "Recruiting") &&
     (myRoles.isHRL || myRoles.isCOSF);
 
   let postDate: Date | undefined = undefined;
@@ -109,7 +110,9 @@ const DetailsTemplate = ({
 
   const isEditable =
     request.data?.stage === "Draft" ||
-    (request.data?.stage === "PackageReview" && !postDate);
+    ((request.data?.stage === "PackageReview" ||
+      request.data?.stage === "Recruiting") &&
+      !postDate);
 
   const isEditor =
     myRoles.isHRL ||
@@ -117,7 +120,6 @@ const DetailsTemplate = ({
     myRoles.isCOSF ||
     Number(request.data?.Author?.Id) === _spPageContextInfo.userId;
 
-  // const sectionId = POSTTYPES.find(({ key }) => key === detailSelection)?.id;
   const section = POSTTYPES.find(({ key }) => key === detailSelection);
 
   let poster: undefined | Person = undefined;
