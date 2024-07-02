@@ -7,20 +7,38 @@ import {
   DialogSurface,
   DialogTitle,
   DialogTrigger,
+  Field,
+  Textarea,
+  TextareaProps,
   Tooltip,
 } from "@fluentui/react-components";
 import { NavigateBackIcon } from "@fluentui/react-icons-mdl2";
+import { useAddNote } from "api/notesApi";
 import { useRequest, useUpdateStage } from "api/requestsApi";
 import { STAGES } from "consts/Stages";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
+
+declare const _spPageContextInfo: {
+  userId: number;
+  userDisplayName: string;
+  userEmail: string;
+  userLoginName: string;
+};
 
 const ReworkRequest = () => {
   const params = useParams();
   const requestId = Number(params.requestId);
   const request = useRequest(requestId);
   const updateStage = useUpdateStage();
+  const addNote = useAddNote(requestId);
+  const [reason, setReason] = useState("");
 
   const currentStage = STAGES.find(({ key }) => key === request.data?.stage);
+
+  const updateReason: TextareaProps["onChange"] = (_e, data) => {
+    setReason(data.value);
+  };
 
   const updateHandler = () => {
     if (request.data && currentStage?.previous) {
@@ -29,6 +47,9 @@ const ReworkRequest = () => {
         newStage: "",
         newSubStage: "",
         eventTitle: "",
+        rework: true,
+        reworkText: reason,
+        reworkAuthor: _spPageContextInfo.userDisplayName,
       };
 
       const subStage = currentStage.subStages?.find(
@@ -48,6 +69,7 @@ const ReworkRequest = () => {
         newData.eventTitle = currentStage.previousEventTitle || "";
       }
       updateStage.mutate(newData);
+      addNote.mutate(reason);
     }
   };
 
@@ -71,12 +93,9 @@ const ReworkRequest = () => {
         <DialogBody>
           <DialogTitle>Rework request</DialogTitle>
           <DialogContent>
-            <p>
-              Send request back a step?
-              <br />
-              Fill out this modal with a form for sending a request back a step
-              with a reason. (Notes capability pending)
-            </p>
+            <Field label="Rework reason">
+              <Textarea value={reason} onChange={updateReason} />
+            </Field>
           </DialogContent>
           <DialogActions>
             <DialogTrigger disableButtonEnhancement>

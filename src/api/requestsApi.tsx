@@ -501,6 +501,9 @@ export const useUpdateStage = () => {
       csfcaApproval?: "Yes" | "No";
       hqApproval?: "Yes" | "No";
       titleV?: "Yes" | "No";
+      rework?: boolean;
+      reworkText?: string;
+      reworkAuthor?: string;
     }) => {
       await spWebContext.web.lists
         .getByTitle("requests")
@@ -548,7 +551,10 @@ export const useUpdateStage = () => {
             request,
             requestData,
             OSFs.data,
-            allRoles.data || []
+            allRoles.data || [],
+            request.rework ?? false,
+            request.reworkAuthor ?? "",
+            request.reworkText ?? ""
           );
           if (email) {
             await sendEmail.mutateAsync({
