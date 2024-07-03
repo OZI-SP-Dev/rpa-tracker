@@ -49,7 +49,7 @@ const SendRequest = () => {
       disableSend = false;
     } else if (
       (request.data?.subStage === "OSFReview" ||
-        request.data?.subStage === "OSFPackageReview") &&
+        request.data?.subStage === "SelectionPackageOSFApproval") &&
       myRoles.isOSF
     ) {
       disableSend = false;
@@ -235,7 +235,7 @@ const SendRequest = () => {
                   </>
                 ) : readyForNextStage ? (
                   nextStage === "Complete" ? (
-                    <p>This will complete the RPA request.</p>
+                    <p>Are you sure you want to Complete this request?</p>
                   ) : (
                     <p>Are you sure you want to send the request? </p>
                   )

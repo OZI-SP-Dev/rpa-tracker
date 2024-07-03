@@ -120,6 +120,20 @@ export interface RPARequest {
   paq?: "Yes" | "No";
 }
 
+export interface UpdateRequestStage {
+  requestId: number;
+  newStage: (typeof STAGES)[number]["key"];
+  newSubStage: string;
+  eventTitle: string;
+  currentEmployee?: "Yes" | "No" | null;
+  csfcaApproval?: "Yes" | "No" | null;
+  hqApproval?: "Yes" | "No" | null;
+  titleV?: "Yes" | "No" | null;
+  rework?: boolean;
+  reworkText?: string;
+  reworkAuthor?: string;
+}
+
 /**
  * Queries the "requests" lists for available content types
  * The internal Id of the RPADocSet is neeeded when creating
@@ -492,32 +506,23 @@ export const useUpdateStage = () => {
 
   return useMutation(
     ["updateStage"],
-    async (request: {
-      requestId: number;
-      newStage: (typeof STAGES)[number]["key"];
-      newSubStage: string;
-      eventTitle: string;
-      currentEmployee?: "Yes" | "No";
-      csfcaApproval?: "Yes" | "No";
-      hqApproval?: "Yes" | "No";
-      titleV?: "Yes" | "No";
-    }) => {
+    async (request: UpdateRequestStage) => {
       await spWebContext.web.lists
         .getByTitle("requests")
         .items.getById(request.requestId)
         .update({
           stage: request.newStage,
           subStage: request.newSubStage,
-          ...(request.currentEmployee && {
+          ...(request.currentEmployee !== undefined && {
             currentEmployee: request.currentEmployee,
           }),
-          ...(request.csfcaApproval && {
+          ...(request.csfcaApproval !== undefined && {
             csfcaApproval: request.csfcaApproval,
           }),
-          ...(request.hqApproval && {
+          ...(request.hqApproval !== undefined && {
             hqApproval: request.hqApproval,
           }),
-          ...(request.titleV && {
+          ...(request.titleV !== undefined && {
             titleV: request.titleV,
           }),
         });
@@ -548,7 +553,10 @@ export const useUpdateStage = () => {
             request,
             requestData,
             OSFs.data,
-            allRoles.data || []
+            allRoles.data || [],
+            request.rework ?? false,
+            request.reworkText ?? "",
+            request.reworkAuthor ?? ""
           );
           if (email) {
             await sendEmail.mutateAsync({
