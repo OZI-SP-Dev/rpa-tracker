@@ -43,7 +43,10 @@ const ViewRequestDetails = ({
     "Undefined",
   ].includes(request.data?.stage || "Undefined");
 
-  const areAnnounceMethodsAddable = isHRL || isCOSF;
+  const areAnnounceMethodsAddable =
+    (isHRL || isCOSF) &&
+    (request.data?.stage == "PackageReview" ||
+      request.data?.stage == "Recruiting");
 
   const isHRLClaimable: boolean =
     (isHRL ?? false) && // Current user has HRL role

@@ -25,10 +25,7 @@ import { useState } from "react";
 import { useParams } from "react-router-dom";
 
 declare const _spPageContextInfo: {
-  userId: number;
   userDisplayName: string;
-  userEmail: string;
-  userLoginName: string;
 };
 
 const ReworkRequest = () => {
@@ -141,7 +138,7 @@ const ReworkRequest = () => {
             </DialogTrigger>
             <DialogTrigger disableButtonEnhancement>
               <Button
-                disabled={!updateReason}
+                disabled={reason === ""}
                 appearance="primary"
                 onClick={updateHandler}
               >
