@@ -49,7 +49,7 @@ const SendRequest = () => {
       disableSend = false;
     } else if (
       (request.data?.subStage === "OSFReview" ||
-        request.data?.subStage === "OSFPackageReview") &&
+        request.data?.subStage === "SelectionPackageOSFApproval") &&
       myRoles.isOSF
     ) {
       disableSend = false;
