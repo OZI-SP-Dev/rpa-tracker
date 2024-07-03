@@ -164,7 +164,7 @@ const emailTemplates = {
             Body: `This email is to inform you that a Request for Personnel Action (RPA) ${requestData.positionTitle} has been sent back for rework.
                   
                   ${reworkText}
-                  ${reworkAuthor}
+                  -${reworkAuthor}
                   
                   To action this request, follow the below link:
                   <a href="${_spPageContextInfo.webAbsoluteUrl}/app/index.aspx#/Request/${request.requestId}">${_spPageContextInfo.webAbsoluteUrl}/app/index.aspx#/Request/${request.requestId}</a>`,
@@ -180,7 +180,7 @@ const emailTemplates = {
             Body: `This email is to inform you that a Request for Personnel Action (RPA) ${requestData.positionTitle} has been sent back for rework.
                   
                   ${reworkText}
-                  ${reworkAuthor}
+                  -${reworkAuthor}
                   
                   To action this request, follow the below link:
                   <a href="${_spPageContextInfo.webAbsoluteUrl}/app/index.aspx#/Request/${request.requestId}">${_spPageContextInfo.webAbsoluteUrl}/app/index.aspx#/Request/${request.requestId}</a>`,
@@ -196,7 +196,7 @@ const emailTemplates = {
                 Body: `This email is to inform you that a Request for Personnel Action (RPA) ${requestData.positionTitle} has been sent back for rework.
                   
                   ${reworkText}
-                  ${reworkAuthor}
+                  -${reworkAuthor}
                   
                   To action this request, follow the below link:
                   <a href="${_spPageContextInfo.webAbsoluteUrl}/app/index.aspx#/Request/${request.requestId}">${_spPageContextInfo.webAbsoluteUrl}/app/index.aspx#/Request/${request.requestId}</a>`,

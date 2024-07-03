@@ -14,7 +14,12 @@ import {
 } from "@fluentui/react-components";
 import { NavigateBackIcon } from "@fluentui/react-icons-mdl2";
 import { useAddNote } from "api/notesApi";
-import { useRequest, useUpdateStage } from "api/requestsApi";
+import {
+  UpdateRequestStage,
+  useRequest,
+  useUpdateStage,
+} from "api/requestsApi";
+import { useMyRoles } from "api/rolesApi";
 import { STAGES } from "consts/Stages";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
@@ -33,8 +38,30 @@ const ReworkRequest = () => {
   const updateStage = useUpdateStage();
   const addNote = useAddNote(requestId);
   const [reason, setReason] = useState("");
+  const myRoles = useMyRoles();
 
   const currentStage = STAGES.find(({ key }) => key === request.data?.stage);
+
+  let disableReworkButton = true;
+  if (currentStage?.next) {
+    if (currentStage?.key === "Draft") {
+      disableReworkButton = false;
+    } else if (myRoles.isHRL || myRoles.isCOSF) {
+      disableReworkButton = false;
+    } else if (
+      (request.data?.subStage === "OSFReview" ||
+        request.data?.subStage === "OSFPackageReview") &&
+      myRoles.isOSF
+    ) {
+      disableReworkButton = false;
+    } else if (request.data?.subStage === "CAPackageReview" && myRoles.isCA) {
+      disableReworkButton = false;
+    } else if (currentStage?.key === "Recruiting" && myRoles.isCSF) {
+      disableReworkButton = false;
+    } else if (currentStage?.key === "Selection" && myRoles.isCSF) {
+      disableReworkButton = false;
+    }
+  }
 
   const updateReason: TextareaProps["onChange"] = (_e, data) => {
     setReason(data.value);
@@ -42,7 +69,7 @@ const ReworkRequest = () => {
 
   const updateHandler = () => {
     if (request.data && currentStage?.previous) {
-      const newData = {
+      const newData: UpdateRequestStage = {
         requestId,
         newStage: "",
         newSubStage: "",
@@ -68,6 +95,17 @@ const ReworkRequest = () => {
         newData.newSubStage = previousStage?.subStages?.[0].key || ""; // first substage or empty string
         newData.eventTitle = currentStage.previousEventTitle || "";
       }
+
+      if (newData.rework && newData.newStage === "PackageApproval") {
+        newData.csfcaApproval = null;
+        newData.hqApproval = null;
+        newData.titleV = null;
+      }
+
+      if (newData.rework && newData.newStage === "Selection") {
+        newData.currentEmployee = null;
+      }
+
       updateStage.mutate(newData);
       addNote.mutate(reason);
     }
@@ -85,7 +123,7 @@ const ReworkRequest = () => {
             }}
             icon={<NavigateBackIcon className="orange" />}
             size="large"
-            disabled={!currentStage?.previous}
+            disabled={disableReworkButton || !currentStage?.previous}
           />
         </Tooltip>
       </DialogTrigger>
@@ -93,8 +131,8 @@ const ReworkRequest = () => {
         <DialogBody>
           <DialogTitle>Rework request</DialogTitle>
           <DialogContent>
-            <Field label="Rework reason">
-              <Textarea value={reason} onChange={updateReason} />
+            <Field label="Rework reason" required>
+              <Textarea value={reason} onChange={updateReason} required />
             </Field>
           </DialogContent>
           <DialogActions>
@@ -102,7 +140,11 @@ const ReworkRequest = () => {
               <Button appearance="secondary">Cancel</Button>
             </DialogTrigger>
             <DialogTrigger disableButtonEnhancement>
-              <Button appearance="primary" onClick={updateHandler}>
+              <Button
+                disabled={!updateReason}
+                appearance="primary"
+                onClick={updateHandler}
+              >
                 Submit
               </Button>
             </DialogTrigger>
