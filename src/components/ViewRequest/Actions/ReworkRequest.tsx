@@ -7,7 +7,10 @@ import {
   DialogSurface,
   DialogTitle,
   DialogTrigger,
+  Dropdown,
+  DropdownProps,
   Field,
+  Option,
   Textarea,
   TextareaProps,
   Tooltip,
@@ -28,6 +31,14 @@ declare const _spPageContextInfo: {
   userDisplayName: string;
 };
 
+const standardReasons = [
+  "Salary/Incentive Over Cap",
+  "Missing Information",
+  "Candidate Declined",
+  "Candidate Unqualified",
+  "No Qualified Candidates",
+];
+
 const ReworkRequest = () => {
   const params = useParams();
   const requestId = Number(params.requestId);
@@ -35,6 +46,8 @@ const ReworkRequest = () => {
   const updateStage = useUpdateStage();
   const addNote = useAddNote(requestId);
   const [reason, setReason] = useState("");
+  const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
+  const [value, setValue] = useState("");
   const myRoles = useMyRoles();
 
   const currentStage = STAGES.find(({ key }) => key === request.data?.stage);
@@ -64,6 +77,11 @@ const ReworkRequest = () => {
     setReason(data.value);
   };
 
+  const onOptionSelect: DropdownProps["onOptionSelect"] = (_e, data) => {
+    setSelectedOptions(data.selectedOptions);
+    setValue(data.optionText ?? "");
+  };
+
   const updateHandler = () => {
     if (request.data && currentStage?.previous) {
       const newData: UpdateRequestStage = {
@@ -72,7 +90,7 @@ const ReworkRequest = () => {
         newSubStage: "",
         eventTitle: "",
         rework: true,
-        reworkText: reason,
+        reworkText: (value === "" ? "" : value + "\n") + reason,
         reworkAuthor: _spPageContextInfo.userDisplayName,
       };
 
@@ -104,7 +122,7 @@ const ReworkRequest = () => {
       }
 
       updateStage.mutate(newData);
-      addNote.mutate(reason);
+      addNote.mutate((value === "" ? "" : value + "\n") + reason);
     }
   };
 
@@ -128,7 +146,19 @@ const ReworkRequest = () => {
         <DialogBody>
           <DialogTitle>Rework request</DialogTitle>
           <DialogContent>
-            <Field label="Rework reason" required>
+            <Field label="Standard reasons">
+              <Dropdown
+                clearable
+                onOptionSelect={onOptionSelect}
+                selectedOptions={selectedOptions}
+                placeholder="Standard Reasons"
+              >
+                {standardReasons.map((reason) => (
+                  <Option key={reason}>{reason}</Option>
+                ))}
+              </Dropdown>
+            </Field>
+            <Field label="Rework reason" required={value === ""}>
               <Textarea value={reason} onChange={updateReason} required />
             </Field>
           </DialogContent>
@@ -138,7 +168,7 @@ const ReworkRequest = () => {
             </DialogTrigger>
             <DialogTrigger disableButtonEnhancement>
               <Button
-                disabled={reason === ""}
+                disabled={reason === "" && value === ""}
                 appearance="primary"
                 onClick={updateHandler}
               >
