@@ -122,7 +122,9 @@ const ReworkRequest = () => {
       }
 
       updateStage.mutate(newData);
-      addNote.mutate((value === "" ? "" : value + "\n") + reason);
+      addNote.mutate(
+        newData.eventTitle + "\n" + (value === "" ? "" : value + "\n") + reason
+      );
     }
   };
 
