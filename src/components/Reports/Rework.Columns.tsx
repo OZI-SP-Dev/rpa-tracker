@@ -26,16 +26,6 @@ export const PackageReview = createTableColumn<ReworkEvent>({
   },
 });
 
-export const OSFReview = createTableColumn<ReworkEvent>({
-  columnId: "OSFReview",
-  renderHeaderCell: () => {
-    return <>OSF Review</>;
-  },
-  renderCell: (item) => {
-    return <TableCellLayout truncate>{item.OSFReview}</TableCellLayout>;
-  },
-});
-
 export const HRLReview = createTableColumn<ReworkEvent>({
   columnId: "HRLReview",
   renderHeaderCell: () => {
@@ -73,16 +63,6 @@ export const PackageApproval = createTableColumn<ReworkEvent>({
   },
   renderCell: (item) => {
     return <TableCellLayout truncate>{item.PackageApproval}</TableCellLayout>;
-  },
-});
-
-export const DraftPackageHRL = createTableColumn<ReworkEvent>({
-  columnId: "DraftPackageHRL",
-  renderHeaderCell: () => {
-    return <>Draft Package (HRL)</>;
-  },
-  renderCell: (item) => {
-    return <TableCellLayout truncate>{item.DraftPackageHRL}</TableCellLayout>;
   },
 });
 

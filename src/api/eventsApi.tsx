@@ -79,9 +79,6 @@ const findFromStage = (reworkEvent: EventLogItem) => {
       case "Package Review":
         return "PackageReview";
 
-      case "OSF Review":
-        return "OSFReview";
-
       case "HRL/COSF Review":
         return "HRLReview";
 
@@ -93,9 +90,6 @@ const findFromStage = (reworkEvent: EventLogItem) => {
 
       case "Package Approval":
         return "PackageApproval";
-
-      case "Draft Package (HRL)":
-        return "DraftPackageHRL";
 
       case "OSF Approval":
         return "SelectionPackageOSFApproval";
