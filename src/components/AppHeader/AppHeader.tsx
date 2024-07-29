@@ -76,6 +76,9 @@ export const AppHeader = () => {
             Roles
           </Link>
         )}
+        <Link to="/Reports/Rework" className={classes.navLink}>
+          Rework Report
+        </Link>
 
         <Popover trapFocus={true} closeOnScroll={true} withArrow={true}>
           <PopoverTrigger>
