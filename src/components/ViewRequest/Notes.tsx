@@ -95,7 +95,11 @@ const ViewRequestNotes = () => {
                   }
                 />
                 <Body2 style={{ whiteSpace: "pre-line" }}>
-                  {parseUTF16(note.text)}
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: `${parseUTF16(note.text)}`,
+                    }}
+                  />
                 </Body2>
               </Card>
             );
