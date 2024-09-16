@@ -37,7 +37,7 @@ export interface RPARequest {
   requestType: (typeof REQUESTTYPES)[number];
   mcrRequired: "Yes" | "No";
   paySystem: (typeof PAYSYSTEMS)[number]["key"];
-  advertisementLength: "Normal" | "Extended";
+  advertisementLength: number;
   lastIncumbent: string;
   series: string;
   grade: (typeof GENERALGRADES)[number] | (typeof ACQGRADES)[number];
