@@ -68,11 +68,6 @@ export const STAGES: ReadonlyArray<STAGE> = [
       //find current stage
       const currentStage = STAGES.find(({ key }) => key === request?.stage);
       //find subStage and run it's check - if subStage not found block the move
-      console.log(
-        currentStage?.subStages
-          ?.find(({ key }) => key === request?.subStage)
-          ?.readyForNext(request)
-      );
       return (
         currentStage?.subStages
           ?.find(({ key }) => key === request?.subStage)

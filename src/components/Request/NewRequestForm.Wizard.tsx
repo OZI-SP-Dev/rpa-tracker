@@ -1,4 +1,4 @@
-import { useEffect, useReducer } from "react";
+import { useReducer } from "react";
 import { useFormContext } from "react-hook-form";
 import { Button, Spinner } from "@fluentui/react-components";
 import HiringInfo from "components/Request/NewFormSection/NewForm.HiringInfo";
@@ -9,7 +9,7 @@ import LinkedInSearch from "components/Request/NewFormSection/NewForm.LinkedInSe
 import RoutingInfo from "components/Request/NewFormSection/NewForm.Routing";
 import USAJobs from "components/Request/NewFormSection/NewForm.USAJobs";
 import Done from "components/Request/NewFormSection/NewForm.Done";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { RHFRequest } from "./NewRequestForm";
 import { RPARequest, useMutateRequest, useUpdateStage } from "api/requestsApi";
 
@@ -163,11 +163,6 @@ const Wizard = () => {
     dispatch({ type: "goto", payload: steps });
   };
 
-  const params = useParams();
-  useEffect(() => {
-    dispatch({ type: "reset" });
-  }, [params.requestId]);
-
   const createNewRequest = async () => {
     const data2 = {
       stage: "Draft",
@@ -228,14 +223,14 @@ const Wizard = () => {
             onClick={async () => {
               if (isValid) {
                 const newData = {
-                  requestId: Number(params.requestId),
+                  requestId: Number(getValues().Id),
                   newStage: "PackageReview",
                   newSubStage: "OSFReview",
                   eventTitle:
                     "Forward Stage Change: RPA Request to Package Review",
                 };
                 await updateStage.mutateAsync(newData);
-                navigate("/Request/" + params.requestId);
+                navigate("/Request/" + getValues().Id);
               } else {
                 trigger(undefined, { shouldFocus: true });
               }
