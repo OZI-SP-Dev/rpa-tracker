@@ -9,7 +9,9 @@ import LinkedInSearch from "components/Request/NewFormSection/NewForm.LinkedInSe
 import RoutingInfo from "components/Request/NewFormSection/NewForm.Routing";
 import USAJobs from "components/Request/NewFormSection/NewForm.USAJobs";
 import Done from "components/Request/NewFormSection/NewForm.Done";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { RHFRequest } from "./NewRequestForm";
+import { RPARequest, useMutateRequest, useUpdateStage } from "api/requestsApi";
 
 interface INPUTSTEPFUNCTIONS {
   next: (methods: string[]) => string;
@@ -140,14 +142,19 @@ function reducer(
   }
 }
 
-const Wizard = ({ isLoading = false, isError = false }) => {
+const Wizard = () => {
   const [state, dispatch] = useReducer(reducer, { page: "RoutingInfo" });
+  const addRequest = useMutateRequest();
+  const updateStage = useUpdateStage();
+  const navigate = useNavigate();
 
   const {
+    setValue,
     trigger,
     formState: { isValid },
     watch,
-  } = useFormContext();
+    getValues,
+  } = useFormContext<RHFRequest>();
   const methods = watch("methods");
 
   const gotoStep = (step: string) => {
@@ -161,6 +168,16 @@ const Wizard = ({ isLoading = false, isError = false }) => {
     dispatch({ type: "reset" });
   }, [params.requestId]);
 
+  const createNewRequest = async () => {
+    const data2 = {
+      stage: "Draft",
+      ...getValues(),
+    } as RPARequest;
+
+    const newRequest = await addRequest.mutateAsync(data2);
+    setValue("Id", newRequest.Id);
+  };
+
   return (
     <>
       {state.page === "RoutingInfo" && <RoutingInfo />}
@@ -172,40 +189,64 @@ const Wizard = ({ isLoading = false, isError = false }) => {
       {state.page === "USAJobs" && <USAJobs />}
       {state.page === "DONE" && <Done gotoStep={gotoStep} />}
 
-      {!isLoading && (
-        <div className="requestWizardButtons">
+      <div className="requestWizardButtons">
+        <Button
+          disabled={state.page === "RoutingInfo" || addRequest.isLoading}
+          onClick={() => {
+            if (isValid) {
+              dispatch({ type: "prev_page", payload: methods });
+            } else {
+              trigger(undefined, { shouldFocus: true });
+            }
+          }}
+        >
+          Prev
+        </Button>
+        {state.page !== "DONE" && (
           <Button
-            disabled={state.page === "RoutingInfo" || isLoading}
-            onClick={() => {
-              if (isValid) {
-                dispatch({ type: "prev_page", payload: methods });
-              } else {
-                trigger(undefined, { shouldFocus: true });
-              }
-            }}
-          >
-            Prev
-          </Button>
-          <Button
+            appearance="primary"
             style={{ marginLeft: "auto" }}
-            disabled={state.page === "DONE" || isLoading}
-            onClick={() => {
+            disabled={addRequest.isLoading}
+            onClick={async () => {
               if (isValid) {
-                dispatch({ type: "next_page", payload: methods });
+                await createNewRequest().then(() =>
+                  dispatch({ type: "next_page", payload: methods })
+                );
               } else {
                 trigger(undefined, { shouldFocus: true });
               }
             }}
           >
-            Next
+            Save and Continue
           </Button>
-          <Button appearance="primary" type="submit">
-            {!isError ? "Save Request" : "Retry"}
+        )}
+        {state.page === "DONE" && (
+          <Button
+            appearance="primary"
+            style={{ marginLeft: "auto" }}
+            disabled={addRequest.isLoading}
+            onClick={async () => {
+              if (isValid) {
+                const newData = {
+                  requestId: Number(params.requestId),
+                  newStage: "PackageReview",
+                  newSubStage: "OSFReview",
+                  eventTitle:
+                    "Forward Stage Change: RPA Request to Package Review",
+                };
+                await updateStage.mutateAsync(newData);
+                navigate("/Request/" + params.requestId);
+              } else {
+                trigger(undefined, { shouldFocus: true });
+              }
+            }}
+          >
+            Submit for Processing
           </Button>
-        </div>
-      )}
+        )}
+      </div>
 
-      {isLoading && (
+      {addRequest.isLoading && (
         <Spinner
           style={{ justifyContent: "flex-start" }}
           label="Saving Request..."

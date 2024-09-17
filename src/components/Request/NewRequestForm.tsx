@@ -1,12 +1,7 @@
 import { Title1, Tooltip, Badge } from "@fluentui/react-components";
 import { FormProvider, useForm } from "react-hook-form";
 import { AlertSolidIcon } from "@fluentui/react-icons-mdl2";
-import {
-  Person,
-  RPARequest,
-  useMutateRequest,
-  useRequest,
-} from "api/requestsApi";
+import { Person, useMutateRequest, useRequest } from "api/requestsApi";
 import "components/Request/Request.css";
 import { addDays } from "@fluentui/react";
 import Wizard from "components/Request/NewRequestForm.Wizard";
@@ -167,16 +162,6 @@ const NewRequestForm = () => {
     }
   }, [request.data, params.requestId, myForm]);
 
-  const createNewRequest = async (data: RHFRequest) => {
-    const data2 = {
-      stage: "Draft",
-      ...data,
-    } as RPARequest;
-
-    const newRequest = await addRequest.mutateAsync(data2);
-    myForm.setValue("Id", newRequest.Id);
-  };
-
   return (
     <div
       style={{
@@ -192,15 +177,8 @@ const NewRequestForm = () => {
       {!!params.requestId && request.isLoading && "Loading..."}
       {(!params.requestId || request.isFetched) && (
         <FormProvider {...myForm}>
-          <form
-            id="inReqForm"
-            className="requestFormContainer"
-            onSubmit={myForm.handleSubmit(createNewRequest)}
-          >
-            <Wizard
-              isLoading={addRequest.isLoading}
-              isError={addRequest.isError}
-            />
+          <form id="inReqForm" className="requestFormContainer">
+            <Wizard />
 
             {addRequest.isError && (
               <Tooltip
