@@ -281,7 +281,7 @@ const getPagedRequests = async (
       // HRL sees requests assigned to them, and unassigned requests
       if (myRoles.isHRL) {
         roleFilters.push(
-          `stage ne 'Draft' and (hrl/Id eq null or hrl/EMail eq '${_spPageContextInfo.userEmail}')`
+          `stage ne 'Draft' and (hrl/EMail eq '${_spPageContextInfo.userEmail}')`
         );
       }
 
