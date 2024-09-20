@@ -54,28 +54,35 @@ const Home: FunctionComponent = () => {
         <section className={styles.section}>
           <Title3 align="center">RPA Tool Instructions</Title3>
           <Body1>
-            <p>A blurb with some instructions</p>
             <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ac
-              nibh quis magna viverra mollis. Donec lacinia porttitor pretium.
-              Ut efficitur lectus a efficitur aliquet. Aenean quis orci vel
-              justo dapibus rhoncus nec vel lacus. Nulla congue luctus
-              elementum. Sed maximus augue a sapien fermentum, ac maximus tortor
-              dapibus. Proin id tincidunt massa, eget suscipit ligula
+              Select “New Request” at the top of this page to initiate an RPA
+              Request. Complete the following pages and click “Next” to continue
+              through the process. All fields with an asterisk must be completed
+              before continuing to the next page. You can save your work at any
+              time and return to it later by clicking “Save” at the bottom of
+              any page.
+            </p>
+            <p>
+              Once complete, select the RPA Tracker link at the top left of the
+              page to return to the Dashboard. Here, you can view all Requests
+              you've entered and the current stage of the process each one is
+              in.
             </p>
           </Body1>
         </section>
         <section className={styles.section}>
           <Title3 align="center">Help Info</Title3>
           <Body1>
-            <p>A blurb about who to contact for assistance</p>
             <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ac
-              nibh quis magna viverra mollis. Donec lacinia porttitor pretium.
-              Ut efficitur lectus a efficitur aliquet. Aenean quis orci vel
-              justo dapibus rhoncus nec vel lacus. Nulla congue luctus
-              elementum. Sed maximus augue a sapien fermentum, ac maximus tortor
-              dapibus. Proin id tincidunt massa, eget suscipit ligula
+              For questions or issues with this tool or assistance with
+              completing your RPA Request package, please contact: <br />
+              <a href="mailto:sabrina.pratte.1@us.af.mil">
+                Sabrina Pratte AFLCMC/XP-OZIF
+              </a>
+              <br />
+              <a href="mailto:chrystal.gayheart@us.af.mil">
+                Chrystal Gayheart AFLCMC/XP-OZIF
+              </a>
             </p>
           </Body1>
         </section>

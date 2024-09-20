@@ -70,6 +70,11 @@ export interface RPARequest {
   linkedinPositionSummary?: string;
   linkedinQualifications: string[];
   dcwf: string[];
+  dcwf2: string[];
+  dcwf3: string[];
+  dcwfLevel?: string;
+  dcwf2Level?: string;
+  dcwf3Level?: string;
   linkedinKSAs?: string;
   linkedinSearchTitle1?: string;
   linkedinSearchTitle2?: string;
@@ -597,6 +602,8 @@ type InternalRequestItem = Omit<
   RPARequest,
   | "methods"
   | "dcwf"
+  | "dcwf2"
+  | "dcwf3"
   | "linkedinQualifications"
   | "supervisor"
   | "organizationalPOC"
@@ -612,6 +619,8 @@ type InternalRequestItem = Omit<
 > & {
   methods: string;
   dcwf: string;
+  dcwf2: string;
+  dcwf3: string;
   linkedinQualifications: string;
   supervisorId?: string;
   organizationalPOCId?: string;
@@ -635,6 +644,8 @@ const transformRequestToSP = async (
   const {
     methods,
     dcwf,
+    dcwf2,
+    dcwf3,
     linkedinQualifications,
     supervisor,
     organizationalPOC,
@@ -775,6 +786,8 @@ const transformRequestToSP = async (
     // stringify arrays for storage in SharePoint
     methods: JSON.stringify(methods),
     dcwf: JSON.stringify(dcwf),
+    dcwf2: JSON.stringify(dcwf2),
+    dcwf3: JSON.stringify(dcwf3),
     linkedinQualifications: JSON.stringify(linkedinQualifications),
 
     // include the rest of the properties from the RPARequest
@@ -827,6 +840,11 @@ const transformRequestFromSP = (request: any): RPARequest => {
     linkedinPositionSummary: request.linkedinPositionSummary,
     linkedinQualifications: JSON.parse(request.linkedinQualifications),
     dcwf: JSON.parse(request.dcwf),
+    dcwf2: JSON.parse(request.dcwf2),
+    dcwf3: JSON.parse(request.dcwf3),
+    dcwfLevel: request.dcwfLevel,
+    dcwf2Level: request.dcwf2Level,
+    dcwf3Level: request.dcwf3Level,
     linkedinKSAs: request.linkedinKSAs,
     linkedinSearchTitle1: request.linkedinSearchTitle1,
     linkedinSearchTitle2: request.linkedinSearchTitle2,
@@ -945,8 +963,7 @@ export interface RequestFilter {
  */
 
 export const validateRequest = (values: FieldValues) => {
-  const HiringInfo =
-    values.advertisementLength === "" || values.methods.length === 0;
+  const HiringInfo = !values.advertisementLength || values.methods.length === 0;
 
   const JobBoard: boolean =
     values.methods.includes("lcmc") && values.closeDateLCMC === undefined;
@@ -976,7 +993,9 @@ export const validateRequest = (values: FieldValues) => {
       !values.linkedinPositionSummary ||
       !(
         !values.linkedinQualifications.includes("certification") ||
-        values.dcwf.length > 0
+        values.dcwf.length > 0 ||
+        values.dcwf2.length > 0 ||
+        values.dcwf3.length > 0
       ) ||
       !values.linkedinKSAs);
 

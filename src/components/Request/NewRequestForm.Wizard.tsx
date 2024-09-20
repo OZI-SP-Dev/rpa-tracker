@@ -166,6 +166,7 @@ const Wizard = () => {
   const createNewRequest = async () => {
     const data2 = {
       stage: "Draft",
+      subStage: "",
       ...getValues(),
     } as RPARequest;
 

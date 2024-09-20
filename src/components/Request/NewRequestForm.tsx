@@ -46,6 +46,11 @@ export type RHFRequest = {
   linkedinPositionSummary: string;
   linkedinQualifications: string[];
   dcwf: string[];
+  dcwf2: string[];
+  dcwf3: string[];
+  dcwfLevel?: string;
+  dcwf2Level?: string;
+  dcwf3Level?: string;
   linkedinKSAs: string;
   linkedinSearchTitle1: string;
   linkedinSearchTitle2: string;
@@ -119,6 +124,11 @@ const NewRequestForm = () => {
       "travel",
     ],
     dcwf: [],
+    dcwf2: [],
+    dcwf3: [],
+    dcwfLevel: "",
+    dcwf2Level: "",
+    dcwf3Level: "",
     linkedinKSAs: "",
     linkedinSearchTitle1: "",
     linkedinSearchTitle2: "",

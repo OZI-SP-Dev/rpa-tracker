@@ -1,50 +1,116 @@
 import { DCWFCodes } from "consts/DCWF";
-import { Option } from "@fluentui/react-components";
+import { Option, Radio } from "@fluentui/react-components";
 import "components/Request/Request.css";
 import { RHFRequest } from "components/Request/NewRequestForm";
-import BACDropdown from "components/BaseFormFields/BACDropdown";
+import BACDropdown, {
+  onOptionSelectCallback,
+  valueCallback,
+} from "components/BaseFormFields/BACDropdown";
+import BACRadioGroup from "components/BaseFormFields/BACRadioGroup";
+
+const customOnOptionSelect: onOptionSelectCallback<RHFRequest> = (
+  _e,
+  data,
+  field
+) => field.onChange(data.selectedOptions);
+
+const customValue: valueCallback<RHFRequest> = (value) => {
+  let retVal = "";
+  let arrayVal = [];
+  if (Array.isArray(value)) {
+    arrayVal = value.map(
+      (value) =>
+        value + " " + DCWFCodes.find(({ Code }) => Code === value)?.Role ?? ""
+    );
+    retVal = arrayVal.join(", ");
+  }
+  return retVal;
+};
+
+const dcwfCodeOptions = () =>
+  DCWFCodes.map((item) => (
+    <Option
+      key={item.Code}
+      text={item.Code + " " + item.Role}
+      value={item.Code}
+    >
+      {item.Code}&nbsp;{item.Role}
+    </Option>
+  ));
 
 const Certifications = () => {
   return (
-    <div className="requestFieldContainer">
-      <BACDropdown<RHFRequest>
-        name="dcwf"
-        labelText="Certifications/Licensure"
-        labelInfo="Select one to three options"
-        fieldProps={{
-          multiselect: true,
-        }}
-        customOnOptionSelect={(_e, data, field) => {
-          if (data.selectedOptions.length <= 3) {
-            field.onChange(data.selectedOptions);
-          }
-        }}
-        customValue={(value) => {
-          let retVal = "";
-          let arrayVal = [];
-          if (Array.isArray(value)) {
-            arrayVal = value.map(
-              (value) =>
-                value +
-                  " " +
-                  DCWFCodes.find(({ Code }) => Code === value)?.Role ?? ""
-            );
-            retVal = arrayVal.join(", ");
-          }
-          return retVal;
-        }}
-      >
-        {DCWFCodes.map((item) => (
-          <Option
-            key={item.Code}
-            text={item.Code + " " + item.Role}
-            value={item.Code}
-          >
-            {item.Code}&nbsp;{item.Role}
-          </Option>
-        ))}
-      </BACDropdown>
-    </div>
+    <fieldset>
+      <legend>Defense Cyber Work Force (DCWF) Roles</legend>
+      <div className="requestFieldContainer">
+        <BACDropdown<RHFRequest>
+          name="dcwf"
+          labelText="DCWF Role 1"
+          customOnOptionSelect={customOnOptionSelect}
+          customValue={customValue}
+        >
+          {dcwfCodeOptions()}
+        </BACDropdown>
+      </div>
+
+      <div className="requestFieldContainer">
+        <BACRadioGroup<RHFRequest>
+          name="dcwfLevel"
+          labelText="DCWF Role 1 Proficiency"
+          fieldProps={{ layout: "horizontal" }}
+        >
+          <Radio key="Basic" value="Basic" label="Basic" />
+          <Radio key="Intermediate" value="Intermediate" label="Intermediate" />
+          <Radio key="Advanced" value="Advanced" label="Advanced" />
+        </BACRadioGroup>
+      </div>
+
+      <div className="requestFieldContainer">
+        <BACDropdown<RHFRequest>
+          name="dcwf2"
+          labelText="DCWF Role 2"
+          customOnOptionSelect={customOnOptionSelect}
+          customValue={customValue}
+        >
+          {dcwfCodeOptions()}
+        </BACDropdown>
+      </div>
+
+      <div className="requestFieldContainer">
+        <BACRadioGroup<RHFRequest>
+          name="dcwf2Level"
+          labelText="DCWF Role 2 Proficiency"
+          fieldProps={{ layout: "horizontal" }}
+        >
+          <Radio key="Basic" value="Basic" label="Basic" />
+          <Radio key="Intermediate" value="Intermediate" label="Intermediate" />
+          <Radio key="Advanced" value="Advanced" label="Advanced" />
+        </BACRadioGroup>
+      </div>
+
+      <div className="requestFieldContainer">
+        <BACDropdown<RHFRequest>
+          name="dcwf3"
+          labelText="DCWF Role 3"
+          customOnOptionSelect={customOnOptionSelect}
+          customValue={customValue}
+        >
+          {dcwfCodeOptions()}
+        </BACDropdown>
+      </div>
+
+      <div className="requestFieldContainer">
+        <BACRadioGroup<RHFRequest>
+          name="dcwf3Level"
+          labelText="DCWF Role 3 Proficiency"
+          fieldProps={{ layout: "horizontal" }}
+        >
+          <Radio key="Basic" value="Basic" label="Basic" />
+          <Radio key="Intermediate" value="Intermediate" label="Intermediate" />
+          <Radio key="Advanced" value="Advanced" label="Advanced" />
+        </BACRadioGroup>
+      </div>
+    </fieldset>
   );
 };
 export default Certifications;
