@@ -15,11 +15,12 @@ const EditRequest = ({ openEditForm }: { openEditForm: () => void }) => {
   const inDraft = request.data?.stage === "Draft";
   const isEditableStage =
     request.data?.stage === "Draft" || request.data?.stage === "PackageReview";
-  const isEditor =
-    myRoles.isHRL ||
-    myRoles.isOSF ||
-    myRoles.isCOSF ||
+  const isEditor = myRoles.isHRL || myRoles.isOSF || myRoles.isCOSF;
+
+  const isDraftAndAuthor =
+    request.data?.stage === "Draft" &&
     Number(request.data?.Author?.Id) === _spPageContextInfo.userId;
+
   const navigate = useNavigate();
 
   const handleClick = () => {
@@ -38,7 +39,12 @@ const EditRequest = ({ openEditForm }: { openEditForm: () => void }) => {
           background: "transparent",
           borderRadius: "50%",
         }}
-        disabled={request.isLoading || !isEditableStage || !isEditor}
+        disabled={
+          request.isLoading ||
+          !isEditableStage ||
+          !isEditor ||
+          !isDraftAndAuthor
+        }
         icon={<EditIcon className="blue" />}
         size="large"
         onClick={() => handleClick()}
