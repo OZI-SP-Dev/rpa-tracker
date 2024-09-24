@@ -19,7 +19,7 @@ import {
   Text,
   Tooltip,
 } from "@fluentui/react-components";
-import { Person, useRequest } from "api/requestsApi";
+import { Person, useMutateRequest, useRequest } from "api/requestsApi";
 import { useParams } from "react-router-dom";
 import {
   CheckMarkIcon,
@@ -94,6 +94,7 @@ const DetailsTemplate = ({
   const request = useRequest(Number(params.requestId));
   const myRoles = useMyRoles();
   const postRequest = usePostRequest();
+  const updateRequest = useMutateRequest();
 
   const isPostable =
     (request.data?.stage === "PackageReview" ||
@@ -227,6 +228,30 @@ const DetailsTemplate = ({
                           }}
                         >
                           Edit
+                        </Button>
+                      )}
+                    {isEditable &&
+                      isEditor &&
+                      setEditSection &&
+                      setIsEditOpen && (
+                        <Button
+                          icon={<DeleteIcon />}
+                          aria-label="Delete"
+                          disabled={updateRequest.isLoading}
+                          onClick={() => {
+                            if (request.data) {
+                              const { Author, Created, ...data } = request.data;
+                              const methods = data.methods.slice(); // shallow copy array
+                              const index = methods.indexOf(sectionName); // find method to remove
+                              methods.splice(index, 1); // remove method
+                              updateRequest.mutateAsync({
+                                ...data,
+                                methods: methods,
+                              });
+                            }
+                          }}
+                        >
+                          Delete
                         </Button>
                       )}
                   </>
