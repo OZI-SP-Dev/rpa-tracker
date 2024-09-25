@@ -23,6 +23,7 @@ import { spWebContext } from "api/SPWebContext";
 
 interface IFilterFields {
   positionTitle: string;
+  mpcn: string;
   requestType: string;
   paySystem: string;
   series: string;
@@ -103,6 +104,12 @@ const FilterRequestsDrawer = ({
             return obj.column === "stage";
           })[0]
           ?.filter.toString() ?? "",
+      mpcn:
+        filterState
+          .filter((obj) => {
+            return obj.column === "mpcn";
+          })[0]
+          ?.filter.toString() ?? "",
       Author: isPerson(author) ? author : null,
       afterDate: afterDate instanceof Date ? new Date(afterDate) : null,
       beforeDate: beforeDate instanceof Date ? new Date(beforeDate) : null,
@@ -175,6 +182,14 @@ const FilterRequestsDrawer = ({
       });
     }
 
+    if (data.mpcn) {
+      newFilter.push({
+        column: "mpcn",
+        filter: data.mpcn,
+        queryString: `(mpcn eq '${data.mpcn}')`,
+      });
+    }
+
     if (data.beforeDate) {
       newFilter.push({
         column: "Created",
@@ -230,36 +245,19 @@ const FilterRequestsDrawer = ({
           }}
         >
           <hr />
-          <Field label="Position Title">
+          <Field label="Office Symbol">
             <Controller
-              name="positionTitle"
+              name="officeSymbol"
               control={control}
               render={({ field }) => <Input type="search" {...field} />}
             />
           </Field>
           <hr />
-          <Field label="Request Type">
+          <Field label="MPCN">
             <Controller
-              name="requestType"
+              name="mpcn"
               control={control}
-              render={({ field }) => (
-                <Combobox
-                  clearable
-                  autoComplete="on"
-                  {...field}
-                  selectedOptions={[field.value ?? ""]}
-                  onOptionSelect={(_event, data) => {
-                    field.onChange(data.optionValue ?? "");
-                  }}
-                  value={field.value}
-                >
-                  {REQUESTTYPES.map((reqType) => (
-                    <Option key={reqType} value={reqType}>
-                      {reqType}
-                    </Option>
-                  ))}
-                </Combobox>
-              )}
+              render={({ field }) => <Input type="search" {...field} />}
             />
           </Field>
           <hr />
@@ -328,11 +326,36 @@ const FilterRequestsDrawer = ({
             />
           </Field>
           <hr />
-          <Field label="Office Symbol">
+          <Field label="Position Title">
             <Controller
-              name="officeSymbol"
+              name="positionTitle"
               control={control}
               render={({ field }) => <Input type="search" {...field} />}
+            />
+          </Field>
+          <hr />
+          <Field label="Request Type">
+            <Controller
+              name="requestType"
+              control={control}
+              render={({ field }) => (
+                <Combobox
+                  clearable
+                  autoComplete="on"
+                  {...field}
+                  selectedOptions={[field.value ?? ""]}
+                  onOptionSelect={(_event, data) => {
+                    field.onChange(data.optionValue ?? "");
+                  }}
+                  value={field.value}
+                >
+                  {REQUESTTYPES.map((reqType) => (
+                    <Option key={reqType} value={reqType}>
+                      {reqType}
+                    </Option>
+                  ))}
+                </Combobox>
+              )}
             />
           </Field>
           <hr />

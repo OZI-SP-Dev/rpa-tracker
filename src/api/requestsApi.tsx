@@ -255,7 +255,7 @@ const getPagedRequests = async (
   OSFs: OSF[]
 ) => {
   const requestedFields =
-    "Id,positionTitle,requestType,paySystem,series,grade,officeSymbol,stage,subStage,Created," +
+    "Id,positionTitle,requestType,paySystem,series,grade,officeSymbol,stage,subStage,Created,mpcn," +
     "Author/Id,Author/EMail,Author/Title";
   const expandedFields = "Author";
 
@@ -925,6 +925,7 @@ const transformPagedRequestsFromSP = (requests: any) => {
       stage: request.stage,
       subStage: request.subStage,
       Created: new Date(request.Created),
+      mpcn: request.mpcn,
     });
   });
 
@@ -943,6 +944,7 @@ interface PagedRequest {
   stage: (typeof STAGES)[number]["key"];
   subStage: string;
   Created: Date;
+  mpcn: string;
 }
 
 interface SortParams {
