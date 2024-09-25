@@ -1,6 +1,7 @@
 import { Body1, Title1, Title3, makeStyles } from "@fluentui/react-components";
 //import RequestsTable from "components/RequestsTable/RequestsTable";
 import { FunctionComponent, lazy } from "react";
+import { Link } from "react-router-dom";
 
 // Begin module downloads immediately, but still utilize lazy() for code splitting
 const RequestsTablePromise = import("components/RequestsTable/RequestsTable");
@@ -55,12 +56,12 @@ const Home: FunctionComponent = () => {
           <Title3 align="center">RPA Tool Instructions</Title3>
           <Body1>
             <p>
-              Select “New Request” at the top of this page to initiate an RPA
-              Request. Complete the following pages and click “Next” to continue
-              through the process. All fields with an asterisk must be completed
-              before continuing to the next page. You can save your work at any
-              time and return to it later by clicking “Save” at the bottom of
-              any page.
+              Select <Link to="/New">“New Request”</Link> at the top of this
+              page to initiate an RPA Request. Complete the following pages and
+              click “Next” to continue through the process. All fields with an
+              asterisk must be completed before continuing to the next page. You
+              can save your work at any time and return to it later by clicking
+              “Save” at the bottom of any page.
             </p>
             <p>
               Once complete, select the RPA Tracker link at the top left of the

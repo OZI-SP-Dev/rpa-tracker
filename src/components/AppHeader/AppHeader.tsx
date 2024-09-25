@@ -55,6 +55,8 @@ export const AppHeader = () => {
   const classes = useStyles();
   const userContext = useContext(UserContext);
   const myRoles = useMyRoles();
+  const canViewReworkReport =
+    myRoles.isHRL || myRoles.isOSF || myRoles.isCOSF || myRoles.isCSF;
 
   const title =
     "RPA Tracker" +
@@ -76,9 +78,11 @@ export const AppHeader = () => {
             Roles
           </Link>
         )}
-        <Link to="/Reports/Rework" className={classes.navLink}>
-          Rework Report
-        </Link>
+        {canViewReworkReport && (
+          <Link to="/Reports/Rework" className={classes.navLink}>
+            Rework Report
+          </Link>
+        )}
 
         <Popover trapFocus={true} closeOnScroll={true} withArrow={true}>
           <PopoverTrigger>
