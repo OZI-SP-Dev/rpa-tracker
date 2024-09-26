@@ -181,6 +181,16 @@ const ViewRequestDetails = ({
             </Label>
             <Text id="dutyLocation">{request.data.dutyLocation}</Text>
 
+            <Label weight="semibold" htmlFor="telework">
+              Telework Possible
+            </Label>
+            <Text id="telework">{request.data.telework}</Text>
+
+            <Label weight="semibold" htmlFor="remote">
+              Remote Work Possible
+            </Label>
+            <Text id="remote">{request.data.remote}</Text>
+
             <Label weight="semibold" htmlFor="lastIncumbent">
               Last Incumbument
             </Label>

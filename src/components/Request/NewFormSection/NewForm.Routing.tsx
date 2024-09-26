@@ -41,6 +41,8 @@ const RoutingInfo = () => {
       <FormFields.FMS />
       <FormFields.PositionSensitivity />
       <FormFields.DutyLocation />
+      <FormFields.Telework />
+      <FormFields.Remote />
       <FormFields.Incumbent />
     </>
   );

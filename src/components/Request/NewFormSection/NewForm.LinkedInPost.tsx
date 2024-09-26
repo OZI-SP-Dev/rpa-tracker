@@ -23,7 +23,6 @@ const LinkedInPost = () => {
       {(temporary === "Term" || temporary === "Temp") && <FormFields.NTE />}
       <FormFields.Salary />
       <FormFields.Incentives />
-      <FormFields.Telework />
       <FormFields.LinkedinPositionSummary />
       <FormFields.LinkedinQualifications />
       {linkedinCertification && <FormFields.Certifications />}

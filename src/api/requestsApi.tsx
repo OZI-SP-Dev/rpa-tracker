@@ -56,7 +56,7 @@ export interface RPARequest {
   fullPartTime?: "Full" | "Part";
   salaryLow?: number;
   salaryHigh?: number;
-  telework?: "Yes" | "No";
+  telework?: "None" | "Regular-recurring" | "Situational";
   remote?: "Yes" | "No";
   pcs?: "Yes" | "No";
   joaQualifications?: string;

@@ -37,16 +37,6 @@ const ViewRequestJOADetails = (props: { data: RPARequest }) => {
         ${props.data.salaryLow} to ${props.data.salaryHigh}
       </Text>
 
-      <Label weight="semibold" htmlFor="telework">
-        Telework Possible
-      </Label>
-      <Text id="telework">{props.data.telework}</Text>
-
-      <Label weight="semibold" htmlFor="remote">
-        Remote Work Possible
-      </Label>
-      <Text id="remote">{props.data.remote}</Text>
-
       <Label weight="semibold" htmlFor="pcs">
         PCS Eligible
       </Label>

@@ -29,11 +29,6 @@ const ViewRequestLIJobPostDetails = (props: { data: RPARequest }) => {
       </Label>
       <Text id="incentives">{props.data.incentives}</Text>
 
-      <Label weight="semibold" htmlFor="LItelework">
-        Telework Possible
-      </Label>
-      <Text id="LItelework">{props.data.telework}</Text>
-
       <Label weight="semibold" htmlFor="linkedinPositionSummary">
         Position Summary
       </Label>

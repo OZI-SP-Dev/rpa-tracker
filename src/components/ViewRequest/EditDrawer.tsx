@@ -129,6 +129,8 @@ const EditDrawer = ({
                 <FormFields.FMS />
                 <FormFields.PositionSensitivity />
                 <FormFields.DutyLocation />
+                <FormFields.Telework />
+                <FormFields.Remote />
                 <FormFields.Incumbent />
                 <FormFields.AdvertisementLength />
                 <FormFields.Methods />
@@ -142,8 +144,6 @@ const EditDrawer = ({
                 <FormFields.IssueTo />
                 <FormFields.FullPartTime />
                 <FormFields.Salary />
-                <FormFields.Telework />
-                <FormFields.Remote />
                 <FormFields.PCS />
                 <FormFields.JOAQualifications />
                 <FormFields.JOAIdealCandidate />
