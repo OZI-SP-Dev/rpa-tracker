@@ -256,8 +256,8 @@ const getPagedRequests = async (
 ) => {
   const requestedFields =
     "Id,positionTitle,requestType,paySystem,series,grade,officeSymbol,stage,subStage,Created,mpcn," +
-    "Author/Id,Author/EMail,Author/Title";
-  const expandedFields = "Author";
+    "Author/Id,Author/EMail,Author/Title,hrl/Id,hrl/EMail,hrl/Title";
+  const expandedFields = "Author,hrl";
 
   let queryString = "ContentType eq 'RPADocSet'";
   if (!allItems) {
@@ -926,6 +926,7 @@ const transformPagedRequestsFromSP = (requests: any) => {
       subStage: request.subStage,
       Created: new Date(request.Created),
       mpcn: request.mpcn,
+      hrl: request.hrl,
     });
   });
 
@@ -945,6 +946,7 @@ interface PagedRequest {
   subStage: string;
   Created: Date;
   mpcn: string;
+  hrl: Person;
 }
 
 interface SortParams {

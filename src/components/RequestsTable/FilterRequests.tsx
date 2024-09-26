@@ -33,6 +33,7 @@ interface IFilterFields {
   afterDate: Date | null;
   beforeDate: Date | null;
   Author: Person | null;
+  hrl: Person | null;
 }
 
 function isPerson(myObj: Person | string | Date | number): myObj is Person {
@@ -58,6 +59,9 @@ const FilterRequestsDrawer = ({
   })[0]?.filter;
   const author = filterState.filter((obj) => {
     return obj.column === "Author";
+  })[0]?.filter;
+  const hrl = filterState.filter((obj) => {
+    return obj.column === "hrl";
   })[0]?.filter;
 
   const { control, handleSubmit, reset } = useForm<IFilterFields>({
@@ -113,6 +117,7 @@ const FilterRequestsDrawer = ({
       Author: isPerson(author) ? author : null,
       afterDate: afterDate instanceof Date ? new Date(afterDate) : null,
       beforeDate: beforeDate instanceof Date ? new Date(beforeDate) : null,
+      hrl: isPerson(hrl) ? hrl : null,
     },
   });
   const onSubmit: SubmitHandler<IFilterFields> = (data) => {
@@ -171,6 +176,14 @@ const FilterRequestsDrawer = ({
         column: "Author",
         filter: data.Author,
         queryString: `AuthorId eq ${data.Author.Id}`,
+      });
+    }
+
+    if (data.hrl?.Id) {
+      newFilter.push({
+        column: "hrl",
+        filter: data.hrl,
+        queryString: `hrlId eq ${data.hrl.Id}`,
       });
     }
 
@@ -355,6 +368,29 @@ const FilterRequestsDrawer = ({
                     </Option>
                   ))}
                 </Combobox>
+              )}
+            />
+          </Field>
+          <hr />
+          <Field label="HRL">
+            <Controller
+              name="hrl"
+              control={control}
+              render={({ field }) => (
+                <PeoplePicker
+                  ariaLabel="HRL"
+                  selectedItems={field.value ?? []}
+                  updatePeople={async (items) => {
+                    if (items?.[0]?.Title) {
+                      const userId = (
+                        await spWebContext.web.ensureUser(items?.[0].EMail)
+                      ).Id;
+                      field.onChange({ ...items[0], Id: userId });
+                    } else {
+                      field.onChange([]);
+                    }
+                  }}
+                />
               )}
             />
           </Field>

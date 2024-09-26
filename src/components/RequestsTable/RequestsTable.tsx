@@ -135,6 +135,21 @@ const Requestor = createTableColumn<RPARequest>({
   },
 });
 
+const Hrl = createTableColumn<RPARequest>({
+  columnId: "hrl",
+  compare: (_a, _b) => 0, // Change nothing, but utilize table's sorting icons
+  renderHeaderCell: (filtered = false) => {
+    return <>HRL {filtered && <FilterIcon />}</>;
+  },
+  renderCell: (item) => {
+    return (
+      <TableCellLayout truncate media={<UserAvatar user={item.hrl} />}>
+        {item.hrl?.Title}
+      </TableCellLayout>
+    );
+  },
+});
+
 const CurrentStage = createTableColumn<RPARequest>({
   columnId: "stage",
   compare: (_a, _b) => 0, // Change nothing, but utilize table's sorting icons
@@ -198,6 +213,7 @@ const RequestsTable = () => {
       series: { minWidth: 80, idealWidth: 80 },
       grade: { minWidth: 80, idealWidth: 80 },
       positionTitle: { minWidth: 120, idealWidth: 280 },
+      hrl: { minWidth: 120, idealWidth: 430 },
       requestor: { minWidth: 120, idealWidth: 430 },
       requestType: { minWidth: 120, idealWidth: 220 },
       currentStage: { minWidth: 120, idealWidth: 165 },
@@ -244,6 +260,7 @@ const RequestsTable = () => {
     Series,
     Grade,
     PositionTitle,
+    Hrl,
     Requestor,
     RequestType,
     CurrentStage,
