@@ -48,7 +48,14 @@ const useStyles = makeStyles({
     textDecorationLine: "none",
     ":hover": { textDecorationLine: "underline" },
   },
-  navAvatar: { marginLeft: "auto", marginRight: "5px" }, // Force the Avatar icon to be positioned at the right most side
+  navHelp: {
+    marginLeft: "auto",
+    marginRight: "1em",
+    textDecorationLine: "none",
+    ":hover": { textDecorationLine: "underline" },
+    color: tokens.colorBrandBackgroundInverted,
+  },
+  navAvatar: { marginLeft: "1em", marginRight: "5px" }, // Force the Avatar icon to be positioned at the right most side
 });
 
 export const AppHeader = () => {
@@ -84,6 +91,12 @@ export const AppHeader = () => {
           </Link>
         )}
 
+        <Link
+          to="mailto:sabrina.pratte.1@us.af.mil?subject=RPA%20Tracker"
+          className={classes.navHelp}
+        >
+          Request Help
+        </Link>
         <Popover trapFocus={true} closeOnScroll={true} withArrow={true}>
           <PopoverTrigger>
             <Tooltip
