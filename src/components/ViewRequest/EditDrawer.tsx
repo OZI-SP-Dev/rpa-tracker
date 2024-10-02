@@ -157,7 +157,6 @@ const EditDrawer = ({
                 )}
                 <FormFields.Salary />
                 <FormFields.Incentives />
-                <FormFields.Telework />
                 <FormFields.LinkedinPositionSummary />
                 <FormFields.LinkedinQualifications />
                 {linkedinCertification && <FormFields.Certifications />}
