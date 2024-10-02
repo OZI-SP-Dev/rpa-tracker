@@ -237,7 +237,10 @@ const DetailsTemplate = ({
                         <Button
                           icon={<DeleteIcon />}
                           aria-label="Delete"
-                          disabled={updateRequest.isLoading}
+                          disabled={
+                            updateRequest.isLoading ||
+                            request.data?.methods.length === 1
+                          }
                           onClick={() => {
                             if (request.data) {
                               const { Author, Created, ...data } = request.data;
