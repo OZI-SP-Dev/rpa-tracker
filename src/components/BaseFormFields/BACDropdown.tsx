@@ -35,10 +35,12 @@ const BACDropdown = <T extends FieldValues>({
   fieldProps,
   customOnOptionSelect,
   customValue,
+  clearable,
 }: BaseFormField<T> & {
   fieldProps?: Partial<DropdownProps>;
   customOnOptionSelect?: onOptionSelectCallback<T>;
   customValue?: valueCallback<T>;
+  clearable?: boolean;
 }) => {
   const form = useFormContext<T>();
 
@@ -69,6 +71,7 @@ const BACDropdown = <T extends FieldValues>({
         aria-describedby={name + "Err"}
         aria-invalid={fieldState.error ? "true" : "false"}
         selectedOptions={field.value}
+        clearable={clearable}
         onOptionSelect={
           customOnOptionSelect
             ? (event, data) => customOnOptionSelect(event, data, field)

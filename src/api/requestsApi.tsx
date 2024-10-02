@@ -72,7 +72,7 @@ export interface RPARequest {
   dcwf: string[];
   dcwf2: string[];
   dcwf3: string[];
-  dcwfLevel?: string;
+  dcwfLevel?: "Basic" | "Intermediate" | "Advanced";
   dcwf2Level?: string;
   dcwf3Level?: string;
   linkedinKSAs?: string;
@@ -997,9 +997,7 @@ export const validateRequest = (values: FieldValues) => {
       !values.linkedinPositionSummary ||
       !(
         !values.linkedinQualifications.includes("certification") ||
-        values.dcwf.length > 0 ||
-        values.dcwf2.length > 0 ||
-        values.dcwf3.length > 0
+        (values.dcwf.length > 0 && values.dcwfLevel)
       ) ||
       !values.linkedinKSAs);
 

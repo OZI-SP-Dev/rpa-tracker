@@ -7,6 +7,7 @@ import BACDropdown, {
   valueCallback,
 } from "components/BaseFormFields/BACDropdown";
 import BACRadioGroup from "components/BaseFormFields/BACRadioGroup";
+import { useFormContext } from "react-hook-form";
 
 const customOnOptionSelect: onOptionSelectCallback<RHFRequest> = (
   _e,
@@ -39,6 +40,18 @@ const dcwfCodeOptions = () =>
   ));
 
 const Certifications = () => {
+  const { watch, setValue } = useFormContext();
+  const dcwf2 = watch("dcwf2");
+  const dcwf3 = watch("dcwf3");
+
+  if (dcwf2?.length !== 1) {
+    setValue("dcwf2Level", "");
+  }
+
+  if (dcwf3?.length !== 1) {
+    setValue("dcwf3Level", "");
+  }
+
   return (
     <fieldset>
       <legend>Defense Cyber Work Force (DCWF) Roles</legend>
@@ -48,6 +61,10 @@ const Certifications = () => {
           labelText="DCWF Role 1"
           customOnOptionSelect={customOnOptionSelect}
           customValue={customValue}
+          clearable
+          rules={{
+            required: "DCWF Role 1 is required",
+          }}
         >
           {dcwfCodeOptions()}
         </BACDropdown>
@@ -58,6 +75,9 @@ const Certifications = () => {
           name="dcwfLevel"
           labelText="DCWF Role 1 Proficiency"
           fieldProps={{ layout: "horizontal" }}
+          rules={{
+            required: "DCWF Role 1 Proficiency is required",
+          }}
         >
           <Radio key="Basic" value="Basic" label="Basic" />
           <Radio key="Intermediate" value="Intermediate" label="Intermediate" />
@@ -71,6 +91,7 @@ const Certifications = () => {
           labelText="DCWF Role 2"
           customOnOptionSelect={customOnOptionSelect}
           customValue={customValue}
+          clearable
         >
           {dcwfCodeOptions()}
         </BACDropdown>
@@ -81,6 +102,11 @@ const Certifications = () => {
           name="dcwf2Level"
           labelText="DCWF Role 2 Proficiency"
           fieldProps={{ layout: "horizontal" }}
+          rules={{
+            ...(dcwf2?.length === 1 && {
+              required: "DCWF Role 2 Proficiency is required",
+            }),
+          }}
         >
           <Radio key="Basic" value="Basic" label="Basic" />
           <Radio key="Intermediate" value="Intermediate" label="Intermediate" />
@@ -94,6 +120,7 @@ const Certifications = () => {
           labelText="DCWF Role 3"
           customOnOptionSelect={customOnOptionSelect}
           customValue={customValue}
+          clearable
         >
           {dcwfCodeOptions()}
         </BACDropdown>
@@ -104,6 +131,11 @@ const Certifications = () => {
           name="dcwf3Level"
           labelText="DCWF Role 3 Proficiency"
           fieldProps={{ layout: "horizontal" }}
+          rules={{
+            ...(dcwf3?.length === 1 && {
+              required: "DCWF Role 3 Proficiency is required",
+            }),
+          }}
         >
           <Radio key="Basic" value="Basic" label="Basic" />
           <Radio key="Intermediate" value="Intermediate" label="Intermediate" />

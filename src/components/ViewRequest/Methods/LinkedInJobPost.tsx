@@ -55,31 +55,37 @@ const ViewRequestLIJobPostDetails = (props: { data: RPARequest }) => {
           <tbody>
             <tr>
               <td>
-                {props.data.dcwf +
-                  " " +
-                  DCWFCodes.find(
-                    ({ Code }) => Code === (props.data.dcwf[0] ?? "")
-                  )?.Role ?? ""}
+                {props.data.dcwf?.length === 1
+                  ? props.data.dcwf +
+                      " " +
+                      DCWFCodes.find(
+                        ({ Code }) => Code === (props.data.dcwf[0] ?? "")
+                      )?.Role ?? ""
+                  : ""}
               </td>
               <td>{props.data.dcwfLevel}</td>
             </tr>
             <tr>
               <td>
-                {props.data.dcwf2 +
-                  " " +
-                  DCWFCodes.find(
-                    ({ Code }) => Code === (props.data.dcwf2[0] ?? "")
-                  )?.Role ?? ""}
+                {props.data.dcwf2?.length === 1
+                  ? props.data.dcwf2 +
+                      " " +
+                      DCWFCodes.find(
+                        ({ Code }) => Code === (props.data.dcwf2[0] ?? "")
+                      )?.Role ?? ""
+                  : ""}
               </td>
               <td>{props.data.dcwf2Level}</td>
             </tr>
             <tr>
               <td>
-                {props.data.dcwf3 +
-                  " " +
-                  DCWFCodes.find(
-                    ({ Code }) => Code === (props.data.dcwf3[0] ?? "")
-                  )?.Role ?? ""}
+                {props.data.dcwf3?.length === 1
+                  ? props.data.dcwf3 +
+                      " " +
+                      DCWFCodes.find(
+                        ({ Code }) => Code === (props.data.dcwf3[0] ?? "")
+                      )?.Role ?? ""
+                  : ""}
               </td>
               <td>{props.data.dcwf3Level}</td>
             </tr>
