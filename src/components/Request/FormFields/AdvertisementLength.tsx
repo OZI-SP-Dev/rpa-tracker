@@ -8,6 +8,17 @@ const AdvertisementLength = () => {
       <BACInput<RHFRequest>
         name="advertisementLength"
         labelText="Advertisement Length"
+        rules={{
+          required: "Close date is required",
+          min: {
+            value: 7,
+            message: "Advertisement Length can be 7 to 30 days",
+          },
+          max: {
+            value: 30,
+            message: "Advertisement Length can be 7 to 30 days",
+          },
+        }}
         fieldProps={{
           type: "number",
           step: "1",
