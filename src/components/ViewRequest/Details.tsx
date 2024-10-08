@@ -192,7 +192,7 @@ const ViewRequestDetails = ({
             <Text id="remote">{request.data.remote}</Text>
 
             <Label weight="semibold" htmlFor="lastIncumbent">
-              Last Incumbument
+              Last Incumbent
             </Label>
             <Text id="lastIncumbent">{request.data.lastIncumbent}</Text>
           </article>
