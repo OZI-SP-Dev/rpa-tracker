@@ -58,10 +58,10 @@ const Home: FunctionComponent = () => {
             <p>
               Select <Link to="/New">“New Request”</Link> at the top of this
               page to initiate an RPA Request. Complete the following pages and
-              click “Next” to continue through the process. All fields with an
-              asterisk must be completed before continuing to the next page. You
-              can save your work at any time and return to it later by clicking
-              “Save” at the bottom of any page.
+              click "Save and Continue" to continue through the process. All
+              fields with an asterisk must be completed before continuing to the
+              next page. After saving, you can return to your request later by
+              clicking its Position Title on the home page / in the table below.
             </p>
             <p>
               Once complete, select the RPA Tracker link at the top left of the
@@ -77,12 +77,9 @@ const Home: FunctionComponent = () => {
             <p>
               For questions or issues with this tool or assistance with
               completing your RPA Request package, please contact: <br />
-              <a href="mailto:sabrina.pratte.1@us.af.mil">
-                Sabrina Pratte AFLCMC/XP-OZIF
-              </a>
-              <br />
-              <a href="mailto:chrystal.gayheart@us.af.mil">
-                Chrystal Gayheart AFLCMC/XP-OZIF
+              <a href="mailto:AFLCMC.OZI.COSFunctional@us.af.mil?subject=RPA%20Tracker%20Assistance%20Request&cc=sabrina.pratte.1@us.af.mil;chrystal.gayheart@us.af.mil">
+                Sabrina Pratte AFLCMC/XP-OZIF and Chrystal Gayheart
+                AFLCMC/XP-OZIF
               </a>
             </p>
           </Body1>

@@ -92,7 +92,7 @@ export const AppHeader = () => {
         )}
 
         <Link
-          to="mailto:sabrina.pratte.1@us.af.mil?subject=RPA%20Tracker"
+          to="mailto:AFLCMC.OZI.COSFunctional@us.af.mil?subject=RPA%20Tracker%20Assistance%20Request&cc=sabrina.pratte.1@us.af.mil;chrystal.gayheart@us.af.mil"
           className={classes.navHelp}
         >
           Request Help
