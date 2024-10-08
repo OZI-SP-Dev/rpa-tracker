@@ -980,8 +980,6 @@ export const validateRequest = (values: FieldValues) => {
       !values.fullPartTime ||
       !values.salaryLow ||
       !values.salaryHigh ||
-      !values.telework ||
-      !values.remote ||
       !values.pcs ||
       !values.joaQualifications ||
       !values.joaIdealCandidate);
@@ -993,7 +991,6 @@ export const validateRequest = (values: FieldValues) => {
       !values.salaryHigh ||
       !(values.temporary === "Full-Time" ? true : values.nte) ||
       !values.incentives ||
-      !values.telework ||
       !values.linkedinPositionSummary ||
       !(
         !values.linkedinQualifications.includes("certification") ||

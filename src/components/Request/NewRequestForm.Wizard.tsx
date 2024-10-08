@@ -11,7 +11,12 @@ import USAJobs from "components/Request/NewFormSection/NewForm.USAJobs";
 import Done from "components/Request/NewFormSection/NewForm.Done";
 import { useNavigate } from "react-router-dom";
 import { RHFRequest } from "./NewRequestForm";
-import { RPARequest, useMutateRequest, useUpdateStage } from "api/requestsApi";
+import {
+  RPARequest,
+  useMutateRequest,
+  useUpdateStage,
+  validateRequest,
+} from "api/requestsApi";
 
 interface INPUTSTEPFUNCTIONS {
   next: (methods: string[]) => string;
@@ -222,7 +227,7 @@ const Wizard = () => {
             style={{ marginLeft: "auto" }}
             disabled={addRequest.isLoading}
             onClick={async () => {
-              if (isValid) {
+              if (!validateRequest(getValues()).hasErrors) {
                 const newData = {
                   requestId: Number(getValues().Id),
                   newStage: "PackageReview",

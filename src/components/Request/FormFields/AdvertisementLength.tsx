@@ -9,7 +9,7 @@ const AdvertisementLength = () => {
         name="advertisementLength"
         labelText="Advertisement Length"
         rules={{
-          required: "Close date is required",
+          required: "Advertisement Length is required",
           min: {
             value: 7,
             message: "Advertisement Length can be 7 to 30 days",

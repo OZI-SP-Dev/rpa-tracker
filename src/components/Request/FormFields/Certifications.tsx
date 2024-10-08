@@ -54,14 +54,14 @@ const Certifications = () => {
 
   return (
     <fieldset>
-      <legend>Defense Cyber Work Force (DCWF) Roles</legend>
+      <legend>Defense Cyber Work Force (DCWF)</legend>
       <div className="requestFieldContainer">
         <BACDropdown<RHFRequest>
           name="dcwf"
           labelText="DCWF Role 1"
           customOnOptionSelect={customOnOptionSelect}
           customValue={customValue}
-          clearable
+          fieldProps={{ clearable: true }}
           rules={{
             required: "DCWF Role 1 is required",
           }}
@@ -91,7 +91,7 @@ const Certifications = () => {
           labelText="DCWF Role 2"
           customOnOptionSelect={customOnOptionSelect}
           customValue={customValue}
-          clearable
+          fieldProps={{ clearable: true }}
         >
           {dcwfCodeOptions()}
         </BACDropdown>
@@ -120,7 +120,7 @@ const Certifications = () => {
           labelText="DCWF Role 3"
           customOnOptionSelect={customOnOptionSelect}
           customValue={customValue}
-          clearable
+          fieldProps={{ clearable: true }}
         >
           {dcwfCodeOptions()}
         </BACDropdown>

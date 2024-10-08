@@ -53,7 +53,10 @@ const SendRequest = () => {
       myRoles.isOSF
     ) {
       disableSend = false;
-    } else if (request.data?.subStage === "CAPackageReview" && myRoles.isCA) {
+    } else if (
+      request.data?.subStage === "SelectionPackageCAApproval" &&
+      myRoles.isCA
+    ) {
       disableSend = false;
     } else if (currentStage?.key === "Recruiting" && myRoles.isCSF) {
       disableSend = false;

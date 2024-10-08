@@ -72,7 +72,7 @@ const emailTemplates = {
                 };
 
                 if (requestData.methods.includes("lcmc")) {
-                  email.To.concat(cosfEmails);
+                  email.To = email.To.concat(cosfEmails);
                 }
                 break;
 
