@@ -49,9 +49,6 @@ const EditDrawer = ({
     mode: "onChange" /* Provide input directly as they input, so if entering bad data (eg letter in MPCN) it will let them know */,
   });
 
-  const linkedinQualifications = myForm.watch("linkedinQualifications") ?? [];
-  const linkedinCertification =
-    linkedinQualifications.includes("certification");
   const temporary = myForm.watch("temporary");
 
   // Reset the form if request.data changes and when form is opened/closed
@@ -126,6 +123,7 @@ const EditDrawer = ({
                 <FormFields.Supervisor />
                 <FormFields.MPCN />
                 <FormFields.CPCN />
+                <FormFields.Certifications />
                 <FormFields.FMS />
                 <FormFields.PositionSensitivity />
                 <FormFields.DutyLocation />
@@ -159,7 +157,6 @@ const EditDrawer = ({
                 <FormFields.Incentives />
                 <FormFields.LinkedinPositionSummary />
                 <FormFields.LinkedinQualifications />
-                {linkedinCertification && <FormFields.Certifications />}
                 <FormFields.LinkedinKSAs />
               </>
             )}

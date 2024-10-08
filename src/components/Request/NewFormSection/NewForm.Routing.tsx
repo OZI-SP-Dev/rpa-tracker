@@ -38,6 +38,7 @@ const RoutingInfo = () => {
       <FormFields.Supervisor />
       <FormFields.MPCN />
       <FormFields.CPCN />
+      <FormFields.Certifications />
       <FormFields.FMS />
       <FormFields.PositionSensitivity />
       <FormFields.DutyLocation />

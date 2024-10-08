@@ -103,9 +103,8 @@ const Certifications = () => {
           labelText="DCWF Role 2 Proficiency"
           fieldProps={{ layout: "horizontal" }}
           rules={{
-            ...(dcwf2?.length === 1 && {
-              required: "DCWF Role 2 Proficiency is required",
-            }),
+            required:
+              dcwf2?.length === 1 ? "DCWF Role 2 Proficiency is required" : "",
           }}
         >
           <Radio key="Basic" value="Basic" label="Basic" />
@@ -132,9 +131,8 @@ const Certifications = () => {
           labelText="DCWF Role 3 Proficiency"
           fieldProps={{ layout: "horizontal" }}
           rules={{
-            ...(dcwf3?.length === 1 && {
-              required: "DCWF Role 3 Proficiency is required",
-            }),
+            required:
+              dcwf3?.length === 1 ? "DCWF Role 3 Proficiency is required" : "",
           }}
         >
           <Radio key="Basic" value="Basic" label="Basic" />

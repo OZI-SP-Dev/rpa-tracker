@@ -3,9 +3,6 @@ import { Divider, InfoLabel, Title2 } from "@fluentui/react-components";
 import { useWatch } from "react-hook-form";
 
 const LinkedInPost = () => {
-  const linkedinQualifications = useWatch({ name: "linkedinQualifications" });
-  const linkedinCertification =
-    linkedinQualifications.includes("certification");
   const temporary = useWatch({ name: "temporary" });
 
   return (
@@ -25,7 +22,6 @@ const LinkedInPost = () => {
       <FormFields.Incentives />
       <FormFields.LinkedinPositionSummary />
       <FormFields.LinkedinQualifications />
-      {linkedinCertification && <FormFields.Certifications />}
       <FormFields.LinkedinKSAs />
     </>
   );
