@@ -73,8 +73,8 @@ export interface RPARequest {
   dcwf2: string[];
   dcwf3: string[];
   dcwfLevel?: "Basic" | "Intermediate" | "Advanced";
-  dcwf2Level?: string;
-  dcwf3Level?: string;
+  dcwf2Level?: "Basic" | "Intermediate" | "Advanced";
+  dcwf3Level?: "Basic" | "Intermediate" | "Advanced";
   linkedinKSAs?: string;
   linkedinSearchTitle1?: string;
   linkedinSearchTitle2?: string;
@@ -992,10 +992,6 @@ export const validateRequest = (values: FieldValues) => {
       !(values.temporary === "Full-Time" ? true : values.nte) ||
       !values.incentives ||
       !values.linkedinPositionSummary ||
-      !(
-        !values.linkedinQualifications.includes("certification") ||
-        (values.dcwf.length > 0 && values.dcwfLevel)
-      ) ||
       !values.linkedinKSAs);
 
   const USAJobs: boolean =

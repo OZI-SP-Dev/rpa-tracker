@@ -10,6 +10,9 @@ const Telework = () => {
         name="telework"
         labelText="Telework Possible"
         fieldProps={{ layout: "horizontal" }}
+        rules={{
+          required: "Telework Possible is required",
+        }}
       >
         <Radio key="None" value="None" label="None" />
         <Radio

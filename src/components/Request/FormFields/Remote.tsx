@@ -10,6 +10,9 @@ const Remote = () => {
         name="remote"
         labelText="Remote Telework"
         fieldProps={{ layout: "horizontal" }}
+        rules={{
+          required: "Remote Telework is required",
+        }}
       >
         <Radio key="Yes" value="Yes" label="Yes" />
         <Radio key="No" value="No" label="No" />
