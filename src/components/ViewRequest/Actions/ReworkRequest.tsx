@@ -73,6 +73,11 @@ const ReworkRequest = () => {
       disableReworkButton = false;
     } else if (currentStage?.key === "Selection" && myRoles.isCSF) {
       disableReworkButton = false;
+    } else if (
+      currentStage?.key === "SelectionPackageCSFApproval" &&
+      myRoles.isCSF
+    ) {
+      disableReworkButton = false;
     }
   }
 
