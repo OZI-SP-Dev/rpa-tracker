@@ -19,7 +19,7 @@ export type RHFRequest = {
   grade: string;
   positionTitle: string;
   mpcn: string;
-  cpcn: string;
+  sprd: string;
   fms: string;
   officeSymbol: string;
   positionSensitivity: string;
@@ -93,7 +93,7 @@ const NewRequestForm = () => {
     grade: "",
     positionTitle: "",
     mpcn: "",
-    cpcn: "",
+    sprd: "",
     fms: "",
     officeSymbol: "",
     positionSensitivity: "",

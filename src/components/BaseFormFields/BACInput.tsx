@@ -1,4 +1,10 @@
-import { Input, InputProps, InfoLabel, Text } from "@fluentui/react-components";
+import {
+  Input,
+  InputProps,
+  InfoLabel,
+  Text,
+  PopoverSurfaceSlots,
+} from "@fluentui/react-components";
 import { FieldValues, useController, useFormContext } from "react-hook-form";
 import { BaseFormField } from "components/BaseFormFields/BaseTypeDef";
 import { TextFieldIcon } from "@fluentui/react-icons-mdl2";
@@ -11,7 +17,9 @@ const BACInput = <T extends FieldValues>({
   rules,
   fieldProps,
   disableError,
+  infoElement,
 }: BaseFormField<T> & {
+  infoElement?: NonNullable<Omit<PopoverSurfaceSlots, "root">>;
   fieldProps?: Partial<InputProps>;
   /** Don't show the error message within the component -- If using this, you should be displaying the error message elsewhere.  It still sets the aria-invalid flag and sets RHF as error */
   disableError?: boolean;
@@ -46,7 +54,7 @@ const BACInput = <T extends FieldValues>({
           weight="semibold"
           className="fieldLabel"
           required={isRequired}
-          info={labelInfo}
+          info={infoElement ? infoElement : labelInfo}
         >
           {labelIcon ?? <TextFieldIcon className="fieldIcon" />}
           {labelText}

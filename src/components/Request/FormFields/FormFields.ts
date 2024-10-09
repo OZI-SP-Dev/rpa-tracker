@@ -8,7 +8,7 @@ export { default as Series } from "./Series";
 export { default as Grade } from "./Grade";
 export { default as PositionTitle } from "./PositionTitle";
 export { default as MPCN } from "./MPCN";
-export { default as CPCN } from "./CPCN";
+export { default as SPRD } from "./SPRD";
 export { default as FMS } from "./FMS";
 export { default as OfficeSymbol } from "./OfficeSymbol";
 export { default as PositionSensitivity } from "./PositionSensitivity";

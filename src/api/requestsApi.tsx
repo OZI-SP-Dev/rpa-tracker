@@ -43,7 +43,7 @@ export interface RPARequest {
   grade: (typeof GENERALGRADES)[number] | (typeof ACQGRADES)[number];
   positionTitle: string;
   mpcn: string;
-  cpcn: string;
+  sprd: string;
   fms: "Yes" | "No";
   officeSymbol: string;
   positionSensitivity: (typeof POSITIONSENSITIVIES)[number]["key"];
@@ -812,7 +812,7 @@ const transformRequestFromSP = (request: any): RPARequest => {
     grade: request.grade,
     positionTitle: request.positionTitle,
     mpcn: request.mpcn,
-    cpcn: request.cpcn,
+    sprd: request.sprd,
     fms: request.fms,
     officeSymbol: request.officeSymbol,
     positionSensitivity: request.positionSensitivity,

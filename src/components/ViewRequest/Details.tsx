@@ -159,10 +159,10 @@ const ViewRequestDetails = ({
             </Label>
             <Text id="mpcn">{request.data.mpcn}</Text>
 
-            <Label weight="semibold" htmlFor="cpcn">
-              CPCN
+            <Label weight="semibold" htmlFor="sprd">
+              SPRD Number
             </Label>
-            <Text id="cpcn">{request.data.cpcn}</Text>
+            <Text id="sprd">{request.data.sprd}</Text>
 
             <Label weight="semibold" htmlFor="fms">
               FMS Position
