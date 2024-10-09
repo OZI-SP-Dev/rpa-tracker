@@ -67,6 +67,11 @@ const SendRequest = () => {
       myRoles.isCSF
     ) {
       disableSend = false;
+    } else if (
+      currentStage?.key === "SelectionPackageHQApproval" &&
+      myRoles.isHQ
+    ) {
+      disableSend = false;
     }
   }
 
