@@ -18,7 +18,9 @@ const EditRequest = ({ openEditForm }: { openEditForm: () => void }) => {
   const isEditor = myRoles.isHRL || myRoles.isOSF || myRoles.isCOSF;
 
   const isDraftAndAuthor =
-    request.data?.stage === "Draft" &&
+    (request.data?.stage === "Draft" ||
+      (request.data?.stage === "PackageReview" &&
+        request.data?.subStage === "OSFReview")) &&
     Number(request.data?.Author?.Id) === _spPageContextInfo.userId;
 
   const navigate = useNavigate();
