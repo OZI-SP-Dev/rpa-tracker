@@ -37,13 +37,13 @@ export interface RPARequest {
   requestType: (typeof REQUESTTYPES)[number];
   mcrRequired: "Yes" | "No";
   paySystem: (typeof PAYSYSTEMS)[number]["key"];
-  advertisementLength: "Normal" | "Extended";
+  advertisementLength: number;
   lastIncumbent: string;
   series: string;
   grade: (typeof GENERALGRADES)[number] | (typeof ACQGRADES)[number];
   positionTitle: string;
   mpcn: string;
-  cpcn: string;
+  sprd: string;
   fms: "Yes" | "No";
   officeSymbol: string;
   positionSensitivity: (typeof POSITIONSENSITIVIES)[number]["key"];
@@ -56,7 +56,7 @@ export interface RPARequest {
   fullPartTime?: "Full" | "Part";
   salaryLow?: number;
   salaryHigh?: number;
-  telework?: "Yes" | "No";
+  telework?: "None" | "Regular-recurring" | "Situational";
   remote?: "Yes" | "No";
   pcs?: "Yes" | "No";
   joaQualifications?: string;
@@ -70,6 +70,11 @@ export interface RPARequest {
   linkedinPositionSummary?: string;
   linkedinQualifications: string[];
   dcwf: string[];
+  dcwf2: string[];
+  dcwf3: string[];
+  dcwfLevel?: "Basic" | "Intermediate" | "Advanced";
+  dcwf2Level?: "Basic" | "Intermediate" | "Advanced";
+  dcwf3Level?: "Basic" | "Intermediate" | "Advanced";
   linkedinKSAs?: string;
   linkedinSearchTitle1?: string;
   linkedinSearchTitle2?: string;
@@ -250,9 +255,9 @@ const getPagedRequests = async (
   OSFs: OSF[]
 ) => {
   const requestedFields =
-    "Id,positionTitle,requestType,paySystem,series,grade,officeSymbol,stage,subStage,Created," +
-    "Author/Id,Author/EMail,Author/Title";
-  const expandedFields = "Author";
+    "Id,positionTitle,requestType,paySystem,series,grade,officeSymbol,stage,subStage,Created,mpcn," +
+    "Author/Id,Author/EMail,Author/Title,hrl/Id,hrl/EMail,hrl/Title";
+  const expandedFields = "Author,hrl";
 
   let queryString = "ContentType eq 'RPADocSet'";
   if (!allItems) {
@@ -276,7 +281,7 @@ const getPagedRequests = async (
       // HRL sees requests assigned to them, and unassigned requests
       if (myRoles.isHRL) {
         roleFilters.push(
-          `stage ne 'Draft' and (hrl/Id eq null or hrl/EMail eq '${_spPageContextInfo.userEmail}')`
+          `stage ne 'Draft' and (hrl/EMail eq '${_spPageContextInfo.userEmail}')`
         );
       }
 
@@ -597,6 +602,8 @@ type InternalRequestItem = Omit<
   RPARequest,
   | "methods"
   | "dcwf"
+  | "dcwf2"
+  | "dcwf3"
   | "linkedinQualifications"
   | "supervisor"
   | "organizationalPOC"
@@ -612,6 +619,8 @@ type InternalRequestItem = Omit<
 > & {
   methods: string;
   dcwf: string;
+  dcwf2: string;
+  dcwf3: string;
   linkedinQualifications: string;
   supervisorId?: string;
   organizationalPOCId?: string;
@@ -635,6 +644,8 @@ const transformRequestToSP = async (
   const {
     methods,
     dcwf,
+    dcwf2,
+    dcwf3,
     linkedinQualifications,
     supervisor,
     organizationalPOC,
@@ -775,6 +786,8 @@ const transformRequestToSP = async (
     // stringify arrays for storage in SharePoint
     methods: JSON.stringify(methods),
     dcwf: JSON.stringify(dcwf),
+    dcwf2: JSON.stringify(dcwf2),
+    dcwf3: JSON.stringify(dcwf3),
     linkedinQualifications: JSON.stringify(linkedinQualifications),
 
     // include the rest of the properties from the RPARequest
@@ -799,7 +812,7 @@ const transformRequestFromSP = (request: any): RPARequest => {
     grade: request.grade,
     positionTitle: request.positionTitle,
     mpcn: request.mpcn,
-    cpcn: request.cpcn,
+    sprd: request.sprd,
     fms: request.fms,
     officeSymbol: request.officeSymbol,
     positionSensitivity: request.positionSensitivity,
@@ -827,6 +840,11 @@ const transformRequestFromSP = (request: any): RPARequest => {
     linkedinPositionSummary: request.linkedinPositionSummary,
     linkedinQualifications: JSON.parse(request.linkedinQualifications),
     dcwf: JSON.parse(request.dcwf),
+    dcwf2: JSON.parse(request.dcwf2),
+    dcwf3: JSON.parse(request.dcwf3),
+    dcwfLevel: request.dcwfLevel,
+    dcwf2Level: request.dcwf2Level,
+    dcwf3Level: request.dcwf3Level,
     linkedinKSAs: request.linkedinKSAs,
     linkedinSearchTitle1: request.linkedinSearchTitle1,
     linkedinSearchTitle2: request.linkedinSearchTitle2,
@@ -907,6 +925,8 @@ const transformPagedRequestsFromSP = (requests: any) => {
       stage: request.stage,
       subStage: request.subStage,
       Created: new Date(request.Created),
+      mpcn: request.mpcn,
+      hrl: request.hrl,
     });
   });
 
@@ -925,6 +945,8 @@ interface PagedRequest {
   stage: (typeof STAGES)[number]["key"];
   subStage: string;
   Created: Date;
+  mpcn: string;
+  hrl: Person;
 }
 
 interface SortParams {
@@ -945,8 +967,7 @@ export interface RequestFilter {
  */
 
 export const validateRequest = (values: FieldValues) => {
-  const HiringInfo =
-    values.advertisementLength === "" || values.methods.length === 0;
+  const HiringInfo = !values.advertisementLength || values.methods.length === 0;
 
   const JobBoard: boolean =
     values.methods.includes("lcmc") && values.closeDateLCMC === undefined;
@@ -959,8 +980,6 @@ export const validateRequest = (values: FieldValues) => {
       !values.fullPartTime ||
       !values.salaryLow ||
       !values.salaryHigh ||
-      !values.telework ||
-      !values.remote ||
       !values.pcs ||
       !values.joaQualifications ||
       !values.joaIdealCandidate);
@@ -972,12 +991,7 @@ export const validateRequest = (values: FieldValues) => {
       !values.salaryHigh ||
       !(values.temporary === "Full-Time" ? true : values.nte) ||
       !values.incentives ||
-      !values.telework ||
       !values.linkedinPositionSummary ||
-      !(
-        !values.linkedinQualifications.includes("certification") ||
-        values.dcwf.length > 0
-      ) ||
       !values.linkedinKSAs);
 
   const USAJobs: boolean =

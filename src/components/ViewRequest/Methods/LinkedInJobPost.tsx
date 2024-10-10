@@ -1,7 +1,8 @@
 import { Label, Text } from "@fluentui/react-components";
 import { RPARequest } from "api/requestsApi";
-import { DCWFCodes } from "consts/DCWF";
+// import { DCWFCodes } from "consts/DCWF";
 import UpdatePostId from "components/ViewRequest/DetailSections/UpdatePostId";
+import { DCWFCodes } from "consts/DCWF";
 
 const ViewRequestLIJobPostDetails = (props: { data: RPARequest }) => {
   return (
@@ -28,11 +29,6 @@ const ViewRequestLIJobPostDetails = (props: { data: RPARequest }) => {
       </Label>
       <Text id="incentives">{props.data.incentives}</Text>
 
-      <Label weight="semibold" htmlFor="LItelework">
-        Telework Possible
-      </Label>
-      <Text id="LItelework">{props.data.telework}</Text>
-
       <Label weight="semibold" htmlFor="linkedinPositionSummary">
         Position Summary
       </Label>
@@ -47,15 +43,55 @@ const ViewRequestLIJobPostDetails = (props: { data: RPARequest }) => {
         {props.data.linkedinQualifications?.map((qual) => qual + "\n")}
       </Text>
 
-      <Label weight="semibold" htmlFor="dcwf">
-        Certifications/Licensure
-      </Label>
-      <Text style={{ whiteSpace: "pre-wrap" }} id="dcwf">
-        {props.data.dcwf?.map((cert) => {
-          const found = DCWFCodes.find((element) => element.Code === cert);
-          return cert + " " + found?.Role + "\n";
-        })}
-      </Text>
+      <fieldset style={{ gridColumn: "1 / 3" }}>
+        <legend>Defense Cyber Work Force (DCWF)</legend>
+        <table>
+          <thead>
+            <tr>
+              <th>Role</th>
+              <th>Proficiency</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                {props.data.dcwf?.length === 1
+                  ? props.data.dcwf +
+                      " " +
+                      DCWFCodes.find(
+                        ({ Code }) => Code === (props.data.dcwf[0] ?? "")
+                      )?.Role ?? ""
+                  : ""}
+              </td>
+              <td>{props.data.dcwfLevel}</td>
+            </tr>
+            <tr>
+              <td>
+                {props.data.dcwf2?.length === 1
+                  ? props.data.dcwf2 +
+                      " " +
+                      DCWFCodes.find(
+                        ({ Code }) => Code === (props.data.dcwf2[0] ?? "")
+                      )?.Role ?? ""
+                  : ""}
+              </td>
+              <td>{props.data.dcwf2Level}</td>
+            </tr>
+            <tr>
+              <td>
+                {props.data.dcwf3?.length === 1
+                  ? props.data.dcwf3 +
+                      " " +
+                      DCWFCodes.find(
+                        ({ Code }) => Code === (props.data.dcwf3[0] ?? "")
+                      )?.Role ?? ""
+                  : ""}
+              </td>
+              <td>{props.data.dcwf3Level}</td>
+            </tr>
+          </tbody>
+        </table>
+      </fieldset>
 
       <Label weight="semibold" htmlFor="linkedinKSAs">
         KSA's

@@ -49,9 +49,6 @@ const EditDrawer = ({
     mode: "onChange" /* Provide input directly as they input, so if entering bad data (eg letter in MPCN) it will let them know */,
   });
 
-  const linkedinQualifications = myForm.watch("linkedinQualifications") ?? [];
-  const linkedinCertification =
-    linkedinQualifications.includes("certification");
   const temporary = myForm.watch("temporary");
 
   // Reset the form if request.data changes and when form is opened/closed
@@ -125,10 +122,13 @@ const EditDrawer = ({
                 <FormFields.OfficeSymbol />
                 <FormFields.Supervisor />
                 <FormFields.MPCN />
-                <FormFields.CPCN />
+                <FormFields.SPRD />
+                <FormFields.Certifications />
                 <FormFields.FMS />
                 <FormFields.PositionSensitivity />
                 <FormFields.DutyLocation />
+                <FormFields.Telework />
+                <FormFields.Remote />
                 <FormFields.Incumbent />
                 <FormFields.AdvertisementLength />
                 <FormFields.Methods />
@@ -142,8 +142,6 @@ const EditDrawer = ({
                 <FormFields.IssueTo />
                 <FormFields.FullPartTime />
                 <FormFields.Salary />
-                <FormFields.Telework />
-                <FormFields.Remote />
                 <FormFields.PCS />
                 <FormFields.JOAQualifications />
                 <FormFields.JOAIdealCandidate />
@@ -157,10 +155,8 @@ const EditDrawer = ({
                 )}
                 <FormFields.Salary />
                 <FormFields.Incentives />
-                <FormFields.Telework />
                 <FormFields.LinkedinPositionSummary />
                 <FormFields.LinkedinQualifications />
-                {linkedinCertification && <FormFields.Certifications />}
                 <FormFields.LinkedinKSAs />
               </>
             )}

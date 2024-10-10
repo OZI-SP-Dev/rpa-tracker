@@ -1,12 +1,7 @@
 import { Title1, Tooltip, Badge } from "@fluentui/react-components";
 import { FormProvider, useForm } from "react-hook-form";
 import { AlertSolidIcon } from "@fluentui/react-icons-mdl2";
-import {
-  Person,
-  RPARequest,
-  useMutateRequest,
-  useRequest,
-} from "api/requestsApi";
+import { Person, useMutateRequest, useRequest } from "api/requestsApi";
 import "components/Request/Request.css";
 import { addDays } from "@fluentui/react";
 import Wizard from "components/Request/NewRequestForm.Wizard";
@@ -18,13 +13,13 @@ export type RHFRequest = {
   requestType: string;
   mcrRequired: string;
   paySystem: string; // "NH" | "GS" | "GG";
-  advertisementLength: string; // "Normal" | "Extended";
+  advertisementLength: number;
   lastIncumbent: string;
   series: string; // 4 digit string
   grade: string;
   positionTitle: string;
   mpcn: string;
-  cpcn: string;
+  sprd: string;
   fms: string;
   officeSymbol: string;
   positionSensitivity: string;
@@ -51,6 +46,11 @@ export type RHFRequest = {
   linkedinPositionSummary: string;
   linkedinQualifications: string[];
   dcwf: string[];
+  dcwf2: string[];
+  dcwf3: string[];
+  dcwfLevel?: string;
+  dcwf2Level?: string;
+  dcwf3Level?: string;
   linkedinKSAs: string;
   linkedinSearchTitle1: string;
   linkedinSearchTitle2: string;
@@ -87,13 +87,13 @@ const NewRequestForm = () => {
     requestType: "",
     mcrRequired: "",
     paySystem: "NH",
-    advertisementLength: "",
+    advertisementLength: 7,
     lastIncumbent: "",
     series: "",
     grade: "",
     positionTitle: "",
     mpcn: "",
-    cpcn: "",
+    sprd: "",
     fms: "",
     officeSymbol: "",
     positionSensitivity: "",
@@ -124,6 +124,11 @@ const NewRequestForm = () => {
       "travel",
     ],
     dcwf: [],
+    dcwf2: [],
+    dcwf3: [],
+    dcwfLevel: "",
+    dcwf2Level: "",
+    dcwf3Level: "",
     linkedinKSAs: "",
     linkedinSearchTitle1: "",
     linkedinSearchTitle2: "",
@@ -167,16 +172,6 @@ const NewRequestForm = () => {
     }
   }, [request.data, params.requestId, myForm]);
 
-  const createNewRequest = async (data: RHFRequest) => {
-    const data2 = {
-      stage: "Draft",
-      ...data,
-    } as RPARequest;
-
-    const newRequest = await addRequest.mutateAsync(data2);
-    myForm.setValue("Id", newRequest.Id);
-  };
-
   return (
     <div
       style={{
@@ -192,15 +187,8 @@ const NewRequestForm = () => {
       {!!params.requestId && request.isLoading && "Loading..."}
       {(!params.requestId || request.isFetched) && (
         <FormProvider {...myForm}>
-          <form
-            id="inReqForm"
-            className="requestFormContainer"
-            onSubmit={myForm.handleSubmit(createNewRequest)}
-          >
-            <Wizard
-              isLoading={addRequest.isLoading}
-              isError={addRequest.isError}
-            />
+          <form id="inReqForm" className="requestFormContainer">
+            <Wizard />
 
             {addRequest.isError && (
               <Tooltip

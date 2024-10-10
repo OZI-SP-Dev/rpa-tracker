@@ -109,6 +109,17 @@ const OfficeSymbol = createTableColumn<RPARequest>({
   },
 });
 
+const Mpcn = createTableColumn<RPARequest>({
+  columnId: "mpcn",
+  compare: (_a, _b) => 0, // Change nothing, but utilize table's sorting icons
+  renderHeaderCell: (filtered = false) => {
+    return <>MPCN {filtered && <FilterIcon />}</>;
+  },
+  renderCell: (item) => {
+    return <TableCellLayout truncate>{item.mpcn}</TableCellLayout>;
+  },
+});
+
 const Requestor = createTableColumn<RPARequest>({
   columnId: "Author",
   compare: (_a, _b) => 0, // Change nothing, but utilize table's sorting icons
@@ -119,6 +130,21 @@ const Requestor = createTableColumn<RPARequest>({
     return (
       <TableCellLayout truncate media={<UserAvatar user={item.Author} />}>
         {item.Author?.Title}
+      </TableCellLayout>
+    );
+  },
+});
+
+const Hrl = createTableColumn<RPARequest>({
+  columnId: "hrl",
+  compare: (_a, _b) => 0, // Change nothing, but utilize table's sorting icons
+  renderHeaderCell: (filtered = false) => {
+    return <>HRL {filtered && <FilterIcon />}</>;
+  },
+  renderCell: (item) => {
+    return (
+      <TableCellLayout truncate media={<UserAvatar user={item.hrl} />}>
+        {item.hrl?.Title}
       </TableCellLayout>
     );
   },
@@ -181,13 +207,15 @@ const RequestsTable = () => {
   const refMap = useRef<Record<string, HTMLElement | null>>({});
   const [columnSizingOptions, setColumnSizingOptions] =
     useState<TableColumnSizingOptions>({
-      positionTitle: { minWidth: 120, idealWidth: 280 },
-      requestType: { minWidth: 120, idealWidth: 220 },
+      officeSymbol: { minWidth: 120, idealWidth: 120 },
+      mpcn: { minWidth: 80, idealWidth: 80 },
       paySystem: { minWidth: 80, idealWidth: 80 },
       series: { minWidth: 80, idealWidth: 80 },
       grade: { minWidth: 80, idealWidth: 80 },
-      officeSymbol: { minWidth: 120, idealWidth: 120 },
+      positionTitle: { minWidth: 120, idealWidth: 280 },
+      hrl: { minWidth: 120, idealWidth: 430 },
       requestor: { minWidth: 120, idealWidth: 430 },
+      requestType: { minWidth: 120, idealWidth: 220 },
       currentStage: { minWidth: 120, idealWidth: 165 },
       createdDate: { minWidth: 120, idealWidth: 120 },
     });
@@ -226,13 +254,15 @@ const RequestsTable = () => {
   };
 
   const columns: TableColumnDefinition<RPARequest>[] = [
-    PositionTitle,
-    RequestType,
+    OfficeSymbol,
+    Mpcn,
     PaySystem,
     Series,
     Grade,
-    OfficeSymbol,
+    PositionTitle,
+    Hrl,
     Requestor,
+    RequestType,
     CurrentStage,
     CreatedDate,
   ];

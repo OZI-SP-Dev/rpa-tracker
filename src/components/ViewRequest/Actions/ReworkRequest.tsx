@@ -64,11 +64,24 @@ const ReworkRequest = () => {
       myRoles.isOSF
     ) {
       disableReworkButton = false;
-    } else if (request.data?.subStage === "CAPackageReview" && myRoles.isCA) {
+    } else if (
+      request.data?.subStage === "SelectionPackageCAApproval" &&
+      myRoles.isCA
+    ) {
       disableReworkButton = false;
     } else if (currentStage?.key === "Recruiting" && myRoles.isCSF) {
       disableReworkButton = false;
     } else if (currentStage?.key === "Selection" && myRoles.isCSF) {
+      disableReworkButton = false;
+    } else if (
+      request.data?.subStage === "SelectionPackageCSFApproval" &&
+      myRoles.isCSF
+    ) {
+      disableReworkButton = false;
+    } else if (
+      request.data?.subStage === "SelectionPackageHQApproval" &&
+      myRoles.isHQ
+    ) {
       disableReworkButton = false;
     }
   }

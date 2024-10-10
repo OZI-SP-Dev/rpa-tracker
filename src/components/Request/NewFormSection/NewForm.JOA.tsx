@@ -12,11 +12,8 @@ const JOAField = () => {
       <FormFields.IssueTo />
       <FormFields.FullPartTime />
       <FormFields.Salary />
-      <FormFields.Telework />
-      <FormFields.Remote />
       <FormFields.PCS />
       <FormFields.JOAQualifications />
-
       <FormFields.JOAIdealCandidate />
     </>
   );

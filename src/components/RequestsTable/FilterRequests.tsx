@@ -23,6 +23,7 @@ import { spWebContext } from "api/SPWebContext";
 
 interface IFilterFields {
   positionTitle: string;
+  mpcn: string;
   requestType: string;
   paySystem: string;
   series: string;
@@ -32,6 +33,7 @@ interface IFilterFields {
   afterDate: Date | null;
   beforeDate: Date | null;
   Author: Person | null;
+  hrl: Person | null;
 }
 
 function isPerson(myObj: Person | string | Date | number): myObj is Person {
@@ -57,6 +59,9 @@ const FilterRequestsDrawer = ({
   })[0]?.filter;
   const author = filterState.filter((obj) => {
     return obj.column === "Author";
+  })[0]?.filter;
+  const hrl = filterState.filter((obj) => {
+    return obj.column === "hrl";
   })[0]?.filter;
 
   const { control, handleSubmit, reset } = useForm<IFilterFields>({
@@ -103,9 +108,16 @@ const FilterRequestsDrawer = ({
             return obj.column === "stage";
           })[0]
           ?.filter.toString() ?? "",
+      mpcn:
+        filterState
+          .filter((obj) => {
+            return obj.column === "mpcn";
+          })[0]
+          ?.filter.toString() ?? "",
       Author: isPerson(author) ? author : null,
       afterDate: afterDate instanceof Date ? new Date(afterDate) : null,
       beforeDate: beforeDate instanceof Date ? new Date(beforeDate) : null,
+      hrl: isPerson(hrl) ? hrl : null,
     },
   });
   const onSubmit: SubmitHandler<IFilterFields> = (data) => {
@@ -167,11 +179,27 @@ const FilterRequestsDrawer = ({
       });
     }
 
+    if (data.hrl?.Id) {
+      newFilter.push({
+        column: "hrl",
+        filter: data.hrl,
+        queryString: `hrlId eq ${data.hrl.Id}`,
+      });
+    }
+
     if (data.stage) {
       newFilter.push({
         column: "stage",
         filter: data.stage,
         queryString: `(stage eq '${data.stage}')`,
+      });
+    }
+
+    if (data.mpcn) {
+      newFilter.push({
+        column: "mpcn",
+        filter: data.mpcn,
+        queryString: `(mpcn eq '${data.mpcn}')`,
       });
     }
 
@@ -230,36 +258,19 @@ const FilterRequestsDrawer = ({
           }}
         >
           <hr />
-          <Field label="Position Title">
+          <Field label="Office Symbol">
             <Controller
-              name="positionTitle"
+              name="officeSymbol"
               control={control}
               render={({ field }) => <Input type="search" {...field} />}
             />
           </Field>
           <hr />
-          <Field label="Request Type">
+          <Field label="MPCN">
             <Controller
-              name="requestType"
+              name="mpcn"
               control={control}
-              render={({ field }) => (
-                <Combobox
-                  clearable
-                  autoComplete="on"
-                  {...field}
-                  selectedOptions={[field.value ?? ""]}
-                  onOptionSelect={(_event, data) => {
-                    field.onChange(data.optionValue ?? "");
-                  }}
-                  value={field.value}
-                >
-                  {REQUESTTYPES.map((reqType) => (
-                    <Option key={reqType} value={reqType}>
-                      {reqType}
-                    </Option>
-                  ))}
-                </Combobox>
-              )}
+              render={({ field }) => <Input type="search" {...field} />}
             />
           </Field>
           <hr />
@@ -328,11 +339,59 @@ const FilterRequestsDrawer = ({
             />
           </Field>
           <hr />
-          <Field label="Office Symbol">
+          <Field label="Position Title">
             <Controller
-              name="officeSymbol"
+              name="positionTitle"
               control={control}
               render={({ field }) => <Input type="search" {...field} />}
+            />
+          </Field>
+          <hr />
+          <Field label="Request Type">
+            <Controller
+              name="requestType"
+              control={control}
+              render={({ field }) => (
+                <Combobox
+                  clearable
+                  autoComplete="on"
+                  {...field}
+                  selectedOptions={[field.value ?? ""]}
+                  onOptionSelect={(_event, data) => {
+                    field.onChange(data.optionValue ?? "");
+                  }}
+                  value={field.value}
+                >
+                  {REQUESTTYPES.map((reqType) => (
+                    <Option key={reqType} value={reqType}>
+                      {reqType}
+                    </Option>
+                  ))}
+                </Combobox>
+              )}
+            />
+          </Field>
+          <hr />
+          <Field label="HRL">
+            <Controller
+              name="hrl"
+              control={control}
+              render={({ field }) => (
+                <PeoplePicker
+                  ariaLabel="HRL"
+                  selectedItems={field.value ?? []}
+                  updatePeople={async (items) => {
+                    if (items?.[0]?.Title) {
+                      const userId = (
+                        await spWebContext.web.ensureUser(items?.[0].EMail)
+                      ).Id;
+                      field.onChange({ ...items[0], Id: userId });
+                    } else {
+                      field.onChange([]);
+                    }
+                  }}
+                />
+              )}
             />
           </Field>
           <hr />

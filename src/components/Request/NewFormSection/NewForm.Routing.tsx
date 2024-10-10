@@ -37,10 +37,13 @@ const RoutingInfo = () => {
       <FormFields.OfficeSymbol />
       <FormFields.Supervisor />
       <FormFields.MPCN />
-      <FormFields.CPCN />
+      <FormFields.SPRD />
+      <FormFields.Certifications />
       <FormFields.FMS />
       <FormFields.PositionSensitivity />
       <FormFields.DutyLocation />
+      <FormFields.Telework />
+      <FormFields.Remote />
       <FormFields.Incumbent />
     </>
   );

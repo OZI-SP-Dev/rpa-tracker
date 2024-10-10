@@ -6,8 +6,8 @@ import BACCombobox from "components/BaseFormFields/BACCombobox";
 import { useFormContext } from "react-hook-form";
 
 const Grade = () => {
-  const form = useFormContext();
-  const paySystem = form.watch("paySystem");
+  const { watch } = useFormContext();
+  const paySystem = watch("paySystem");
   return (
     <div className="requestFieldContainer">
       <BACCombobox<RHFRequest>

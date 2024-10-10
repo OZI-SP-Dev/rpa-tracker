@@ -48,13 +48,22 @@ const useStyles = makeStyles({
     textDecorationLine: "none",
     ":hover": { textDecorationLine: "underline" },
   },
-  navAvatar: { marginLeft: "auto", marginRight: "5px" }, // Force the Avatar icon to be positioned at the right most side
+  navHelp: {
+    marginLeft: "auto",
+    marginRight: "1em",
+    textDecorationLine: "none",
+    ":hover": { textDecorationLine: "underline" },
+    color: tokens.colorBrandBackgroundInverted,
+  },
+  navAvatar: { marginLeft: "1em", marginRight: "5px" }, // Force the Avatar icon to be positioned at the right most side
 });
 
 export const AppHeader = () => {
   const classes = useStyles();
   const userContext = useContext(UserContext);
   const myRoles = useMyRoles();
+  const canViewReworkReport =
+    myRoles.isHRL || myRoles.isOSF || myRoles.isCOSF || myRoles.isCSF;
 
   const title =
     "RPA Tracker" +
@@ -76,10 +85,18 @@ export const AppHeader = () => {
             Roles
           </Link>
         )}
-        <Link to="/Reports/Rework" className={classes.navLink}>
-          Rework Report
-        </Link>
+        {canViewReworkReport && (
+          <Link to="/Reports/Rework" className={classes.navLink}>
+            Rework Report
+          </Link>
+        )}
 
+        <Link
+          to="mailto:AFLCMC.OZI.COSFunctional@us.af.mil?subject=RPA%20Tracker%20Assistance%20Request&cc=sabrina.pratte.1@us.af.mil;chrystal.gayheart@us.af.mil"
+          className={classes.navHelp}
+        >
+          Request Help
+        </Link>
         <Popover trapFocus={true} closeOnScroll={true} withArrow={true}>
           <PopoverTrigger>
             <Tooltip

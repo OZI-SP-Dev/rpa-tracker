@@ -8,7 +8,7 @@ const Incumbent = () => {
     <div className="requestFieldContainer">
       <BACInput<RHFRequest>
         name="lastIncumbent"
-        labelText="Name of last incubment (if applicable)"
+        labelText="Name of last incumbent (if applicable)"
         labelIcon={<ContactIcon className="fieldIcon" />}
         fieldProps={{ placeholder: "Example format: 'Last, First MI'" }}
       />

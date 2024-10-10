@@ -159,10 +159,10 @@ const ViewRequestDetails = ({
             </Label>
             <Text id="mpcn">{request.data.mpcn}</Text>
 
-            <Label weight="semibold" htmlFor="cpcn">
-              CPCN
+            <Label weight="semibold" htmlFor="sprd">
+              SPRD Number
             </Label>
-            <Text id="cpcn">{request.data.cpcn}</Text>
+            <Text id="sprd">{request.data.sprd}</Text>
 
             <Label weight="semibold" htmlFor="fms">
               FMS Position
@@ -181,8 +181,18 @@ const ViewRequestDetails = ({
             </Label>
             <Text id="dutyLocation">{request.data.dutyLocation}</Text>
 
+            <Label weight="semibold" htmlFor="telework">
+              Telework Possible
+            </Label>
+            <Text id="telework">{request.data.telework}</Text>
+
+            <Label weight="semibold" htmlFor="remote">
+              Remote Work Possible
+            </Label>
+            <Text id="remote">{request.data.remote}</Text>
+
             <Label weight="semibold" htmlFor="lastIncumbent">
-              Last Incumbument
+              Last Incumbent
             </Label>
             <Text id="lastIncumbent">{request.data.lastIncumbent}</Text>
           </article>

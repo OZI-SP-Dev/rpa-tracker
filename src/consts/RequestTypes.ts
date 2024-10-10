@@ -1,9 +1,9 @@
 export const REQUESTTYPES = [
   "Change in MPCN info",
   "Create/Update NH-04",
-  "EHA (Expedited Hiring Authority)",
+  "DHA (Direct Hiring Authority / By Name Request)",
   "Promotion",
-  "Recruit/Fill",
+  "Recruit/Fill (i.e. Job Announcement",
   "Reassignment",
   "Other",
 ];
