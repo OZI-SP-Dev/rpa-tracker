@@ -166,7 +166,9 @@ const ViewRequestDetails = ({
             <Text id="sprd">{request.data.sprd}</Text>
 
             <fieldset style={{ gridColumn: "1 / 3" }}>
-              <legend>Defense Cyber Work Force (DCWF)</legend>
+              <legend>
+                <strong>Defense Cyber Work Force (DCWF)</strong>
+              </legend>
               <table>
                 <thead>
                   <tr>
