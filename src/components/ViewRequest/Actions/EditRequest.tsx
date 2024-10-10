@@ -44,8 +44,7 @@ const EditRequest = ({ openEditForm }: { openEditForm: () => void }) => {
         disabled={
           request.isLoading ||
           !isEditableStage ||
-          !isEditor ||
-          !isDraftAndAuthor
+          (!isEditor && !isDraftAndAuthor)
         }
         icon={<EditIcon className="blue" />}
         size="large"
