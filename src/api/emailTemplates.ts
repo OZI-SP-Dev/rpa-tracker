@@ -82,6 +82,17 @@ const emailTemplates = {
           }
           break;
 
+        case "Recruiting":
+          email = {
+            To: [assignedHRLEmail].concat(cosfEmails),
+            Subject: `HRL/COSF Action: RPA ${requestData.positionTitle} is pending HRL/COSF review.`,
+            Body: `This email has been generated to inform you that a Request for Personnel Action (RPA) for - ${requestData.positionTitle} - has been submitted and is pending the HRL/COSF review.
+
+              To action this request, follow the below link:
+              <a href="${_spPageContextInfo.webAbsoluteUrl}/app/index.aspx#/Request/${request.requestId}">${_spPageContextInfo.webAbsoluteUrl}/app/index.aspx#/Request/${request.requestId}</a>`,
+          };
+          break;
+
         case "PackageApproval":
           switch (request.newSubStage) {
             case "SelectionPackageOSFApproval":
