@@ -18,6 +18,7 @@ import { useClaimRequest } from "api/hrlApi";
 import HiringPanel from "components/ViewRequest/HiringPanel";
 import { EditIcon } from "@fluentui/react-icons-mdl2";
 import { usePostRequest } from "api/postRequestApi";
+import { DCWFCodes } from "consts/DCWF";
 
 declare const _spPageContextInfo: {
   userId: number;
@@ -163,6 +164,61 @@ const ViewRequestDetails = ({
               SPRD Number
             </Label>
             <Text id="sprd">{request.data.sprd}</Text>
+
+            <fieldset style={{ gridColumn: "1 / 3" }}>
+              <legend>
+                <strong>Defense Cyber Work Force (DCWF)</strong>
+              </legend>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Role</th>
+                    <th>Proficiency</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      {request.data.dcwf?.length === 1
+                        ? request.data.dcwf +
+                            " " +
+                            DCWFCodes.find(
+                              ({ Code }) =>
+                                Code === (request.data.dcwf[0] ?? "")
+                            )?.Role ?? ""
+                        : ""}
+                    </td>
+                    <td>{request.data.dcwfLevel}</td>
+                  </tr>
+                  <tr>
+                    <td>
+                      {request.data.dcwf2?.length === 1
+                        ? request.data.dcwf2 +
+                            " " +
+                            DCWFCodes.find(
+                              ({ Code }) =>
+                                Code === (request.data.dcwf2[0] ?? "")
+                            )?.Role ?? ""
+                        : ""}
+                    </td>
+                    <td>{request.data.dcwf2Level}</td>
+                  </tr>
+                  <tr>
+                    <td>
+                      {request.data.dcwf3?.length === 1
+                        ? request.data.dcwf3 +
+                            " " +
+                            DCWFCodes.find(
+                              ({ Code }) =>
+                                Code === (request.data.dcwf3[0] ?? "")
+                            )?.Role ?? ""
+                        : ""}
+                    </td>
+                    <td>{request.data.dcwf3Level}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </fieldset>
 
             <Label weight="semibold" htmlFor="fms">
               FMS Position
