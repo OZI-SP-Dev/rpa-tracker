@@ -77,9 +77,8 @@ const Home: FunctionComponent = () => {
             <p>
               For questions or issues with this tool or assistance with
               completing your RPA Request package, please contact: <br />
-              <a href="mailto:AFLCMC.OZI.COSFunctional@us.af.mil?subject=RPA%20Tracker%20Assistance%20Request&cc=sabrina.pratte.1@us.af.mil;chrystal.gayheart@us.af.mil">
-                Sabrina Pratte AFLCMC/XP-OZIF and Chrystal Gayheart
-                AFLCMC/XP-OZIF
+              <a href="mailto:AFLCMC.OZI.COSFunctional@us.af.mil?subject=RPA%20Tracker%20Assistance%20Request&cc=sabrina.pratte.1@us.af.mil">
+                Sabrina Pratte AFLCMC/XP-OZIF
               </a>
             </p>
           </Body1>
