@@ -11,6 +11,7 @@ import { useEffect } from "react";
 export type RHFRequest = {
   Id?: string;
   requestType: string;
+  requestTypeOther: string;
   mcrRequired: string;
   paySystem: string; // "NH" | "GS" | "GG";
   advertisementLength: number;
@@ -85,6 +86,7 @@ const NewRequestForm = () => {
   const today = new Date(Date.now());
   const defaultValues = {
     requestType: "",
+    requestTypeOther: "",
     mcrRequired: "",
     paySystem: "NH",
     advertisementLength: 7,
