@@ -86,7 +86,11 @@ const ViewRequestDetails = ({
             <Label weight="semibold" htmlFor="requestType">
               Request Type
             </Label>
-            <Text id="requestType">{request.data.requestType}</Text>
+            <Text id="requestType">
+              {request.data.requestType !== "Other"
+                ? request.data.requestType
+                : `Other - ${request.data.requestTypeOther}`}
+            </Text>
 
             <HiringPanel />
 
