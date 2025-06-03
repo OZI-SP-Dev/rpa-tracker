@@ -4,6 +4,6 @@ export const REQUESTTYPES = [
   "DHA (Direct Hiring Authority / By Name Request)",
   "Promotion",
   "Recruit/Fill (i.e. Job Announcement",
-  "Reassignment",
+  "Management Reassignment",
   "Other",
 ];

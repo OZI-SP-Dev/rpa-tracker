@@ -35,6 +35,7 @@ export interface RPARequest {
   stage: (typeof STAGES)[number]["key"];
   subStage: string;
   requestType: (typeof REQUESTTYPES)[number];
+  requestTypeOther: string;
   mcrRequired: "Yes" | "No";
   paySystem: (typeof PAYSYSTEMS)[number]["key"];
   advertisementLength: number;
@@ -255,7 +256,7 @@ const getPagedRequests = async (
   OSFs: OSF[]
 ) => {
   const requestedFields =
-    "Id,positionTitle,requestType,paySystem,series,grade,officeSymbol,stage,subStage,Created,mpcn," +
+    "Id,positionTitle,requestType,requestTypeOther,paySystem,series,grade,officeSymbol,stage,subStage,Created,mpcn," +
     "Author/Id,Author/EMail,Author/Title,hrl/Id,hrl/EMail,hrl/Title";
   const expandedFields = "Author,hrl";
 
@@ -657,6 +658,7 @@ const transformRequestToSP = async (
     linkedInSearchPerson,
     resumeSearchPerson,
     usaJobsPostPerson,
+    requestTypeOther,
     ...rest
   } = request;
 
@@ -790,6 +792,9 @@ const transformRequestToSP = async (
     dcwf3: JSON.stringify(dcwf3),
     linkedinQualifications: JSON.stringify(linkedinQualifications),
 
+    // blank out requestTypeOther if requestType isn't Other
+    requestTypeOther: rest.requestType === "Other" ? requestTypeOther : "",
+
     // include the rest of the properties from the RPARequest
     ...rest,
   };
@@ -804,6 +809,7 @@ const transformRequestFromSP = (request: any): RPARequest => {
     subStage: request.subStage,
     Author: request.Author,
     requestType: request.requestType,
+    requestTypeOther: request.requestTypeOther,
     mcrRequired: request.mcrRequired,
     paySystem: request.paySystem,
     advertisementLength: request.advertisementLength,
