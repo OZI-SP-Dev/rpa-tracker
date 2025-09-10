@@ -37,6 +37,7 @@ export interface RPARequest {
   requestType: (typeof REQUESTTYPES)[number];
   requestTypeOther: string;
   mcrRequired: "Yes" | "No";
+  mcrJustification: string;
   paySystem: (typeof PAYSYSTEMS)[number]["key"];
   advertisementLength: number;
   lastIncumbent: string;
@@ -299,7 +300,7 @@ const getPagedRequests = async (
       // HQ only see NH-04 requests in the Candidate Offer Stage
       if (myRoles.isHQ) {
         roleFilters.push(
-          `stage eq 'PackageApproval' and requestType eq 'Create/Update NH-04')`
+          `stage eq 'PackageApproval' and requestType eq 'NH-04 Creation/Upgrade')`
         );
       }
 
@@ -811,6 +812,7 @@ const transformRequestFromSP = (request: any): RPARequest => {
     requestType: request.requestType,
     requestTypeOther: request.requestTypeOther,
     mcrRequired: request.mcrRequired,
+    mcrJustification: request.mcrJustification,
     paySystem: request.paySystem,
     advertisementLength: request.advertisementLength,
     lastIncumbent: request.lastIncumbent,
