@@ -19,6 +19,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Fixed for any bug fixes.
 - Security in case of vulnerabilities.
 
+## [1.0.4] - 2025-09-11
+
+### Changed
+
+- Remove deprecated sendEmail api call -- replace with PowerAutomate triggered emails list
+
 ## [1.0.3] - 2025-09-09
 
 ### Changed
