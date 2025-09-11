@@ -13,6 +13,7 @@ export type RHFRequest = {
   requestType: string;
   requestTypeOther: string;
   mcrRequired: string;
+  mcrJustification: string;
   paySystem: string; // "NH" | "GS" | "GG";
   advertisementLength: number;
   lastIncumbent: string;
@@ -88,6 +89,7 @@ const NewRequestForm = () => {
     requestType: "",
     requestTypeOther: "",
     mcrRequired: "",
+    mcrJustification: "",
     paySystem: "NH",
     advertisementLength: 7,
     lastIncumbent: "",

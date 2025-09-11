@@ -127,9 +127,20 @@ const ViewRequestDetails = ({
             </div>
 
             <Label weight="semibold" htmlFor="mcrRequired">
-              MCR Required
+              Management Change Request (MCR) Required
             </Label>
             <Text id="mcrRequired">{request.data.mcrRequired}</Text>
+
+            {request.data.mcrRequired === "Yes" && (
+              <>
+                <Label weight="semibold" htmlFor="mcrJustification">
+                  Justification/Mission Impact/Personnel Impact for MCR
+                </Label>
+                <Text id="mcrJustification">
+                  {request.data.mcrJustification}
+                </Text>
+              </>
+            )}
 
             <Label weight="semibold" htmlFor="positionTitle">
               Position Title

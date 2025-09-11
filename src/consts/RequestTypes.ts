@@ -1,9 +1,8 @@
 export const REQUESTTYPES = [
-  "Change in MPCN info",
-  "Create/Update NH-04",
-  "DHA (Direct Hiring Authority / By Name Request)",
-  "Promotion",
-  "Recruit/Fill (i.e. Job Announcement",
-  "Management Reassignment",
+  "Admin (Chg in MPCN, DCWF Update, SAR Upgrade, Position Realignment, etc.)",
+  "NH-04 Creation/Upgrade",
+  "Career/targeted Promotion (Trainee/Intern)",
+  "Recruit/Fill (i.e. DHA or Job Announcement",
+  "Management-Directed Reassignment (Requires losing org approval e-mail)",
   "Other",
 ];
