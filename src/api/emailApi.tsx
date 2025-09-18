@@ -16,7 +16,8 @@ export type EmailProperties = Omit<
   "AdditionalHeaders" | "From"
 >;
 
-const useLogEmail = () => {
+export const useSendEmail = () => {
+  const { dispatchToast } = useToastController("toaster");
   return useMutation(
     ["logEmail"],
     async (requestEmail: { email: EmailProperties; requestId: number }) => {
@@ -31,25 +32,8 @@ const useLogEmail = () => {
       return spWebContext.web.lists
         .getByTitle("emails")
         .items.add({ Title: requestEmail.requestId.toString(), ...logEmail });
-    }
-  );
-};
-
-export const useSendEmail = () => {
-  const logEmail = useLogEmail();
-  const { dispatchToast } = useToastController("toaster");
-  return useMutation(
-    ["sendEmail"],
-    async (requestEmail: { email: EmailProperties; requestId: number }) => {
-      const email: IEmailProperties = structuredClone(requestEmail.email);
-      email.AdditionalHeaders = { "content-type": "text/html" };
-      email.Body = email.Body.replace(/\n/g, "<BR>");
-      return spWebContext.utility.sendEmail(email);
     },
     {
-      onSuccess: async (_data, requestEmail) => {
-        logEmail.mutate(requestEmail);
-      },
       onError: async (error) => {
         console.log(error);
         if (error instanceof Error) {
