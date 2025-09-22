@@ -24,6 +24,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Changed
 
 - Remove deprecated sendEmail api call -- replace with PowerAutomate triggered emails list
+- Log is now semicolon separated string to be usable by the SendEmail_Child Power Automate flwo
 
 ## [1.0.3] - 2025-09-09
 
