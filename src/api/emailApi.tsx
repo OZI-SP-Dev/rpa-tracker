@@ -22,9 +22,9 @@ export const useSendEmail = () => {
     ["logEmail"],
     async (requestEmail: { email: EmailProperties; requestId: number }) => {
       const logEmail = {
-        To: JSON.stringify(requestEmail.email.To),
-        CC: JSON.stringify(requestEmail.email.CC),
-        BCC: JSON.stringify(requestEmail.email.BCC),
+        To: requestEmail.email.To?.join(";"),
+        CC: requestEmail.email.CC?.join(";"),
+        BCC: requestEmail.email.BCC?.join(";"),
         Subject: requestEmail.email.Subject,
         Body: requestEmail.email.Body,
       };
