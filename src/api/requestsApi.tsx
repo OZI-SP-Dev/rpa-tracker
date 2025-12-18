@@ -20,7 +20,7 @@ import { OSF, useOSFs } from "api/osfApi";
 import { useSendEmail } from "api/emailApi";
 import { useMyRoles, useRoles } from "api/rolesApi";
 
-const PAGESIZE = 5;
+export const PAGESIZE = 25;
 
 export interface Person {
   Id: string;
