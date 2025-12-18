@@ -1,4 +1,9 @@
-import { RPARequest, RequestFilter, usePagedRequests } from "api/requestsApi";
+import {
+  PAGESIZE,
+  RPARequest,
+  RequestFilter,
+  usePagedRequests,
+} from "api/requestsApi";
 import {
   Button,
   DataGrid,
@@ -371,7 +376,7 @@ const RequestsTable = () => {
           disabled={
             !pagedItems.data ||
             pagedItems.isFetching ||
-            pagedItems.data.length < 5
+            pagedItems.data.length < PAGESIZE
           }
           icon={pagedItems.isFetching ? <Spinner /> : <ArrowNextRegular />}
           iconPosition="after"
