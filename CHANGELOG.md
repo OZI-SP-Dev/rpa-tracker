@@ -19,6 +19,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Fixed for any bug fixes.
 - Security in case of vulnerabilities.
 
+## [1.1.0] - 2026-06-15
+
+- Removed New Request links and route
+
 ## [1.0.5] - 2025-12-17
 
 - Changed page size to 25 items

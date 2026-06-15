@@ -77,9 +77,9 @@ export const AppHeader = () => {
         <Link className={classes.navLink} to="/">
           <Text className={classes.navHeaderSiteName}>{title}</Text>
         </Link>
-        <Link to="/New" className={classes.navLink}>
+        {/* <Link to="/New" className={classes.navLink}>
           New Request
-        </Link>
+        </Link> */}
         {myRoles.isAdmin && (
           <Link to="/Roles" className={classes.navLink}>
             Roles
