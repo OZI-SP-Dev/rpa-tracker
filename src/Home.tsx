@@ -1,7 +1,7 @@
 import { Body1, Title1, Title3, makeStyles } from "@fluentui/react-components";
 //import RequestsTable from "components/RequestsTable/RequestsTable";
 import { FunctionComponent, lazy } from "react";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 
 // Begin module downloads immediately, but still utilize lazy() for code splitting
 const RequestsTablePromise = import("components/RequestsTable/RequestsTable");
@@ -52,7 +52,7 @@ const Home: FunctionComponent = () => {
             </p>
           </Body1>
         </section>
-        <section className={styles.section}>
+        {/* <section className={styles.section}>
           <Title3 align="center">RPA Tool Instructions</Title3>
           <Body1>
             <p>
@@ -70,7 +70,7 @@ const Home: FunctionComponent = () => {
               in.
             </p>
           </Body1>
-        </section>
+        </section> */}
         <section className={styles.section}>
           <Title3 align="center">Help Info</Title3>
           <Body1>
@@ -83,7 +83,7 @@ const Home: FunctionComponent = () => {
             </p>
           </Body1>
         </section>
-        <section className={styles.section}>
+        {/* <section className={styles.section}>
           <Title3 align="center">Commonly Requested Documents</Title3>
           <Body1>
             <p>
@@ -91,7 +91,7 @@ const Home: FunctionComponent = () => {
               a doc library
             </p>
           </Body1>
-        </section>
+        </section> */}
       </div>
       <RequestsTable />
     </div>
